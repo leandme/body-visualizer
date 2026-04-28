@@ -3,7 +3,7 @@ import { MetadataRoute } from 'next';
 import fs from 'fs';
 import path from 'path';
 
-const BASE_URL = 'https://bodyvisualizerai.com';
+const BASE_URL = 'https://bodyvisualizer.ai';
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const pagesDirectory = path.join(process.cwd(), '/app/(site)');

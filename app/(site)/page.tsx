@@ -2,7 +2,7 @@ import { Metadata } from "next";
 import { Suspense } from "react";
 import BodyVisualizerTool from "../components/BodyVisualizerTool";
 
-const title = "Body Fat Visualizer – BMI, Weight, Height & Measurements";
+const title = "Body Visualizer – BMI, Weight, Height & Shape";
 const description =
   "Use an interactive body visualizer to test BMI, weight, height, and body-fat scenarios. Compare fat mass and lean mass outputs with a dynamic body render.";
 
