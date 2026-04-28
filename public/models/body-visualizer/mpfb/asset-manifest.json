@@ -1,0 +1,86 @@
+{
+  "manifestVersion": 1,
+  "selectedOn": "2026-02-19",
+  "stack": "makehuman+mpfb",
+  "license": "CC0-1.0 (assets), mixed OSS licenses for tooling",
+  "sources": {
+    "makehumanAssetsRepo": "https://github.com/makehumancommunity/makehuman-assets",
+    "makehumanRepo": "https://github.com/makehumancommunity/makehuman",
+    "mpfbDocs": "https://static.makehumancommunity.org/mpfb/docs.html",
+    "mpfbFaq": "https://static.makehumancommunity.org/mpfb/faq.html"
+  },
+  "coreMeshes": [
+    {
+      "id": "male_generic_obj",
+      "url": "https://raw.githubusercontent.com/makehumancommunity/makehuman-assets/master/base/proxymeshes/male_generic/male_generic.obj",
+      "category": "male"
+    },
+    {
+      "id": "female_generic_obj",
+      "url": "https://raw.githubusercontent.com/makehumancommunity/makehuman-assets/master/base/proxymeshes/female_generic/female_generic.obj",
+      "category": "female"
+    },
+    {
+      "id": "male_muscle_obj",
+      "url": "https://raw.githubusercontent.com/makehumancommunity/makehuman-assets/master/base/proxymeshes/male_muscle_13290/male_muscle_13290.obj",
+      "category": "male"
+    },
+    {
+      "id": "female_muscle_obj",
+      "url": "https://raw.githubusercontent.com/makehumancommunity/makehuman-assets/master/base/proxymeshes/female_muscle_13442/female_muscle_13442.obj",
+      "category": "female"
+    }
+  ],
+  "targetPacks": [
+    {
+      "id": "arms01",
+      "url": "https://files.makehumancommunity.org/asset_packs/arms01/arms01_cc0.zip"
+    },
+    {
+      "id": "cheek01",
+      "url": "https://files.makehumancommunity.org/asset_packs/cheek01/cheek01_cc0.zip"
+    },
+    {
+      "id": "ears01",
+      "url": "https://files.makehumancommunity.org/asset_packs/ears01/ears01_cc0.zip"
+    },
+    {
+      "id": "hands01",
+      "url": "https://files.makehumancommunity.org/asset_packs/hands01/hands01_cc0.zip"
+    },
+    {
+      "id": "nose01",
+      "url": "https://files.makehumancommunity.org/asset_packs/nose01/nose01_cc0.zip"
+    },
+    {
+      "id": "skins01",
+      "url": "https://files.makehumancommunity.org/asset_packs/skins01/skins01_cc0.zip"
+    },
+    {
+      "id": "skins02",
+      "url": "https://files.makehumancommunity.org/asset_packs/skins02/skins02_cc0.zip"
+    }
+  ],
+  "modifierReferences": [
+    {
+      "id": "modeling_modifiers",
+      "url": "https://raw.githubusercontent.com/makehumancommunity/makehuman/master/makehuman/data/modifiers/modeling_modifiers.json"
+    },
+    {
+      "id": "modeling_sliders",
+      "url": "https://raw.githubusercontent.com/makehumancommunity/makehuman/master/makehuman/data/modifiers/modeling_sliders.json"
+    },
+    {
+      "id": "bodyshapes_modifiers",
+      "url": "https://raw.githubusercontent.com/makehumancommunity/makehuman/master/makehuman/data/modifiers/bodyshapes_modifiers.json"
+    },
+    {
+      "id": "measurement_modifiers",
+      "url": "https://raw.githubusercontent.com/makehumancommunity/makehuman/master/makehuman/data/modifiers/measurement_modifiers.json"
+    }
+  ],
+  "plannedRuntimeOutputs": [
+    "public/models/body-visualizer/mpfb/body_male_v1.glb",
+    "public/models/body-visualizer/mpfb/body_female_v1.glb"
+  ]
+}

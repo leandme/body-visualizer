@@ -2,7 +2,7 @@ import { Metadata } from "next";
 
 const title = "About";
 const description =
-  "Learn what Height Estimator is, how photo-based height estimation works, its limitations, and how to use it responsibly.";
+  "Learn what Body Visualizer is, how the interactive model works, key limitations, and how to use it responsibly.";
 
 export const metadata: Metadata = {
   title,
@@ -17,56 +17,56 @@ export default function AboutPage() {
 
         <div className="prose prose-invert max-w-3xl text-center lg:text-left">
           <p className="text-lg">
-            Height Estimator is a free visual tool designed to help people estimate apparent adult height from a
-            single full-body photo. The goal is simple: make visual height estimation more accessible, private, and
-            practical for everyday use.
+            Body Visualizer is an interactive 3D tool designed to help people explore how body fat percentage, BMI,
+            height, and weight can change overall body appearance. The goal is simple: make body-composition context
+            easier to understand and easier to use.
           </p>
 
           <h2>Why this tool exists</h2>
           <p className="text-lg">
-            Many people want a quick height estimate from a photo without manual measurement setup or specialized
-            equipment. Height Estimator exists as a lightweight option for directional estimates and comparison across
-            similarly framed photos.
+            Numbers like BMI, weight, and body-fat percentage are useful, but they can feel abstract in isolation.
+            Body Visualizer exists to turn those metrics into a visual model so scenario planning and progress reviews
+            become more intuitive.
           </p>
 
-          <h2>How the estimate works (high level)</h2>
+          <h2>How it works (high level)</h2>
           <p className="text-lg">
-            The estimator analyzes visual cues in your uploaded image such as body proportions, perspective, posture,
-            and scene context. It returns an estimated height, a plausible range, and a confidence level.
+            The tool uses slider inputs and composition formulas to update a live body model. As you change body fat,
+            BMI, height, and weight, the render and derived metrics update in real time so you can compare scenarios.
           </p>
           <p className="text-lg">
-            Like all photo-based estimates, results depend on image quality, camera angle, distance, posture, and
-            visible scale cues.
+            You can switch between male and female profiles, imperial and metric units, plus linked or independent
+            slider modes depending on how you want to test changes.
           </p>
 
           <h2>Accuracy and limitations</h2>
           <p className="text-lg">
-            Height Estimator provides a directional estimate, not an exact clinical measurement. It is most useful for
-            rough context and comparison when photo conditions are consistent.
+            Body Visualizer is a directional planning tool, not a clinical measurement system. It is most useful for
+            trend comparison, education, and what-if scenario testing.
           </p>
           <ul className="text-lg">
             <li>Not intended for medical diagnosis or treatment decisions</li>
-            <li>Accuracy varies with image framing, camera perspective, and photo quality</li>
-            <li>Best used as a rough visual estimate, not a substitute for direct measurement</li>
+            <li>Does not replicate each person&apos;s exact anatomy or fat distribution</li>
+            <li>Best used with consistent tracking habits and real-world measurements over time</li>
           </ul>
 
           <h2>Privacy</h2>
           <p className="text-lg">
-            Privacy matters. Use photos you are comfortable uploading to a computer system. Review the Privacy Policy
-            for details on data handling.
+            Privacy matters. Body Visualizer does not require photo uploads to run core scenarios. Review the Privacy
+            Policy for details on data handling.
           </p>
 
           <h2>Who should use this tool</h2>
           <ul className="text-lg">
-            <li>People who want a quick photo-based height estimate</li>
-            <li>Users comparing multiple photos under similar conditions</li>
-            <li>Anyone looking for rough visual context before direct measurement</li>
+            <li>People who want visual context for BMI and body-fat scenarios</li>
+            <li>Users tracking body-composition trends over time</li>
+            <li>Coaches and individuals planning realistic physique goals</li>
           </ul>
 
           <h2>Who should not rely on this tool</h2>
           <ul className="text-lg">
-            <li>Anyone needing exact height for medical, legal, or official records</li>
-            <li>Individuals requiring high-precision biometric measurement</li>
+            <li>Anyone needing exact values for medical or legal decisions</li>
+            <li>Individuals requiring clinical-grade body-composition testing</li>
           </ul>
 
           <h2 id="founder">About the Founder</h2>
@@ -105,7 +105,7 @@ export default function AboutPage() {
                 </div>
               </div>
               <p className="text-gray-500 mt-1">
-                Independent product builder focused on practical fitness tools, height estimation, and visual progress
+                Independent product builder focused on practical fitness tools, body composition, and visual progress
                 tracking.
               </p>
             </div>

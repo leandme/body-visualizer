@@ -16,59 +16,60 @@ export default function FAQ() {
             <div className="collapse collapse-plus bg-base-500 rounded-lg">
               <input type="radio" name="faq-accordion" />
               <div className="collapse-title text-lg lg:text-xl">
-                How does it work?
+                What is Body Visualizer?
               </div>
               <div className="collapse-content">
                 <p className="text-lg">
-                Upload a clear full-body photo and our model analyzes visual cues like proportions, posture, and
-                perspective to estimate apparent adult height.
+                Body Visualizer is an interactive model that shows how body shape may change when you adjust body fat,
+                BMI, height, and weight.
                 </p>
               </div>
             </div>
             <div className="collapse collapse-plus bg-base-500 rounded-lg">
               <input type="radio" name="faq-accordion" />
               <div className="collapse-title text-lg lg:text-xl">
-                How long does it take?
+                Do I need to upload photos?
               </div>
               <div className="collapse-content">
                 <p className="text-lg">
-                  Most estimates are completed in less than 20 seconds.
+                  No. The core Body Visualizer experience runs from your slider inputs and does not require photo
+                  upload.
                 </p>
               </div>
             </div>
             <div className="collapse collapse-plus bg-base-500 rounded-lg">
               <input type="radio" name="faq-accordion" />
               <div className="collapse-title text-lg lg:text-xl">
-                Is it accurate?
+                How accurate is it?
               </div>
               <div className="collapse-content">
                 <p className="text-lg">
-                It is designed for directional visual estimates, not exact measurement. Accuracy improves with
-                full-body framing, better lighting, and consistent camera setup.
+                  It is designed for directional scenario testing and trend context, not clinical measurement. Use it
+                  alongside consistent real-world tracking.
                 </p>
               </div>
             </div>
             <div className="collapse collapse-plus bg-base-500 rounded-lg">
               <input type="radio" name="faq-accordion" />
               <div className="collapse-title text-lg lg:text-xl">
-              What types of photos should I upload?
+                What is Linked mode vs Independent mode?
               </div>
               <div className="collapse-content">
                 <p className="text-lg">
-                For best results, upload a well-lit full-body standing photo with head-to-feet visibility. Avoid
-                extreme camera angles and include only one person in each photo.
+                  Linked mode keeps BMI and body-fat sliders synchronized. Independent mode lets you move each slider
+                  manually for custom what-if comparisons.
                 </p>
               </div>
             </div>
             <div className="collapse collapse-plus bg-base-500 rounded-lg">
               <input type="radio" name="faq-accordion" />
               <div className="collapse-title text-lg lg:text-xl">
-              Is my data safe?
+                Can I use imperial and metric units?
               </div>
               <div className="collapse-content">
                 <p className="text-lg">
-                Yes. We prioritize privacy and process uploads only to generate your estimate. See our Privacy Policy
-                for details on retention and data handling.
+                  Yes. You can switch between imperial and metric units at any time and continue testing scenarios in
+                  whichever format you prefer.
                 </p>
               </div>
             </div>

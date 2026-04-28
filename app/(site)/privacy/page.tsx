@@ -1,8 +1,8 @@
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Privacy Policy - Height Estimator",
-  description: "Learn how Height Estimator handles uploaded photos, usage data, and privacy rights.",
+  title: "Privacy Policy - Body Visualizer",
+  description: "Learn how Body Visualizer handles input data, usage analytics, and privacy rights.",
 };
 
 export default function PrivacyPolicy() {
@@ -10,14 +10,14 @@ export default function PrivacyPolicy() {
     <div className="container mx-auto px-4 py-8 max-w-4xl">
       <h1 className="text-4xl font-bold mb-6">Privacy Policy</h1>
       <p className="text-lg mb-4">
-        Welcome to Height Estimator. Your privacy matters to us. This policy explains what information we process and
+        Welcome to Body Visualizer. Your privacy matters to us. This policy explains what information we process and
         how we use it.
       </p>
 
       <section className="mb-6">
         <h2 className="text-2xl font-semibold mb-4">Information We Process</h2>
         <ul className="list-disc pl-6 space-y-1">
-          <li>Images you upload for photo-based height estimation.</li>
+          <li>Values you enter in the tool, such as height, weight, BMI, and body-fat percentage.</li>
           <li>Basic technical data such as browser type and device metadata.</li>
           <li>Usage analytics to improve reliability and UX.</li>
         </ul>
@@ -26,7 +26,7 @@ export default function PrivacyPolicy() {
       <section className="mb-6">
         <h2 className="text-2xl font-semibold mb-4">How We Use Information</h2>
         <ul className="list-disc pl-6 space-y-1">
-          <li>To provide height estimation and calculate results.</li>
+          <li>To render Body Visualizer outputs and calculate results.</li>
           <li>To improve product quality, performance, and stability.</li>
           <li>To protect the service from abuse and misuse.</li>
         </ul>

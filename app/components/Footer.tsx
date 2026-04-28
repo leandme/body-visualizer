@@ -7,17 +7,17 @@ export default function Footer() {
             <div className="flex items-center gap-2">
               <img
                 src="/favicon.ico"
-                alt="Height Estimator Logo"
+                alt="Body Visualizer Logo"
                 width={32}
                 height={32}
                 className="w-8 h-8 shrink-0 object-contain"
                 loading="eager"
               />
-              <span className="text-lg font-semibold">Height Estimator</span>
+              <span className="text-lg font-semibold">Body Visualizer</span>
             </div>
           </a>
           <p className="mt-3 text-base text-gray-300 leading-relaxed">
-            Estimate apparent adult height from a full-body photo with confidence and range context.
+            Use interactive body visualization to explore BMI, body fat, height, and weight scenarios in real time.
           </p>
         </div>
 
@@ -51,7 +51,7 @@ export default function Footer() {
               <li>
                 <a
                   className="hover:text-white"
-                  href="https://bodyfatestimator.ai/"
+                  href="https://bodyfatestimator.ai"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
@@ -71,11 +71,41 @@ export default function Footer() {
               <li>
                 <a
                   className="hover:text-white"
-                  href="https://skoy.ai"
+                  href="https://jawlinecheck.com"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  SKOY
+                  Jawline Check
+                </a>
+              </li>
+              <li>
+                <a
+                  className="hover:text-white"
+                  href="https://heightestimatorai.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Height Estimator
+                </a>
+              </li>
+              <li>
+                <a
+                  className="hover:text-white"
+                  href="https://bodyfatestimator.ai/canthal-tilt"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Canthal Tilt Test
+                </a>
+              </li>
+              <li>
+                <a
+                  className="hover:text-white"
+                  href="https://bodyshapeanalyzer.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Body Shape Analyzer
                 </a>
               </li>
             </ul>

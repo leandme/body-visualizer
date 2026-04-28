@@ -28,7 +28,7 @@ export default function Comparison() {
             {/* AI Roasting */}
             <div className="card bg-[#DEFCED] w-full lg:w-1/3 shadow-xl">
               <div className="card-body">
-                <h2 className="card-title text-center justify-center text-xl font-bold">Body Fat Estimator AI</h2>
+                <h2 className="card-title text-center justify-center text-xl font-bold">Body Visualizer</h2>
                 <ul className="mt-4 space-y-4">
                   <li className="flex items-center text-neutral">
                     <span className="text-green-500 mr-2">✅</span>
