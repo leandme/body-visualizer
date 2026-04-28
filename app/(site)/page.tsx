@@ -1,6 +1,7 @@
 import { Metadata } from "next";
 import { Suspense } from "react";
 import BodyVisualizerTool from "../components/BodyVisualizerTool";
+import FaqSection, { type FaqSectionItem } from "../components/FaqSection";
 
 const title = "Body Visualizer – BMI, Weight, Height & Shape";
 const description =
@@ -31,6 +32,69 @@ const BODY_VISUALIZER_STEPS = [
       "Use the 3D model and metric outputs together to compare trend direction across scenarios, not just one single value.",
   },
 ] as const;
+
+const BODY_VISUALIZER_FAQS: FaqSectionItem[] = [
+  {
+    question: "What is a body visualizer?",
+    answer:
+      "A body visualizer is an interactive model that shows how body appearance may shift when you change body fat percentage, BMI, height, and weight assumptions.",
+  },
+  {
+    question: "How is this different from a BMI calculator?",
+    answer:
+      "A BMI calculator gives only a number. Body Visualizer combines BMI with a dynamic body render and additional composition context so scenario changes are easier to interpret.",
+  },
+  {
+    question: "What is Linked mode vs Independent mode?",
+    answer:
+      "Linked mode keeps BMI and body-fat sliders synchronized for fast scenario testing. Independent mode lets each slider move separately for manual what-if comparisons.",
+  },
+  {
+    question: "Can I switch between imperial and metric units?",
+    answer:
+      "Yes. You can toggle between imperial and metric units at any time and continue from the same scenario.",
+  },
+  {
+    question: "Do I need to upload photos to use this tool?",
+    answer:
+      "No. The Body Visualizer runs from your slider inputs and does not require photo upload.",
+  },
+  {
+    question: "Why can two people with the same BMI look different?",
+    answer:
+      "BMI uses only height and weight. It does not account for fat distribution, muscle mass, frame size, posture, and other factors that affect how a physique looks.",
+  },
+  {
+    question: "What happens if I increase height while keeping weight the same?",
+    answer:
+      "BMI decreases because the same body mass is distributed across a taller frame, and the model typically appears leaner in that scenario.",
+  },
+  {
+    question: "Is fat mass the same as body-fat percentage?",
+    answer:
+      "No. Body-fat percentage is the share of total body weight that is fat. Fat mass is the absolute fat amount in kg or lb.",
+  },
+  {
+    question: "How accurate is Body Visualizer?",
+    answer:
+      "It is best used as a directional planning and tracking tool, not a medical measurement. It helps compare trends and scenarios rather than predict exact anatomy.",
+  },
+  {
+    question: "Can this replace DEXA, calipers, or clinical assessment?",
+    answer:
+      "No. Use Body Visualizer for education and planning, then validate with consistent real-world tracking or clinical methods when precision is required.",
+  },
+  {
+    question: "Should I trust BMI or body-fat percentage more for physique tracking?",
+    answer:
+      "For visual physique tracking, body-fat percentage plus lean and fat mass context is usually more informative than BMI alone. BMI is still useful as a broad screening metric.",
+  },
+  {
+    question: "How should I use this week to week?",
+    answer:
+      "Keep inputs consistent and compare scenarios every 2-4 weeks. Pair the tool with regular scale weight, waist measurements, and progress photos for better decisions.",
+  },
+];
 
 export default function Home() {
   return (
@@ -71,6 +135,15 @@ export default function Home() {
             ))}
           </div>
         </section>
+
+        <FaqSection
+          id="body-visualizer-faq"
+          heading="Body Visualizer FAQ"
+          description="Common questions about body visualizer outputs, slider behavior, and accuracy limits."
+          items={BODY_VISUALIZER_FAQS}
+          accordionName="body-visualizer-faq-accordion"
+          className="mt-20 lg:mt-32 pb-20"
+        />
       </div>
     </Suspense>
   );
