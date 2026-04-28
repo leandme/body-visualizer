@@ -107,7 +107,7 @@ export default function Home() {
     >
       <div className="mx-auto max-w-6xl">
         <section className="mx-auto max-w-4xl pt-6 text-center">
-          <h1 className="text-4xl lg:text-5xl font-bold">Body Visualizer</h1>
+          <h1 className="text-4xl lg:text-5xl font-bold">Body Visualizer – BMI, Weight, Height &amp; Shape</h1>
           <p className="mt-4 text-lg text-gray-700 leading-relaxed">
             Visualize your body shape with an interactive male or female model based on body fat, BMI, height, and
             weight.
