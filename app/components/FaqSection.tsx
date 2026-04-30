@@ -20,32 +20,31 @@ export default function FaqSection({
   description,
   id,
   accordionName,
-  className = "mt-10 lg:mt-40",
+  className = "mt-12",
 }: FaqSectionProps) {
   const radioName = accordionName ?? `${id ?? "faq"}-accordion`;
 
   return (
-    <div id={id} className={`hero ${className} flex items-center justify-center bg-base-100`}>
-      <div className="hero-content w-full px-4">
-        <div className="max-w-5xl mx-auto">
-          <h2 className="text-3xl lg:text-4xl font-bold text-center mt-4">{heading}</h2>
+    <section id={id} className={`w-full bg-white ${className}`}>
+      <div className="mx-auto w-full max-w-5xl px-4">
+        <h2 className="text-3xl lg:text-4xl font-bold text-center text-gray-900">{heading}</h2>
+        {description ? <p className="py-6 text-lg text-center text-gray-700">{description}</p> : null}
 
-          {description ? <p className="py-6 text-lg mb-6 text-center">{description}</p> : null}
-
-          <div className="space-y-4">
-            {items.map((item, idx) => (
-              <div key={`${item.question}-${idx}`} className="collapse collapse-plus border bg-base-500 rounded-lg">
-                <input type="radio" name={radioName} />
-                <div className="collapse-title text-lg lg:text-xl">{item.question}</div>
-                <div className="collapse-content">
-                  <div className="text-lg text-gray-700 leading-relaxed">{item.answer}</div>
-                </div>
+        <div className="space-y-4">
+          {items.map((item, idx) => (
+            <div
+              key={`${item.question}-${idx}`}
+              className="collapse collapse-plus rounded-xl border border-gray-200 bg-white"
+            >
+              <input type="radio" name={radioName} />
+              <div className="collapse-title text-lg lg:text-xl font-medium text-gray-900">{item.question}</div>
+              <div className="collapse-content">
+                <div className="text-lg leading-relaxed text-gray-700">{item.answer}</div>
               </div>
-            ))}
-          </div>
+            </div>
+          ))}
         </div>
       </div>
-    </div>
+    </section>
   );
 }
-

@@ -16,7 +16,7 @@ module.exports = {
     themes: [
       {
         theme: {
-          primary: "#0075C3",  // Customize primary color
+          primary: "#5e17eb",  // Customize primary color
           secondary: "#2ecc71", // Customize secondary color
           accent: "#9b59b6",   // Accent color
           neutral: "#1F2937",  // Neutral color

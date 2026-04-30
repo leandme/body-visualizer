@@ -1,5 +1,5 @@
 const SITE_NAME = "Body Visualizer";
-const LOGO_SRC = "/favicon.ico";
+const LOGO_SRC = "/logo.png";
 
 export default function Navbar() {
   return (

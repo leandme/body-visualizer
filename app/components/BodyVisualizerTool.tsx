@@ -28,7 +28,6 @@ import {
   Ruler,
   Save,
   Share2,
-  SlidersHorizontal,
   Weight,
   X,
 } from "lucide-react";
@@ -332,6 +331,22 @@ function bmiCategory(bmi: number): Category {
     color: "#ef5f7b",
     note: "Higher BMI range.",
   };
+}
+
+function bodyFatCategory(gender: Gender, bodyFatPct: number): Category {
+  if (gender === "male") {
+    if (bodyFatPct < 10) return { label: "Lean", color: "#52a1ff", note: "Lower body-fat range." };
+    if (bodyFatPct < 18) return { label: "Fit", color: "#66cf7f", note: "Fitness-oriented range." };
+    if (bodyFatPct < 25) return { label: "Average", color: "#8ad66e", note: "Typical range." };
+    if (bodyFatPct < 32) return { label: "High", color: "#edca53", note: "Higher body-fat range." };
+    return { label: "Very high", color: "#ef5f7b", note: "Elevated body-fat range." };
+  }
+
+  if (bodyFatPct < 18) return { label: "Lean", color: "#52a1ff", note: "Lower body-fat range." };
+  if (bodyFatPct < 28) return { label: "Fit", color: "#66cf7f", note: "Fitness-oriented range." };
+  if (bodyFatPct < 35) return { label: "Average", color: "#8ad66e", note: "Typical range." };
+  if (bodyFatPct < 42) return { label: "High", color: "#edca53", note: "Higher body-fat range." };
+  return { label: "Very high", color: "#ef5f7b", note: "Elevated body-fat range." };
 }
 
 function estimateMeasurements(props: {
@@ -833,15 +848,15 @@ function BodyRender(props: {
       : 0;
 
   return (
-    <div className="relative h-full w-full overflow-hidden rounded-[26px] border border-white/10 bg-[#02050b]">
+    <div className="relative h-full w-full overflow-hidden rounded-[26px] border border-gray-200 bg-white">
       <Canvas
         camera={{ position: [0, 0.08, 5.3], fov: 24 }}
         dpr={[1, 1.75]}
-        gl={{ antialias: true, preserveDrawingBuffer: true }}
+        gl={{ antialias: true, preserveDrawingBuffer: true, alpha: true }}
       >
-        <color attach="background" args={["#02050b"]} />
+        <color attach="background" args={["#ffffff"]} />
 
-        <hemisphereLight intensity={0.42} groundColor="#070a10" />
+        <hemisphereLight intensity={0.52} groundColor="#e5e7eb" />
         <directionalLight position={[3.5, 4.2, 2.4]} intensity={1.1} />
         <directionalLight position={[-2.8, 1.4, -1.8]} intensity={0.48} />
         <directionalLight position={[0.2, -2.1, 2.3]} intensity={0.22} />
@@ -910,11 +925,11 @@ function SliderField(props: {
   return (
     <div className="space-y-2">
       <div className="flex items-center justify-between gap-3 text-sm">
-        <div className="flex items-center gap-2 text-white/80">
-          <span className="text-white/40">{icon}</span>
+        <div className="flex items-center gap-2 text-black">
+          <span className="text-gray-500">{icon}</span>
           <span className="font-medium">{label}</span>
         </div>
-        <p className="font-semibold text-white/90">{valueLabel}</p>
+        <p className="font-semibold text-black">{valueLabel}</p>
       </div>
 
       <input
@@ -931,6 +946,66 @@ function SliderField(props: {
   );
 }
 
+function GradientStatSlider(props: {
+  label: string;
+  value: number;
+  valueDisplay: string;
+  min: number;
+  max: number;
+  step?: number;
+  statusLabel: string;
+  statusColor: string;
+  gradient: string;
+  onChange: (value: number) => void;
+}) {
+  const {
+    label,
+    value,
+    valueDisplay,
+    min,
+    max,
+    step = 0.1,
+    statusLabel,
+    statusColor,
+    gradient,
+    onChange,
+  } = props;
+
+  const marker = clamp(((value - min) / (max - min)) * 100, 0, 100);
+
+  return (
+    <div className="rounded-2xl border border-gray-200 bg-white px-4 py-3">
+      <div className="flex items-end justify-between gap-3">
+        <p className="text-black">
+          <span className="text-lg font-semibold">{label}</span>
+          <span className="ml-2 text-3xl font-bold leading-none text-black">{valueDisplay}</span>
+        </p>
+        <p className="text-2xl font-semibold text-right" style={{ color: statusColor }}>
+          {statusLabel}
+        </p>
+      </div>
+
+      <div className="relative mt-4">
+        <div className={`h-3 w-full rounded-full ${gradient}`} />
+        <div
+          className="pointer-events-none absolute top-1/2 z-20 h-5 w-1.5 -translate-y-1/2 rounded-full bg-gray-900"
+          style={{ left: `${marker}%`, transform: "translate(-50%, -50%)" }}
+        />
+        <input
+          type="range"
+          min={min}
+          max={max}
+          step={step}
+          value={value}
+          onChange={(e) => onChange(Number(e.target.value))}
+          className="absolute inset-0 z-30 h-3 w-full cursor-pointer appearance-none bg-transparent [&::-webkit-slider-runnable-track]:h-3 [&::-webkit-slider-runnable-track]:bg-transparent [&::-webkit-slider-thumb]:mt-[-6px] [&::-webkit-slider-thumb]:h-5 [&::-webkit-slider-thumb]:w-5 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-transparent [&::-moz-range-track]:h-3 [&::-moz-range-track]:bg-transparent [&::-moz-range-thumb]:h-5 [&::-moz-range-thumb]:w-5 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:bg-transparent"
+          aria-label={label}
+        />
+      </div>
+    </div>
+  );
+}
+
 function PanelButton(props: {
   active: boolean;
   onClick: () => void;
@@ -943,7 +1018,7 @@ function PanelButton(props: {
       type="button"
       onClick={onClick}
       className={`rounded-lg px-4 py-2 text-sm font-semibold transition ${
-        active ? "bg-white/18 text-white" : "text-white/55 hover:text-white"
+        active ? "bg-primary/10 text-black" : "text-black/60 hover:text-black"
       }`}
     >
       {children}
@@ -1157,7 +1232,6 @@ function ControlPanel(props: {
   isDirty: boolean;
   onGenderChange: (gender: Gender) => void;
   onUnitsChange: (units: Units) => void;
-  onSyncModeChange: (mode: SyncMode) => void;
   onHeightChange: (valueCm: number) => void;
   onWeightChange: (valueKg: number) => void;
   onBodyFatChange: (value: number) => void;
@@ -1179,7 +1253,6 @@ function ControlPanel(props: {
     isDirty,
     onGenderChange,
     onUnitsChange,
-    onSyncModeChange,
     onHeightChange,
     onWeightChange,
     onBodyFatChange,
@@ -1209,20 +1282,46 @@ function ControlPanel(props: {
   const measurementSubtitle = profile.advancedMeasurementsEnabled
     ? "Manual measurements influence local morph detail"
     : "Auto mode derives measurements from height, weight, and body fat";
+  const bodyFatClass = bodyFatCategory(profile.gender, profile.bodyFatPct);
 
   return (
-    <div className="flex h-full flex-col rounded-[24px] border border-white/10 bg-white/[0.03]">
-      <div className="border-b border-white/10 p-4">
-        <div className="grid grid-cols-2 rounded-xl bg-black/40 p-1">
+    <div className="flex h-full flex-col rounded-[24px] border border-gray-200 bg-white">
+      <div className="border-b border-gray-200 p-4">
+        <div className="grid grid-cols-2 rounded-xl border border-gray-200 bg-gray-100 p-1">
           <PanelButton active={profile.gender === "female"} onClick={() => onGenderChange("female")}>Female</PanelButton>
           <PanelButton active={profile.gender === "male"} onClick={() => onGenderChange("male")}>Male</PanelButton>
         </div>
       </div>
 
       <div className="min-h-0 flex-1 space-y-5 overflow-y-auto p-4">
-        <div className="inline-flex rounded-xl bg-black/40 p-1">
-          <PanelButton active={profile.units === "imperial"} onClick={() => onUnitsChange("imperial")}>Imperial</PanelButton>
-          <PanelButton active={profile.units === "metric"} onClick={() => onUnitsChange("metric")}>Metric</PanelButton>
+        <div className="relative inline-grid w-56 grid-cols-2 rounded-full border border-gray-200 bg-gray-100 p-1">
+          <span
+            className="pointer-events-none absolute bottom-1 top-1 rounded-full border border-[#66cf7f]/40 bg-[#66cf7f]/20 transition-all duration-200"
+            style={{
+              left: profile.units === "imperial" ? "0.25rem" : "50%",
+              right: profile.units === "imperial" ? "50%" : "0.25rem",
+            }}
+          />
+          <button
+            type="button"
+            onClick={() => onUnitsChange("imperial")}
+            className={`relative z-10 rounded-full px-4 py-2 text-sm font-semibold transition ${
+              profile.units === "imperial" ? "text-black" : "text-black/60 hover:text-black"
+            }`}
+            aria-pressed={profile.units === "imperial"}
+          >
+            Imperial
+          </button>
+          <button
+            type="button"
+            onClick={() => onUnitsChange("metric")}
+            className={`relative z-10 rounded-full px-4 py-2 text-sm font-semibold transition ${
+              profile.units === "metric" ? "text-black" : "text-black/60 hover:text-black"
+            }`}
+            aria-pressed={profile.units === "metric"}
+          >
+            Metric
+          </button>
         </div>
 
         <div className="space-y-4">
@@ -1296,68 +1395,52 @@ function ControlPanel(props: {
             disabled={!profile.advancedMeasurementsEnabled}
           />
 
-          <div className="rounded-xl border border-white/10 bg-black/25 p-3 text-xs text-white/70">
+          <div className="rounded-xl border border-gray-200 bg-white p-3 text-xs text-black">
             <button
               type="button"
               onClick={onToggleAdvancedMeasurements}
-              className="flex w-full items-center justify-between font-semibold text-white/90"
+              className="flex w-full items-center justify-between font-semibold text-black"
             >
               <span>Advanced measurements</span>
               <span>{profile.advancedMeasurementsEnabled ? "On" : "Off"}</span>
             </button>
-            <p className="mt-2 text-white/60">{measurementSubtitle}</p>
+            <p className="mt-2 text-black/70">{measurementSubtitle}</p>
             {!profile.advancedMeasurementsEnabled ? (
-              <p className="mt-2 text-white/40">
+              <p className="mt-2 text-black/60">
                 Auto reference: chest {formatLength(derivedMeasurements.chestCm, profile.units)}, waist {formatLength(derivedMeasurements.waistCm, profile.units)}, hips {formatLength(derivedMeasurements.hipsCm, profile.units)}, inseam {formatLength(derivedMeasurements.inseamCm, profile.units)}.
               </p>
             ) : null}
           </div>
 
-          <div className="rounded-xl border border-white/10 bg-black/25 p-3">
-            <div className="mb-3 flex items-center justify-between">
-              <p className="text-xs font-semibold uppercase tracking-wide text-white/55">Core composition</p>
-              <div className="inline-flex rounded-lg bg-black/40 p-1">
-                <button
-                  type="button"
-                  onClick={() => onSyncModeChange("linked")}
-                  className={`rounded-md px-2 py-1 text-[11px] font-semibold ${
-                    profile.syncMode === "linked" ? "bg-white/20 text-white" : "text-white/55"
-                  }`}
-                >
-                  Linked
-                </button>
-                <button
-                  type="button"
-                  onClick={() => onSyncModeChange("independent")}
-                  className={`rounded-md px-2 py-1 text-[11px] font-semibold ${
-                    profile.syncMode === "independent" ? "bg-white/20 text-white" : "text-white/55"
-                  }`}
-                >
-                  Independent
-                </button>
-              </div>
-            </div>
+          <div className="rounded-xl border border-gray-200 bg-white p-3">
+            <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-black/70">
+              Core composition (linked)
+            </p>
 
             <div className="space-y-4">
-              <SliderField
-                icon={<SlidersHorizontal size={16} />}
-                label="Body Fat %"
-                valueLabel={`${round(profile.bodyFatPct, 1)}%`}
+              <GradientStatSlider
+                label="Body Fat"
+                value={round(profile.bodyFatPct, 1)}
+                valueDisplay={`${round(profile.bodyFatPct, 1)}%`}
                 min={bounds.min}
                 max={bounds.max}
                 step={0.1}
-                value={round(profile.bodyFatPct, 1)}
+                statusLabel={bodyFatClass.label}
+                statusColor={bodyFatClass.color}
+                gradient="bg-gradient-to-r from-[#4f86ff] via-[#66cf7f] via-50% to-[#ef5f7b]"
                 onChange={onBodyFatChange}
               />
 
-              <SliderField
-                icon={<SlidersHorizontal size={16} />}
+              <GradientStatSlider
                 label="BMI"
-                valueLabel={round(bmi, 1).toString()}
+                value={round(bmi, 1)}
+                valueDisplay={round(bmi, 1).toString()}
                 min={BMI_MIN}
                 max={BMI_MAX}
                 step={0.1}
-                value={round(bmi, 1)}
+                statusLabel={bmiClass.label}
+                statusColor={bmiClass.color}
+                gradient="bg-gradient-to-r from-[#4f86ff] via-[#66cf7f] via-50% to-[#ef5f7b]"
                 onChange={onBmiChange}
               />
             </div>
@@ -1365,12 +1448,12 @@ function ControlPanel(props: {
         </div>
       </div>
 
-      <div className="space-y-4 border-t border-white/10 p-4">
+      <div className="space-y-4 border-t border-gray-200 p-4">
         <div className="grid grid-cols-2 gap-2">
           <button
             type="button"
             onClick={onResetDefault}
-            className="flex items-center justify-center gap-2 rounded-lg border border-white/20 bg-transparent px-3 py-2 text-sm font-medium text-white/85 transition hover:border-white/40"
+            className="flex items-center justify-center gap-2 rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm font-medium text-black transition hover:border-gray-400"
           >
             <RotateCcw size={14} />
             Reset Default
@@ -1379,7 +1462,7 @@ function ControlPanel(props: {
             type="button"
             onClick={onResetSaved}
             disabled={!canResetSaved}
-            className="flex items-center justify-center gap-2 rounded-lg border border-white/20 bg-transparent px-3 py-2 text-sm font-medium text-white/85 transition hover:border-white/40 disabled:cursor-not-allowed disabled:opacity-40"
+            className="flex items-center justify-center gap-2 rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm font-medium text-black transition hover:border-gray-400 disabled:cursor-not-allowed disabled:opacity-40"
           >
             <RotateCcw size={14} />
             Reset Saved
@@ -1395,25 +1478,6 @@ function ControlPanel(props: {
           {isDirty ? `Save (${activePresetName})` : "Saved"}
         </button>
 
-        <div className="rounded-lg border border-white/10 bg-black/25 px-3 py-2">
-          <div className="mb-2 flex items-end justify-between">
-            <p className="text-sm text-white/70">
-              BMI <span className="text-2xl font-bold text-white">{round(bmi, 1)}</span>
-            </p>
-            <p className="text-sm font-semibold" style={{ color: bmiClass.color }}>
-              {bmiClass.label}
-            </p>
-          </div>
-          <div className="relative h-2 overflow-hidden rounded-full bg-white/10">
-            <div className="absolute inset-0 bg-gradient-to-r from-[#3b82f6] via-[#66cf7f] via-50% to-[#ef5f7b]" />
-            <div
-              className="absolute top-1/2 h-3 w-1 -translate-y-1/2 rounded-full bg-white"
-              style={{
-                left: `${clamp(((bmi - BMI_MIN) / (BMI_MAX - BMI_MIN)) * 100, 0, 100)}%`,
-              }}
-            />
-          </div>
-        </div>
       </div>
     </div>
   );
@@ -1432,17 +1496,17 @@ function SnapshotModal(props: {
   if (!open || !snapshotPayload || !previewImage) return null;
 
   return (
-    <div className="fixed inset-0 z-[80] flex items-center justify-center bg-black/70 p-4 backdrop-blur-[1px]">
-      <div className="w-full max-w-5xl rounded-3xl border border-white/15 bg-[#070b14] p-6 text-white shadow-2xl">
+    <div className="fixed inset-0 z-[80] flex items-center justify-center bg-white/70 p-4 backdrop-blur-[1px]">
+      <div className="w-full max-w-5xl rounded-3xl border border-gray-200 bg-white p-6 text-black shadow-2xl">
         <div className="mb-5 flex items-start justify-between">
           <div>
             <h3 className="text-3xl font-semibold">Snapshot</h3>
-            <p className="mt-2 text-white/60">Export a fixed-size share card with your current body stats.</p>
+            <p className="mt-2 text-black/60">Export a fixed-size share card with your current body stats.</p>
           </div>
           <button
             type="button"
             onClick={onClose}
-            className="rounded-md p-2 text-white/70 transition hover:bg-white/10 hover:text-white"
+            className="rounded-md p-2 text-black/70 transition hover:bg-gray-100 hover:text-black"
             aria-label="Close"
           >
             <X size={22} />
@@ -1450,13 +1514,13 @@ function SnapshotModal(props: {
         </div>
 
         <div className="grid grid-cols-1 gap-5 lg:grid-cols-[minmax(0,1fr)_300px]">
-          <div className="overflow-hidden rounded-2xl border border-white/10 bg-black/40 p-2">
+          <div className="overflow-hidden rounded-2xl border border-gray-200 bg-gray-50 p-2">
             <img src={previewImage} alt="Snapshot Preview" className="h-[360px] w-full rounded-xl object-cover" />
           </div>
 
-          <div className="rounded-2xl border border-white/10 bg-black/30 p-4">
-            <p className="text-xs uppercase tracking-wide text-white/50">{snapshotPayload.gender} profile</p>
-            <div className="mt-3 space-y-2 text-sm text-white/85">
+          <div className="rounded-2xl border border-gray-200 bg-white p-4">
+            <p className="text-xs uppercase tracking-wide text-black/50">{snapshotPayload.gender} profile</p>
+            <div className="mt-3 space-y-2 text-sm text-black/85">
               <p>Height: {formatHeight(snapshotPayload.heightCm, snapshotPayload.units)}</p>
               <p>Weight: {formatWeight(snapshotPayload.weightKg, snapshotPayload.units)}</p>
               <p>Chest: {formatLength(snapshotPayload.measurements.chestCm, snapshotPayload.units)}</p>
@@ -1466,7 +1530,7 @@ function SnapshotModal(props: {
               <p>BMI: {round(snapshotPayload.bmi, 1)}</p>
               <p>Body Fat: {round(snapshotPayload.bodyFatPct, 1)}%</p>
             </div>
-            <p className="mt-4 text-xs text-white/50">{new Date(snapshotPayload.timestampIso).toLocaleString()}</p>
+            <p className="mt-4 text-xs text-black/50">{new Date(snapshotPayload.timestampIso).toLocaleString()}</p>
           </div>
         </div>
 
@@ -1489,7 +1553,7 @@ function SnapshotModal(props: {
           <button
             type="button"
             onClick={onClose}
-            className="rounded-xl border border-white/25 px-5 py-2.5 font-semibold text-white/85 transition hover:border-white/40"
+            className="rounded-xl border border-gray-300 px-5 py-2.5 font-semibold text-black transition hover:border-gray-400"
           >
             Close
           </button>
@@ -1582,6 +1646,7 @@ export default function BodyVisualizerTool() {
   const applyProfile = useCallback((next: BodyProfile) => {
     setProfile({
       ...next,
+      syncMode: "linked",
       manualMeasurements: next.advancedMeasurementsEnabled
         ? next.manualMeasurements ??
           estimateMeasurements({
@@ -1598,13 +1663,11 @@ export default function BodyVisualizerTool() {
     setProfile((current) => {
       const bounds = bodyFatBounds(nextGender);
       const nextBmi = bmiFrom(current.weightKg, current.heightCm);
-      const nextBodyFat =
-        current.syncMode === "linked"
-          ? clamp(round(predictBodyFatFromBmi(nextBmi, nextGender), 1), bounds.min, bounds.max)
-          : clamp(current.bodyFatPct, bounds.min, bounds.max);
+      const nextBodyFat = clamp(round(predictBodyFatFromBmi(nextBmi, nextGender), 1), bounds.min, bounds.max);
 
       const nextProfile: BodyProfile = {
         ...current,
+        syncMode: "linked",
         gender: nextGender,
         bodyFatPct: nextBodyFat,
       };
@@ -1626,22 +1689,16 @@ export default function BodyVisualizerTool() {
     setProfile((current) => ({ ...current, units }));
   };
 
-  const handleSyncModeChange = (syncMode: SyncMode) => {
-    setProfile((current) => ({ ...current, syncMode }));
-  };
-
   const handleHeightChange = (nextHeightCm: number) => {
     setProfile((current) => {
       const clampedHeight = clamp(nextHeightCm, HEIGHT_CM_MIN, HEIGHT_CM_MAX);
-      let nextBodyFat = current.bodyFatPct;
-      if (current.syncMode === "linked") {
-        const nextBmi = bmiFrom(current.weightKg, clampedHeight);
-        const bounds = bodyFatBounds(current.gender);
-        nextBodyFat = clamp(round(predictBodyFatFromBmi(nextBmi, current.gender), 1), bounds.min, bounds.max);
-      }
+      const nextBmi = bmiFrom(current.weightKg, clampedHeight);
+      const bounds = bodyFatBounds(current.gender);
+      const nextBodyFat = clamp(round(predictBodyFatFromBmi(nextBmi, current.gender), 1), bounds.min, bounds.max);
 
       return {
         ...current,
+        syncMode: "linked",
         heightCm: clampedHeight,
         bodyFatPct: nextBodyFat,
       };
@@ -1651,15 +1708,13 @@ export default function BodyVisualizerTool() {
   const handleWeightChange = (nextWeightKg: number) => {
     setProfile((current) => {
       const clampedWeight = clamp(nextWeightKg, WEIGHT_KG_MIN, WEIGHT_KG_MAX);
-      let nextBodyFat = current.bodyFatPct;
-      if (current.syncMode === "linked") {
-        const nextBmi = bmiFrom(clampedWeight, current.heightCm);
-        const bounds = bodyFatBounds(current.gender);
-        nextBodyFat = clamp(round(predictBodyFatFromBmi(nextBmi, current.gender), 1), bounds.min, bounds.max);
-      }
+      const nextBmi = bmiFrom(clampedWeight, current.heightCm);
+      const bounds = bodyFatBounds(current.gender);
+      const nextBodyFat = clamp(round(predictBodyFatFromBmi(nextBmi, current.gender), 1), bounds.min, bounds.max);
 
       return {
         ...current,
+        syncMode: "linked",
         weightKg: clampedWeight,
         bodyFatPct: nextBodyFat,
       };
@@ -1670,17 +1725,11 @@ export default function BodyVisualizerTool() {
     setProfile((current) => {
       const bounds = bodyFatBounds(current.gender);
       const clampedBodyFat = clamp(nextBodyFatPct, bounds.min, bounds.max);
-      if (current.syncMode !== "linked") {
-        return {
-          ...current,
-          bodyFatPct: clampedBodyFat,
-        };
-      }
-
       const modeledBmi = clamp(bmiFromPredictedBodyFat(clampedBodyFat, current.gender), BMI_MIN, BMI_MAX);
       const modeledWeight = clamp(weightFromBmi(modeledBmi, current.heightCm), WEIGHT_KG_MIN, WEIGHT_KG_MAX);
       return {
         ...current,
+        syncMode: "linked",
         bodyFatPct: clampedBodyFat,
         weightKg: modeledWeight,
       };
@@ -1691,14 +1740,12 @@ export default function BodyVisualizerTool() {
     setProfile((current) => {
       const clampedBmi = clamp(nextBmi, BMI_MIN, BMI_MAX);
       const nextWeight = clamp(weightFromBmi(clampedBmi, current.heightCm), WEIGHT_KG_MIN, WEIGHT_KG_MAX);
-      let nextBodyFat = current.bodyFatPct;
-      if (current.syncMode === "linked") {
-        const bounds = bodyFatBounds(current.gender);
-        nextBodyFat = clamp(round(predictBodyFatFromBmi(clampedBmi, current.gender), 1), bounds.min, bounds.max);
-      }
+      const bounds = bodyFatBounds(current.gender);
+      const nextBodyFat = clamp(round(predictBodyFatFromBmi(clampedBmi, current.gender), 1), bounds.min, bounds.max);
 
       return {
         ...current,
+        syncMode: "linked",
         weightKg: nextWeight,
         bodyFatPct: nextBodyFat,
       };
@@ -1841,50 +1888,32 @@ export default function BodyVisualizerTool() {
 
   return (
     <section className="w-full">
-      <div className="overflow-hidden rounded-[30px] border border-white/10 bg-[#04070d] text-white shadow-[0_24px_70px_rgba(0,0,0,0.45)]">
-        <header className="border-b border-white/10 bg-[radial-gradient(circle_at_center,_rgba(45,120,88,0.2),_rgba(4,7,13,0.98)_60%)] px-5 py-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between gap-4">
-            <div className="flex items-center gap-3">
-              <img src="/favicon.ico" alt="Body Visualizer" className="h-10 w-10 rounded-xl" />
-              <div>
-                <p className="text-2xl font-semibold leading-none">Body Visualizer</p>
-                <p className="mt-1 text-xs text-white/50">Visual estimator, non-clinical</p>
-              </div>
-            </div>
-
-            <div className="hidden items-center gap-2 md:flex">
-              <PanelButton active={profile.gender === "female"} onClick={() => handleGenderChange("female")}>Female</PanelButton>
-              <PanelButton active={profile.gender === "male"} onClick={() => handleGenderChange("male")}>Male</PanelButton>
-            </div>
-
-            <div className="flex items-center gap-2 text-white/65">
-              <span className="hidden text-sm sm:inline">English</span>
+      <div className="overflow-hidden border-y border-gray-200 bg-transparent text-black">
+        <div className="grid min-h-[calc(100vh-10rem)] grid-cols-1 lg:grid-cols-[minmax(0,1fr)_430px]">
+          <div className="relative p-0">
+            <div className="absolute right-8 top-7 z-20 md:hidden">
               <button
                 type="button"
-                className="inline-flex rounded-lg border border-white/20 p-2 text-white/75 transition hover:border-white/40 lg:hidden"
+                className="inline-flex rounded-lg border border-gray-300 bg-white p-2 text-black transition hover:border-gray-400"
                 onClick={() => setMobilePanelOpen(true)}
                 aria-label="Open controls"
               >
                 <Menu size={18} />
               </button>
             </div>
-          </div>
-        </header>
 
-        <div className="grid min-h-[760px] grid-cols-1 lg:grid-cols-[minmax(0,1fr)_430px]">
-          <div className="relative p-4 sm:p-6 lg:p-7">
             <div className="absolute left-8 top-7 z-20 flex flex-wrap items-center gap-2">
               <button
                 type="button"
                 onClick={resetToDefault}
-                className="rounded-full border border-white/30 bg-white/16 px-4 py-2 text-sm font-medium text-white"
+                className="rounded-full border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-black"
               >
                 Default Body
               </button>
               <button
                 type="button"
                 onClick={newProfileDraft}
-                className="rounded-full border border-white/20 bg-black/30 px-4 py-2 text-sm font-medium text-white/85 hover:border-white/40"
+                className="rounded-full border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-black hover:border-gray-400"
               >
                 + New
               </button>
@@ -1895,8 +1924,8 @@ export default function BodyVisualizerTool() {
                   onClick={() => loadPreset(preset)}
                   className={`rounded-full border px-3 py-1.5 text-xs font-medium transition ${
                     activePresetId === preset.id
-                      ? "border-[#2ecc71] bg-[#2ecc71]/20 text-[#8df0b3]"
-                      : "border-white/20 bg-black/25 text-white/70 hover:border-white/35"
+                      ? "border-[#5e17eb]/45 bg-[#5e17eb]/12 text-black"
+                      : "border-gray-300 bg-white text-black hover:border-gray-400"
                   }`}
                 >
                   {preset.name}
@@ -1925,7 +1954,7 @@ export default function BodyVisualizerTool() {
               <button
                 type="button"
                 onClick={captureSnapshot}
-                className="rounded-full border border-white/20 bg-black/45 p-2.5 text-white/85 transition hover:border-white/40 hover:text-white"
+                className="rounded-full border border-gray-300 bg-white p-2.5 text-black transition hover:border-gray-400"
                 aria-label="Share Snapshot"
               >
                 <Share2 size={16} />
@@ -1933,19 +1962,19 @@ export default function BodyVisualizerTool() {
               <button
                 type="button"
                 onClick={captureSnapshot}
-                className="rounded-full border border-white/20 bg-black/45 p-2.5 text-white/85 transition hover:border-white/40 hover:text-white"
+                className="rounded-full border border-gray-300 bg-white p-2.5 text-black transition hover:border-gray-400"
                 aria-label="Take Snapshot"
               >
                 <Camera size={16} />
               </button>
             </div>
 
-            <div className="absolute bottom-8 left-8 z-20 flex flex-wrap items-center gap-2 text-xs text-white/55">
-              <div className="rounded-full border border-white/20 bg-black/35 px-3 py-1">{modelBadgeText}</div>
-              <div className="rounded-full border border-white/20 bg-black/35 px-3 py-1">Drag to rotate, scroll to zoom</div>
+            <div className="absolute bottom-8 left-8 z-20 flex flex-wrap items-center gap-2 text-xs text-black">
+              <div className="rounded-full border border-gray-300 bg-white px-3 py-1">{modelBadgeText}</div>
+              <div className="rounded-full border border-gray-300 bg-white px-3 py-1">Drag to rotate, scroll to zoom</div>
             </div>
 
-            <div className="absolute right-8 top-7 z-20 hidden items-center gap-2 rounded-full border border-white/15 bg-black/30 p-1 md:flex">
+            <div className="absolute right-8 top-7 z-20 hidden items-center gap-2 rounded-full border border-gray-300 bg-white p-1 md:flex">
               {([
                 ["front", "Front"],
                 ["left", "Left"],
@@ -1957,7 +1986,7 @@ export default function BodyVisualizerTool() {
                   type="button"
                   onClick={() => setViewPreset(preset)}
                   className={`rounded-full px-3 py-1.5 text-xs font-semibold ${
-                    viewPreset === preset ? "bg-white/20 text-white" : "text-white/55"
+                    viewPreset === preset ? "bg-gray-200 text-black" : "text-black"
                   }`}
                 >
                   {label}
@@ -1966,7 +1995,7 @@ export default function BodyVisualizerTool() {
             </div>
           </div>
 
-          <aside className="hidden border-l border-white/10 p-4 lg:block">
+          <aside className="hidden border-l border-gray-200 p-4 lg:block">
             <ControlPanel
               profile={profile}
               bmi={bmi}
@@ -1978,7 +2007,6 @@ export default function BodyVisualizerTool() {
               isDirty={isDirty}
               onGenderChange={handleGenderChange}
               onUnitsChange={handleUnitsChange}
-              onSyncModeChange={handleSyncModeChange}
               onHeightChange={handleHeightChange}
               onWeightChange={handleWeightChange}
               onBodyFatChange={handleBodyFatChange}
@@ -1994,14 +2022,14 @@ export default function BodyVisualizerTool() {
       </div>
 
       {mobilePanelOpen ? (
-        <div className="fixed inset-0 z-[70] flex items-end bg-black/65 backdrop-blur-sm lg:hidden">
-          <div className="max-h-[86vh] w-full overflow-hidden rounded-t-3xl border-t border-white/15 bg-[#050811] p-3">
+        <div className="fixed inset-0 z-[70] flex items-end bg-white/70 backdrop-blur-sm lg:hidden">
+          <div className="max-h-[86vh] w-full overflow-hidden rounded-t-3xl border-t border-gray-200 bg-white p-3">
             <div className="mb-3 flex items-center justify-between px-2">
-              <p className="text-sm font-semibold text-white/80">Controls</p>
+              <p className="text-sm font-semibold text-black">Controls</p>
               <button
                 type="button"
                 onClick={() => setMobilePanelOpen(false)}
-                className="rounded-md p-2 text-white/70 hover:bg-white/10"
+                className="rounded-md p-2 text-black hover:bg-gray-100"
                 aria-label="Close controls"
               >
                 <X size={18} />
@@ -2019,7 +2047,6 @@ export default function BodyVisualizerTool() {
                 isDirty={isDirty}
                 onGenderChange={handleGenderChange}
                 onUnitsChange={handleUnitsChange}
-                onSyncModeChange={handleSyncModeChange}
                 onHeightChange={handleHeightChange}
                 onWeightChange={handleWeightChange}
                 onBodyFatChange={handleBodyFatChange}
