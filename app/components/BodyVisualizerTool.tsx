@@ -262,6 +262,33 @@ function round(n: number, decimals = 1) {
   return Math.round(n * m) / m;
 }
 
+function toRangePercent(value: number, min: number, max: number) {
+  return clamp(((value - min) / (max - min)) * 100, 0, 100);
+}
+
+function buildBandedGradient(
+  min: number,
+  max: number,
+  stops: Array<{ until: number; color: string }>
+) {
+  if (!stops.length) return "linear-gradient(90deg, #d1d5db 0%, #d1d5db 100%)";
+
+  let cursor = 0;
+  const parts: string[] = [];
+
+  stops.forEach((stop, index) => {
+    const end = toRangePercent(stop.until, min, max);
+    parts.push(`${stop.color} ${cursor}%`, `${stop.color} ${end}%`);
+    cursor = end;
+
+    if (index === stops.length - 1 && end < 100) {
+      parts.push(`${stop.color} ${end}%`, `${stop.color} 100%`);
+    }
+  });
+
+  return `linear-gradient(90deg, ${parts.join(", ")})`;
+}
+
 function kgToLb(kg: number) {
   return kg * 2.2046226218;
 }
@@ -848,14 +875,29 @@ function BodyRender(props: {
       : 0;
 
   return (
-    <div className="relative h-full w-full overflow-hidden rounded-[26px] border border-gray-200 bg-white">
+    <div
+      className="relative h-full w-full overflow-hidden rounded-[26px] border border-gray-200 bg-[#4a4d51]"
+      style={{
+        background:
+          "radial-gradient(120% 58% at 50% 44%, rgba(235,240,246,0.17) 0%, rgba(235,240,246,0.04) 36%, rgba(0,0,0,0) 68%), linear-gradient(180deg, #2a2c2f 0%, #2f3135 48%, #4f5257 72%, #5b5e63 100%)",
+      }}
+    >
+      <div className="pointer-events-none absolute inset-0 z-[1]">
+        <div className="absolute inset-x-[-40%] bottom-[-56%] h-[136%] opacity-32 [mask-image:linear-gradient(to_top,black_72%,transparent)] [transform:perspective(1200px)_rotateX(73deg)]">
+          <div className="absolute inset-0 [background-image:linear-gradient(rgba(255,255,255,0.12)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.12)_1px,transparent_1px)] [background-size:76px_76px]" />
+        </div>
+        <div className="absolute inset-x-0 bottom-0 h-[45%] bg-gradient-to-t from-black/30 via-black/10 to-transparent" />
+      </div>
+
       <Canvas
+        className="relative z-[2]"
         camera={{ position: [0, 0.08, 5.3], fov: 24 }}
         dpr={[1, 1.75]}
         gl={{ antialias: true, preserveDrawingBuffer: true, alpha: true }}
+        onCreated={({ gl }) => {
+          gl.setClearColor(0x000000, 0);
+        }}
       >
-        <color attach="background" args={["#ffffff"]} />
-
         <hemisphereLight intensity={0.52} groundColor="#e5e7eb" />
         <directionalLight position={[3.5, 4.2, 2.4]} intensity={1.1} />
         <directionalLight position={[-2.8, 1.4, -1.8]} intensity={0.48} />
@@ -955,7 +997,7 @@ function GradientStatSlider(props: {
   step?: number;
   statusLabel: string;
   statusColor: string;
-  gradient: string;
+  trackGradient: string;
   onChange: (value: number) => void;
 }) {
   const {
@@ -967,7 +1009,7 @@ function GradientStatSlider(props: {
     step = 0.1,
     statusLabel,
     statusColor,
-    gradient,
+    trackGradient,
     onChange,
   } = props;
 
@@ -986,10 +1028,11 @@ function GradientStatSlider(props: {
       </div>
 
       <div className="relative mt-4">
-        <div className={`h-3 w-full rounded-full ${gradient}`} />
+        <div className="h-3 w-full rounded-full" style={{ background: trackGradient }} />
         <div
-          className="pointer-events-none absolute top-1/2 z-20 h-5 w-1.5 -translate-y-1/2 rounded-full bg-gray-900"
-          style={{ left: `${marker}%`, transform: "translate(-50%, -50%)" }}
+          className="pointer-events-none absolute top-1/2 z-20 h-5 w-1.5 -translate-y-1/2 rounded-full shadow-[0_0_0_1px_rgba(0,0,0,0.16)]"
+          style={{ left: `${marker}%`, transform: "translate(-50%, -50%)", backgroundColor: statusColor }}
+          aria-hidden="true"
         />
         <input
           type="range"
@@ -1283,6 +1326,35 @@ function ControlPanel(props: {
     ? "Manual measurements influence local morph detail"
     : "Auto mode derives measurements from height, weight, and body fat";
   const bodyFatClass = bodyFatCategory(profile.gender, profile.bodyFatPct);
+  const bodyFatGradient = useMemo(() => {
+    if (profile.gender === "male") {
+      return buildBandedGradient(bounds.min, bounds.max, [
+        { until: 10, color: "#52a1ff" },
+        { until: 18, color: "#66cf7f" },
+        { until: 25, color: "#8ad66e" },
+        { until: 32, color: "#edca53" },
+        { until: bounds.max, color: "#ef5f7b" },
+      ]);
+    }
+
+    return buildBandedGradient(bounds.min, bounds.max, [
+      { until: 18, color: "#52a1ff" },
+      { until: 28, color: "#66cf7f" },
+      { until: 35, color: "#8ad66e" },
+      { until: 42, color: "#edca53" },
+      { until: bounds.max, color: "#ef5f7b" },
+    ]);
+  }, [profile.gender, bounds.min, bounds.max]);
+  const bmiGradient = useMemo(
+    () =>
+      buildBandedGradient(BMI_MIN, BMI_MAX, [
+        { until: 18.5, color: "#4f86ff" },
+        { until: 25, color: "#66cf7f" },
+        { until: 30, color: "#edca53" },
+        { until: BMI_MAX, color: "#ef5f7b" },
+      ]),
+    []
+  );
 
   return (
     <div className="flex h-full flex-col rounded-[24px] border border-gray-200 bg-white">
@@ -1427,7 +1499,7 @@ function ControlPanel(props: {
                 step={0.1}
                 statusLabel={bodyFatClass.label}
                 statusColor={bodyFatClass.color}
-                gradient="bg-gradient-to-r from-[#4f86ff] via-[#66cf7f] via-50% to-[#ef5f7b]"
+                trackGradient={bodyFatGradient}
                 onChange={onBodyFatChange}
               />
 
@@ -1440,7 +1512,7 @@ function ControlPanel(props: {
                 step={0.1}
                 statusLabel={bmiClass.label}
                 statusColor={bmiClass.color}
-                gradient="bg-gradient-to-r from-[#4f86ff] via-[#66cf7f] via-50% to-[#ef5f7b]"
+                trackGradient={bmiGradient}
                 onChange={onBmiChange}
               />
             </div>
@@ -1472,7 +1544,7 @@ function ControlPanel(props: {
         <button
           type="button"
           onClick={onSavePreset}
-          className="flex w-full items-center justify-center gap-2 rounded-lg bg-[#2ecc71] px-4 py-2.5 text-sm font-semibold text-[#07120b] transition hover:bg-[#35db7b]"
+          className="flex w-full items-center justify-center gap-2 rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-white transition hover:brightness-95"
         >
           <Save size={15} />
           {isDirty ? `Save (${activePresetName})` : "Saved"}
@@ -1546,7 +1618,7 @@ function SnapshotModal(props: {
               }
             }}
             disabled={isDownloading}
-            className="rounded-xl bg-[#2ecc71] px-5 py-2.5 font-semibold text-[#07120b] transition hover:bg-[#35db7b] disabled:opacity-60"
+            className="rounded-xl bg-primary px-5 py-2.5 font-semibold text-white transition hover:brightness-95 disabled:opacity-60"
           >
             {isDownloading ? "Preparing..." : "Download PNG"}
           </button>

@@ -16,7 +16,7 @@ module.exports = {
     themes: [
       {
         theme: {
-          primary: "#5e17eb",  // Customize primary color
+          primary: "#3b82f6",  // BFE-style blue for primary CTAs
           secondary: "#2ecc71", // Customize secondary color
           accent: "#9b59b6",   // Accent color
           neutral: "#1F2937",  // Neutral color
