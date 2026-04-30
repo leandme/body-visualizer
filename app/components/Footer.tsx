@@ -91,7 +91,7 @@ export default function Footer() {
               <li>
                 <a
                   className="hover:text-white"
-                  href="https://bodyfatestimator.ai/canthal-tilt"
+                  href="https://canthaltilttest.com"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
