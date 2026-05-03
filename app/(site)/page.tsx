@@ -142,13 +142,13 @@ const FAQS: FaqItem[] = [
 export default function Home() {
   return (
     <div className="relative left-1/2 right-1/2 w-screen -translate-x-1/2 pb-20">
-      <section id="visualizer-tool" className="mt-6">
+      <section id="visualizer-tool">
         <BodyVisualizerTool />
       </section>
 
       <section className="mx-auto mt-16 max-w-[1400px] overflow-hidden rounded-[30px] border border-gray-200 bg-white text-gray-900 shadow-sm">
         <div className="px-6 pb-10 pt-12 text-center sm:px-8">
-          <h1 className="text-4xl font-bold tracking-tight lg:text-6xl">Body Visualizer</h1>
+          <h1 className="text-4xl font-bold tracking-tight lg:text-5xl">Body Visualizer</h1>
           <p className="mx-auto mt-5 max-w-4xl text-xl text-gray-600">
             Transform your measurements into a lifelike 3D body model in seconds.
           </p>
@@ -174,7 +174,7 @@ export default function Home() {
           </div>
 
           <div className="space-y-7">
-            <h2 className="text-4xl font-bold leading-tight">What is Body Visualizer</h2>
+            <h2 className="text-3xl font-bold leading-tight lg:text-4xl">What is Body Visualizer</h2>
             <p className="text-2xl leading-relaxed text-gray-600">
               Body Visualizer creates realistic 3D body references from your measurements so you can compare shape changes in a clearer, more intuitive way.
             </p>
@@ -229,7 +229,7 @@ export default function Home() {
             <span className="inline-flex rounded-full border border-gray-300 bg-gray-100 px-4 py-1.5 text-sm font-semibold text-gray-700">
               Benefits
             </span>
-            <h2 className="mt-5 text-5xl font-bold leading-tight">Why Use Our Body Visualizer</h2>
+            <h2 className="mt-5 text-3xl font-bold leading-tight lg:text-4xl">Why Use Our Body Visualizer</h2>
             <p className="mt-5 text-xl leading-relaxed text-gray-600">
               Discover how Body Visualizer transforms abstract body numbers into meaningful visual insights for better decision-making.
             </p>
@@ -276,7 +276,7 @@ export default function Home() {
       </section>
 
       <section className="mx-auto mt-16 max-w-[1400px] overflow-hidden rounded-[30px] border border-gray-200 bg-white px-6 py-10 shadow-sm sm:px-8">
-        <h2 className="mx-auto max-w-2xl text-center text-5xl font-bold leading-tight text-gray-900">How to Use the Body Visualizer</h2>
+        <h2 className="mx-auto max-w-2xl text-center text-3xl font-bold leading-tight text-gray-900 lg:text-4xl">How to Use the Body Visualizer</h2>
         <p className="mx-auto mt-5 max-w-3xl text-center text-xl leading-relaxed text-gray-600">
           Creating your personalized 3D model takes less than a minute with these straightforward steps.
         </p>
@@ -297,7 +297,7 @@ export default function Home() {
               >
                 {index + 1}
               </div>
-              <h2 className="text-3xl font-semibold text-gray-900">{step.title}</h2>
+              <h2 className="text-3xl font-semibold text-gray-900 lg:text-4xl">{step.title}</h2>
               <p className="mt-3 text-xl leading-relaxed text-gray-600">{step.description}</p>
             </article>
           ))}
@@ -318,7 +318,7 @@ export default function Home() {
           id="cta"
           className="mx-auto w-full max-w-4xl rounded-3xl border border-gray-200 bg-white px-6 py-14 text-center shadow-sm"
         >
-          <h2 className="text-3xl font-semibold text-gray-900 lg:text-5xl">
+          <h2 className="text-3xl font-semibold text-gray-900 lg:text-4xl">
             Start Visualizing Your Body Shape Today
           </h2>
           <p className="mx-auto mt-6 max-w-3xl text-xl leading-relaxed text-gray-700">

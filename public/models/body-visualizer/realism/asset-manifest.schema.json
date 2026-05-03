@@ -1,0 +1,107 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://bodyvisualizer.local/schemas/realism-asset-manifest.schema.json",
+  "title": "RealismAssetManifest",
+  "type": "object",
+  "required": ["manifestVersion", "generatedAt", "sourceNote", "defaults", "gender"],
+  "properties": {
+    "manifestVersion": { "type": "integer", "minimum": 1 },
+    "generatedAt": { "type": "string", "format": "date-time" },
+    "sourceNote": { "type": "string", "minLength": 1 },
+    "defaults": {
+      "type": "object",
+      "required": ["preferredVariant", "mobileProfileMaxTextureSize"],
+      "properties": {
+        "preferredVariant": {
+          "type": "string",
+          "enum": ["realism", "mpfb", "custom", "legacy"]
+        },
+        "mobileProfileMaxTextureSize": { "type": "integer", "minimum": 256 }
+      },
+      "additionalProperties": false
+    },
+    "gender": {
+      "type": "object",
+      "required": ["male", "female"],
+      "properties": {
+        "male": { "$ref": "#/$defs/genderConfig" },
+        "female": { "$ref": "#/$defs/genderConfig" }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "materialSet": {
+      "type": "object",
+      "required": ["id"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "baseColor": { "type": "string" },
+        "roughness": { "type": "number", "minimum": 0, "maximum": 1 },
+        "metalness": { "type": "number", "minimum": 0, "maximum": 1 },
+        "envMapIntensity": { "type": "number", "minimum": 0 },
+        "normalScale": { "type": "number", "minimum": 0 },
+        "alphaTest": { "type": "number", "minimum": 0, "maximum": 1 },
+        "transparent": { "type": "boolean" },
+        "texturePaths": {
+          "type": "object",
+          "properties": {
+            "albedo": { "type": "string" },
+            "normal": { "type": "string" },
+            "roughness": { "type": "string" },
+            "metalness": { "type": "string" },
+            "ao": { "type": "string" },
+            "alpha": { "type": "string" },
+            "emissive": { "type": "string" }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "morphMap": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "array",
+        "items": { "type": "string", "minLength": 1 }
+      }
+    },
+    "license": {
+      "type": "object",
+      "required": ["source", "sku", "productName", "productUrl", "rightsNote"],
+      "properties": {
+        "source": { "type": "string", "minLength": 1 },
+        "sku": { "type": "string", "minLength": 1 },
+        "productName": { "type": "string", "minLength": 1 },
+        "productUrl": { "type": "string", "minLength": 1 },
+        "rightsNote": { "type": "string", "minLength": 1 },
+        "licenseUrl": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": false
+    },
+    "lod": {
+      "type": "object",
+      "properties": {
+        "desktopLabel": { "type": "string" },
+        "mobileLabel": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "genderConfig": {
+      "type": "object",
+      "required": ["primaryModelPath", "license"],
+      "properties": {
+        "primaryModelPath": { "type": "string", "minLength": 1 },
+        "desktopModelPath": { "type": "string" },
+        "mobileModelPath": { "type": "string" },
+        "fallbackModelPath": { "type": "string" },
+        "materialSet": { "$ref": "#/$defs/materialSet" },
+        "morphMap": { "$ref": "#/$defs/morphMap" },
+        "lod": { "$ref": "#/$defs/lod" },
+        "license": { "$ref": "#/$defs/license" }
+      },
+      "additionalProperties": false
+    }
+  }
+}

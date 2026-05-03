@@ -39,3 +39,7 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Large TurboSquid source authoring files (runtime does not use these)
+public/models/body-visualizer/turbosquid/*.blend
+public/models/body-visualizer/turbosquid/*.zpr

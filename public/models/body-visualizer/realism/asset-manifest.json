@@ -1,0 +1,111 @@
+{
+  "manifestVersion": 1,
+  "generatedAt": "2026-05-03T00:00:00.000Z",
+  "sourceNote": "TurboSquid runtime assets integrated. Canonical morph fallback uses rig-driven shaping when body morph channels are absent.",
+  "defaults": {
+    "preferredVariant": "realism",
+    "mobileProfileMaxTextureSize": 2048
+  },
+  "gender": {
+    "male": {
+      "primaryModelPath": "/models/body-visualizer/realism/premium/male/body_male_realism_v1.glb",
+      "desktopModelPath": "/models/body-visualizer/realism/premium/male/body_male_realism_v1.glb",
+      "mobileModelPath": "/models/body-visualizer/realism/premium/male/body_male_realism_mobile.glb",
+      "fallbackModelPath": "/models/body-visualizer/mpfb/body_male_v1.glb",
+      "materialSet": {
+        "id": "turbosquid_body_only_v1",
+        "baseColor": "#f8f6f4",
+        "roughness": 0.66,
+        "metalness": 0.03,
+        "envMapIntensity": 0.34,
+        "normalScale": 0.8
+      },
+      "morphMap": {
+        "macro_weight": ["macro_weight"],
+        "macro_muscle": ["macro_muscle"],
+        "macro_height": ["macro_height"],
+        "local_torso_fat": ["local_torso_fat"],
+        "local_waist_fat": ["local_waist_fat"],
+        "local_glute_fat": ["local_glute_fat"],
+        "local_chest_fat": ["local_chest_fat"],
+        "local_face_fat": ["local_face_fat"],
+        "local_neck_fat": ["local_neck_fat"],
+        "local_torso_muscle": ["local_torso_muscle"],
+        "local_chest_muscle": ["local_chest_muscle"],
+        "local_shoulder_muscle": ["local_shoulder_muscle"],
+        "local_arms_fat": ["local_arms_fat"],
+        "local_forearms_fat": ["local_forearms_fat"],
+        "local_arms_muscle": ["local_arms_muscle"],
+        "local_forearms_muscle": ["local_forearms_muscle"],
+        "local_legs_fat": ["local_legs_fat"],
+        "local_calves_fat": ["local_calves_fat"],
+        "local_legs_muscle": ["local_legs_muscle"],
+        "local_calves_muscle": ["local_calves_muscle"],
+        "local_thigh_shape": ["local_thigh_shape"],
+        "local_calf_shape": ["local_calf_shape"]
+      },
+      "lod": {
+        "desktopLabel": "High fidelity",
+        "mobileLabel": "Optimized"
+      },
+      "license": {
+        "source": "TurboSquid",
+        "sku": "2391247",
+        "productName": "Realistic Human Base Models - Male And Female",
+        "productUrl": "https://www.turbosquid.com/3d-models/realistic-human-base-models-male-and-female-3d-2391247",
+        "rightsNote": "Standard License supports commercial creation usage; raw source redistribution is prohibited.",
+        "licenseUrl": "https://www.turbosquid.com/licensing"
+      }
+    },
+    "female": {
+      "primaryModelPath": "/models/body-visualizer/realism/premium/female/body_female_realism_v1.glb",
+      "desktopModelPath": "/models/body-visualizer/realism/premium/female/body_female_realism_v1.glb",
+      "mobileModelPath": "/models/body-visualizer/realism/premium/female/body_female_realism_mobile.glb",
+      "fallbackModelPath": "/models/body-visualizer/mpfb/body_female_v1.glb",
+      "materialSet": {
+        "id": "turbosquid_body_only_v1",
+        "baseColor": "#f8f5f2",
+        "roughness": 0.68,
+        "metalness": 0.03,
+        "envMapIntensity": 0.34,
+        "normalScale": 0.8
+      },
+      "morphMap": {
+        "macro_weight": ["macro_weight"],
+        "macro_muscle": ["macro_muscle"],
+        "macro_height": ["macro_height"],
+        "local_torso_fat": ["local_torso_fat"],
+        "local_waist_fat": ["local_waist_fat"],
+        "local_glute_fat": ["local_glute_fat"],
+        "local_chest_fat": ["local_chest_fat"],
+        "local_face_fat": ["local_face_fat"],
+        "local_neck_fat": ["local_neck_fat"],
+        "local_torso_muscle": ["local_torso_muscle"],
+        "local_chest_muscle": ["local_chest_muscle"],
+        "local_shoulder_muscle": ["local_shoulder_muscle"],
+        "local_arms_fat": ["local_arms_fat"],
+        "local_forearms_fat": ["local_forearms_fat"],
+        "local_arms_muscle": ["local_arms_muscle"],
+        "local_forearms_muscle": ["local_forearms_muscle"],
+        "local_legs_fat": ["local_legs_fat"],
+        "local_calves_fat": ["local_calves_fat"],
+        "local_legs_muscle": ["local_legs_muscle"],
+        "local_calves_muscle": ["local_calves_muscle"],
+        "local_thigh_shape": ["local_thigh_shape"],
+        "local_calf_shape": ["local_calf_shape"]
+      },
+      "lod": {
+        "desktopLabel": "High fidelity",
+        "mobileLabel": "Optimized"
+      },
+      "license": {
+        "source": "TurboSquid",
+        "sku": "2391247",
+        "productName": "Realistic Human Base Models - Male And Female",
+        "productUrl": "https://www.turbosquid.com/3d-models/realistic-human-base-models-male-and-female-3d-2391247",
+        "rightsNote": "Standard License supports commercial creation usage; raw source redistribution is prohibited.",
+        "licenseUrl": "https://www.turbosquid.com/licensing"
+      }
+    }
+  }
+}

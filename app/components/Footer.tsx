@@ -115,7 +115,7 @@ export default function Footer() {
         <div className="my-8 h-px bg-white/10" />
 
         <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-          <span className="text-xs text-gray-400">© {new Date().getFullYear()} — All Rights Reserved.</span>
+          <span className="text-xs text-gray-400">© {new Date().getFullYear()} Body Visualizer — All Rights Reserved.</span>
           <span className="text-xs text-gray-400 max-w-2xl leading-relaxed">
             <a href="/terms" className="hover:underline">
               Terms

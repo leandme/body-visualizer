@@ -12,13 +12,15 @@ import { Canvas, useThree } from "@react-three/fiber";
 import { OrbitControls, useGLTF } from "@react-three/drei";
 import { clone } from "three/examples/jsm/utils/SkeletonUtils.js";
 import type {
+  BufferGeometry,
   Bone,
   Group,
   Mesh,
   MeshStandardMaterial,
   SkinnedMesh,
+  Texture,
 } from "three";
-import { Color } from "three";
+import { ACESFilmicToneMapping, Color, PCFSoftShadowMap, SRGBColorSpace, TextureLoader } from "three";
 import {
   Camera,
   Heart,
@@ -36,7 +38,8 @@ type Gender = "male" | "female";
 type Units = "imperial" | "metric";
 type SyncMode = "linked" | "independent";
 type ViewPreset = "front" | "left" | "right" | "back";
-type ModelVariant = "legacy" | "mpfb" | "custom";
+type ModelVariant = "legacy" | "mpfb" | "custom" | "realism";
+type RenderQualityProfile = "desktop-high" | "mobile-fallback";
 
 type BodyFatBounds = {
   min: number;
@@ -118,6 +121,60 @@ type MorphAdapter = {
   aliases?: Partial<Record<MorphChannel, string[]>>;
 };
 
+type MaterialTextureSet = {
+  albedo?: string;
+  normal?: string;
+  roughness?: string;
+  metalness?: string;
+  ao?: string;
+  alpha?: string;
+  emissive?: string;
+};
+
+type MaterialSet = {
+  id: string;
+  baseColor?: string;
+  roughness?: number;
+  metalness?: number;
+  envMapIntensity?: number;
+  normalScale?: number;
+  alphaTest?: number;
+  transparent?: boolean;
+  texturePaths?: MaterialTextureSet;
+};
+
+type RealismAssetGenderConfig = {
+  primaryModelPath: string;
+  desktopModelPath?: string;
+  mobileModelPath?: string;
+  fallbackModelPath?: string;
+  materialSet?: MaterialSet;
+  morphMap?: Partial<Record<MorphChannel, string[]>>;
+  lod?: {
+    desktopLabel?: string;
+    mobileLabel?: string;
+  };
+  license: {
+    source: string;
+    sku: string;
+    productName: string;
+    productUrl: string;
+    rightsNote: string;
+    licenseUrl?: string;
+  };
+};
+
+type RealismAssetManifest = {
+  manifestVersion: number;
+  generatedAt: string;
+  sourceNote: string;
+  defaults: {
+    preferredVariant: "realism" | "mpfb" | "custom" | "legacy";
+    mobileProfileMaxTextureSize: number;
+  };
+  gender: Record<Gender, RealismAssetGenderConfig>;
+};
+
 type MeasurementAdjustments = {
   chestDelta: number;
   waistDelta: number;
@@ -137,6 +194,7 @@ const LEGACY_FRONT_MODEL_YAW = Math.PI / 2;
 const MODERN_FRONT_MODEL_YAW = 0;
 
 const STORAGE_KEY = "body-visualizer-presets-v1";
+const REALISM_MANIFEST_PATH = "/models/body-visualizer/realism/asset-manifest.json";
 
 const LEGACY_MODEL_PATH = "/models/body-visualizer/male_base_mesh.glb";
 const MPFB_MODEL_PATHS: Record<Gender, string> = {
@@ -149,7 +207,163 @@ const CUSTOM_MODEL_PATHS: Record<Gender, string> = {
   female: "/models/body-visualizer/custom/body_female_v2.glb",
 };
 
+const TURBOSQUID_MODEL_ROOT = "/models/body-visualizer/realism/premium/";
+const TURBOSQUID_HIDDEN_MESH_PATTERNS = [
+  "hair",
+  "eyebrow",
+  "eyelash",
+  "eyeball",
+  "eyeshadow",
+  "teeth",
+  "hair_cap",
+  "tongue",
+  "gums",
+  "oral",
+  "mouth_inner",
+];
+
+const TURBOSQUID_REGION_TEXTURES: Record<
+  Gender,
+  Record<"head" | "torso" | "arms" | "legs" | "underwear", MaterialTextureSet>
+> = {
+  male: {
+    head: {
+      albedo: "/models/body-visualizer/turbosquid/Male_Base_Textures/Body_Male/T_Male_Head_Bald_BaseColor.png",
+      normal: "/models/body-visualizer/turbosquid/Male_Base_Textures/Body_Male/T_Male_Head_Normal.png",
+      roughness:
+        "/models/body-visualizer/turbosquid/Male_Base_Textures/Body_Male/T_Male_Head_Bald_OcclusionRoughnessMetallic.png",
+      metalness:
+        "/models/body-visualizer/turbosquid/Male_Base_Textures/Body_Male/T_Male_Head_Bald_OcclusionRoughnessMetallic.png",
+      ao: "/models/body-visualizer/turbosquid/Male_Base_Textures/Body_Male/T_Male_Head_Bald_OcclusionRoughnessMetallic.png",
+    },
+    torso: {
+      albedo: "/models/body-visualizer/turbosquid/Male_Base_Textures/Body_Male/T_Male_Torso_BaseColor.png",
+      normal: "/models/body-visualizer/turbosquid/Male_Base_Textures/Body_Male/T_Male_Torso_Normal.png",
+      roughness:
+        "/models/body-visualizer/turbosquid/Male_Base_Textures/Body_Male/T_Male_Torso_OcclusionRoughnessMetallic.png",
+      metalness:
+        "/models/body-visualizer/turbosquid/Male_Base_Textures/Body_Male/T_Male_Torso_OcclusionRoughnessMetallic.png",
+      ao: "/models/body-visualizer/turbosquid/Male_Base_Textures/Body_Male/T_Male_Torso_OcclusionRoughnessMetallic.png",
+    },
+    arms: {
+      albedo: "/models/body-visualizer/turbosquid/Male_Base_Textures/Body_Male/T_Male_Arms_BaseColor.png",
+      normal: "/models/body-visualizer/turbosquid/Male_Base_Textures/Body_Male/T_Male_Arms_Normal.png",
+      roughness:
+        "/models/body-visualizer/turbosquid/Male_Base_Textures/Body_Male/T_Male_Arms_OcclusionRoughnessMetallic.png",
+      metalness:
+        "/models/body-visualizer/turbosquid/Male_Base_Textures/Body_Male/T_Male_Arms_OcclusionRoughnessMetallic.png",
+      ao: "/models/body-visualizer/turbosquid/Male_Base_Textures/Body_Male/T_Male_Arms_OcclusionRoughnessMetallic.png",
+    },
+    legs: {
+      albedo: "/models/body-visualizer/turbosquid/Male_Base_Textures/Body_Male/T_Male_Legs_BaseColor.png",
+      normal: "/models/body-visualizer/turbosquid/Male_Base_Textures/Body_Male/T_Male_Legs_Normal.png",
+      roughness:
+        "/models/body-visualizer/turbosquid/Male_Base_Textures/Body_Male/T_Male_Legs_OcclusionRoughnessMetallic.png",
+      metalness:
+        "/models/body-visualizer/turbosquid/Male_Base_Textures/Body_Male/T_Male_Legs_OcclusionRoughnessMetallic.png",
+      ao: "/models/body-visualizer/turbosquid/Male_Base_Textures/Body_Male/T_Male_Legs_OcclusionRoughnessMetallic.png",
+    },
+    underwear: {
+      albedo: "/models/body-visualizer/turbosquid/Male_Base_Textures/Body_Male/T_Male_Underwear_BaseColor.png",
+      normal: "/models/body-visualizer/turbosquid/Male_Base_Textures/Body_Male/T_Male_Underwear_Normal.png",
+      roughness:
+        "/models/body-visualizer/turbosquid/Male_Base_Textures/Body_Male/T_Male_Underwear_OcclusionRoughnessMetallic.png",
+      metalness:
+        "/models/body-visualizer/turbosquid/Male_Base_Textures/Body_Male/T_Male_Underwear_OcclusionRoughnessMetallic.png",
+      ao: "/models/body-visualizer/turbosquid/Male_Base_Textures/Body_Male/T_Male_Underwear_OcclusionRoughnessMetallic.png",
+    },
+  },
+  female: {
+    head: {
+      albedo: "/models/body-visualizer/turbosquid/Female_Base_Textures/Body_Female/T_Female_Head_Bold_BaseColor.png",
+      normal: "/models/body-visualizer/turbosquid/Female_Base_Textures/Body_Female/T_Female_Head_Normal.png",
+      roughness:
+        "/models/body-visualizer/turbosquid/Female_Base_Textures/Body_Female/T_Female_Head_Bald_OcclusionRoughnessMetallic.png",
+      metalness:
+        "/models/body-visualizer/turbosquid/Female_Base_Textures/Body_Female/T_Female_Head_Bald_OcclusionRoughnessMetallic.png",
+      ao: "/models/body-visualizer/turbosquid/Female_Base_Textures/Body_Female/T_Female_Head_Bald_OcclusionRoughnessMetallic.png",
+    },
+    torso: {
+      albedo: "/models/body-visualizer/turbosquid/Female_Base_Textures/Body_Female/T_Female_Torso_BaseColor.png",
+      normal: "/models/body-visualizer/turbosquid/Female_Base_Textures/Body_Female/T_Female_Torso_Normal.png",
+      roughness:
+        "/models/body-visualizer/turbosquid/Female_Base_Textures/Body_Female/T_Female_Torso_OcclusionRoughnessMetallic.png",
+      metalness:
+        "/models/body-visualizer/turbosquid/Female_Base_Textures/Body_Female/T_Female_Torso_OcclusionRoughnessMetallic.png",
+      ao: "/models/body-visualizer/turbosquid/Female_Base_Textures/Body_Female/T_Female_Torso_OcclusionRoughnessMetallic.png",
+    },
+    arms: {
+      albedo: "/models/body-visualizer/turbosquid/Female_Base_Textures/Body_Female/T_Female_Arms_BaseColor.png",
+      normal: "/models/body-visualizer/turbosquid/Female_Base_Textures/Body_Female/T_Female_Arms_Normal.png",
+      roughness:
+        "/models/body-visualizer/turbosquid/Female_Base_Textures/Body_Female/T_Female_Arms_OcclusionRoughnessMetallic.png",
+      metalness:
+        "/models/body-visualizer/turbosquid/Female_Base_Textures/Body_Female/T_Female_Arms_OcclusionRoughnessMetallic.png",
+      ao: "/models/body-visualizer/turbosquid/Female_Base_Textures/Body_Female/T_Female_Arms_OcclusionRoughnessMetallic.png",
+    },
+    legs: {
+      albedo: "/models/body-visualizer/turbosquid/Female_Base_Textures/Body_Female/T_Female_Legs_BaseColor.png",
+      normal: "/models/body-visualizer/turbosquid/Female_Base_Textures/Body_Female/T_Female_Legs_Normal.png",
+      roughness:
+        "/models/body-visualizer/turbosquid/Female_Base_Textures/Body_Female/T_Female_Legs_OcclusionRoughnessMetallic.png",
+      metalness:
+        "/models/body-visualizer/turbosquid/Female_Base_Textures/Body_Female/T_Female_Legs_OcclusionRoughnessMetallic.png",
+      ao: "/models/body-visualizer/turbosquid/Female_Base_Textures/Body_Female/T_Female_Legs_OcclusionRoughnessMetallic.png",
+    },
+    underwear: {
+      albedo: "/models/body-visualizer/turbosquid/Female_Base_Textures/Body_Female/T_Female_Underwear_BaseColor.png",
+      normal: "/models/body-visualizer/turbosquid/Female_Base_Textures/Body_Female/T_Female_Underwear_Normal.png",
+      roughness:
+        "/models/body-visualizer/turbosquid/Female_Base_Textures/Body_Female/T_Female_Underwear_OcclusionRoughnessMetallic.png",
+      metalness:
+        "/models/body-visualizer/turbosquid/Female_Base_Textures/Body_Female/T_Female_Underwear_OcclusionRoughnessMetallic.png",
+      ao: "/models/body-visualizer/turbosquid/Female_Base_Textures/Body_Female/T_Female_Underwear_OcclusionRoughnessMetallic.png",
+    },
+  },
+};
+
+const textureLoader = new TextureLoader();
+const textureCache = new Map<string, Texture>();
+
+function getCachedTexture(path: string) {
+  if (!textureCache.has(path)) {
+    const texture = textureLoader.load(path);
+    texture.flipY = false;
+    if (path.toLowerCase().includes("basecolor")) {
+      texture.colorSpace = SRGBColorSpace;
+    }
+    texture.needsUpdate = true;
+    textureCache.set(path, texture);
+  }
+  return textureCache.get(path)!;
+}
+
+function shouldHideTurboSquidMesh(meshName: string) {
+  const normalized = meshName.toLowerCase();
+  return TURBOSQUID_HIDDEN_MESH_PATTERNS.some((token) => normalized.includes(token));
+}
+
+function resolveTurboSquidRegion(meshName: string): keyof (typeof TURBOSQUID_REGION_TEXTURES)["male"] | null {
+  if (meshName.includes("Torso")) return "torso";
+  if (meshName.includes("Arms")) return "arms";
+  if (meshName.includes("Legs")) return "legs";
+  if (meshName.includes("Underwear")) return "underwear";
+  if (meshName.includes("Head")) return "head";
+  return null;
+}
+
+function ensureUv2(mesh: Mesh) {
+  const geometry = mesh.geometry as BufferGeometry;
+  if (!geometry?.attributes?.uv || geometry.attributes.uv2) return;
+  geometry.setAttribute("uv2", geometry.attributes.uv);
+}
+
 const MODEL_ADAPTERS: Record<ModelVariant, MorphAdapter> = {
+  realism: {
+    id: "realism",
+    label: "Realistic premium render",
+    aliases: {},
+  },
   custom: {
     id: "custom",
     label: "Custom high-detail morph render",
@@ -466,13 +680,28 @@ function buildMorphChannels(props: {
   const fatNorm = clamp((bodyFatPct - bfBounds.min) / (bfBounds.max - bfBounds.min), 0, 1);
   const bmiNorm = clamp((bmi - BMI_MIN) / (BMI_MAX - BMI_MIN), 0, 1);
   const heightNorm = clamp((heightCm - HEIGHT_CM_MIN) / (HEIGHT_CM_MAX - HEIGHT_CM_MIN), 0, 1);
-  const leanProxy = clamp((bmi * (1 - bodyFatPct / 100) - 15) / 12, 0, 1);
+  const leanMassProxy = bmi * (1 - bodyFatPct / 100);
+  const rawLeanProxy = clamp((leanMassProxy - (gender === "male" ? 14.2 : 13.4)) / 11.5, 0, 1);
+  const lowFatSignal =
+    1 -
+    smoothstep(
+      gender === "male" ? 18 : 28,
+      gender === "male" ? 30 : 41,
+      clamp(bodyFatPct, bfBounds.min, bfBounds.max)
+    );
+  const muscularityLift = smoothstep(
+    gender === "male" ? 9.5 : 8.8,
+    gender === "male" ? 17.5 : 16.5,
+    leanMassProxy
+  );
+  const leanProxy = clamp(rawLeanProxy * 0.62 + muscularityLift * 0.38, 0, 1);
 
   const fatCurve = Math.pow(fatNorm, 1.14);
   const fatMid = smoothstep(0.2, 0.62, fatNorm);
   const fatHigh = smoothstep(0.58, 0.9, fatNorm);
   const bmiCurve = Math.pow(bmiNorm, 1.06);
-  const leanCurve = Math.pow(leanProxy, 0.94);
+  const fatSuppression = Math.pow(fatNorm, 1.32);
+  const leanCurve = Math.pow(clamp(leanProxy * 0.7 + lowFatSignal * 0.3, 0, 1), 0.82);
 
   const torsoFat = clamp(
     0.32 * fatCurve + 0.46 * fatMid + 0.25 * fatHigh + 0.12 * bmiCurve + measurementAdjustments.waistDelta * 0.95,
@@ -500,14 +729,16 @@ function buildMorphChannels(props: {
   const faceFat = clamp(0.16 * fatCurve + 0.27 * fatMid + 0.24 * fatHigh, 0, 1);
   const neckFat = clamp(0.11 * fatCurve + 0.2 * fatMid + 0.22 * fatHigh, 0, 1);
 
-  const torsoMuscle = clamp(0.18 + 0.82 * leanCurve - 0.34 * fatCurve, 0, 1);
+  const torsoMuscle = clamp(0.08 + 0.94 * leanCurve + 0.22 * lowFatSignal - 0.58 * fatSuppression, 0, 1);
   const chestMuscle = clamp(
-    (0.18 + 0.78 * leanCurve - 0.24 * fatCurve) * (gender === "male" ? 1.05 : 0.82),
+    (0.08 + 0.9 * leanCurve + 0.18 * lowFatSignal - 0.52 * fatSuppression) *
+      (gender === "male" ? 1.06 : 0.84),
     0,
     1
   );
   const shoulderMuscle = clamp(
-    (0.16 + 0.82 * leanCurve - 0.18 * fatCurve) * (gender === "male" ? 1.08 : 0.8),
+    (0.1 + 0.95 * leanCurve + 0.24 * lowFatSignal - 0.45 * fatSuppression) *
+      (gender === "male" ? 1.1 : 0.82),
     0,
     1
   );
@@ -518,8 +749,16 @@ function buildMorphChannels(props: {
     1
   );
   const forearmFat = clamp(0.18 * fatCurve + 0.22 * fatMid, 0, 1);
-  const armMuscle = clamp((0.14 + 0.88 * leanCurve - 0.28 * fatCurve) * (gender === "female" ? 0.92 : 1.05), 0, 1);
-  const forearmMuscle = clamp((0.18 + 0.74 * leanCurve - 0.16 * fatCurve) * (gender === "female" ? 0.9 : 1.03), 0, 1);
+  const armMuscle = clamp(
+    (0.08 + 0.92 * leanCurve + 0.16 * lowFatSignal - 0.48 * fatSuppression) * (gender === "female" ? 0.94 : 1.06),
+    0,
+    1
+  );
+  const forearmMuscle = clamp(
+    (0.1 + 0.8 * leanCurve + 0.13 * lowFatSignal - 0.36 * fatSuppression) * (gender === "female" ? 0.92 : 1.05),
+    0,
+    1
+  );
 
   const legFat = clamp(
     (0.34 * fatCurve + 0.4 * fatMid + 0.14 * bmiCurve) * (gender === "female" ? 1.14 : 0.96) +
@@ -534,8 +773,16 @@ function buildMorphChannels(props: {
     0,
     1
   );
-  const legMuscle = clamp((0.16 + 0.78 * leanCurve - 0.2 * fatCurve) * (gender === "female" ? 0.98 : 1), 0, 1);
-  const calfMuscle = clamp((0.16 + 0.7 * leanCurve - 0.14 * fatCurve) * (gender === "female" ? 0.92 : 1.02), 0, 1);
+  const legMuscle = clamp(
+    (0.08 + 0.86 * leanCurve + 0.16 * lowFatSignal - 0.42 * fatSuppression) * (gender === "female" ? 0.99 : 1.01),
+    0,
+    1
+  );
+  const calfMuscle = clamp(
+    (0.1 + 0.74 * leanCurve + 0.12 * lowFatSignal - 0.32 * fatSuppression) * (gender === "female" ? 0.94 : 1.04),
+    0,
+    1
+  );
   const thighShape = clamp(
     (0.2 + 0.46 * fatMid + 0.22 * leanCurve) * (gender === "female" ? 1.16 : 0.95) +
       measurementAdjustments.hipsDelta * 0.8 +
@@ -557,7 +804,7 @@ function buildMorphChannels(props: {
 
   return {
     macro_weight: clamp(0.28 + 0.52 * bmiCurve + 0.4 * fatCurve + 0.12 * fatHigh + macroAdjust, 0, 1),
-    macro_muscle: clamp(0.12 + 0.92 * leanCurve - 0.18 * fatCurve, 0, 1),
+    macro_muscle: clamp(0.06 + 1.02 * leanCurve + 0.18 * lowFatSignal - 0.5 * fatSuppression, 0, 1),
     macro_height: clamp(Math.pow(heightNorm, 1.04) + measurementAdjustments.inseamDelta * 0.28, 0, 1),
     local_torso_fat: torsoFat,
     local_waist_fat: waistFat,
@@ -581,34 +828,154 @@ function buildMorphChannels(props: {
   };
 }
 
-function applyMaterialOverride(root: Group, gender: Gender) {
-  const flatSkinColor = gender === "female" ? "#dce5f2" : "#d9e2ef";
+function loadMaterialTextures(texturePaths?: MaterialTextureSet) {
+  if (!texturePaths) return {};
+
+  const resolveTexture = (path?: string) => {
+    if (!path) return null;
+    try {
+      return getCachedTexture(path);
+    } catch {
+      return null;
+    }
+  };
+
+  return {
+    map: resolveTexture(texturePaths.albedo),
+    normalMap: resolveTexture(texturePaths.normal),
+    roughnessMap: resolveTexture(texturePaths.roughness),
+    metalnessMap: resolveTexture(texturePaths.metalness),
+    aoMap: resolveTexture(texturePaths.ao),
+    alphaMap: resolveTexture(texturePaths.alpha),
+    emissiveMap: resolveTexture(texturePaths.emissive),
+  };
+}
+
+function applyMaterialOverride(
+  root: Group,
+  gender: Gender,
+  options?: {
+    materialSet?: MaterialSet;
+    renderProfile?: RenderQualityProfile;
+    modelPath?: string;
+  }
+) {
+  const renderProfile = options?.renderProfile ?? "desktop-high";
+  const materialSet = options?.materialSet;
+  const isTurboSquidRuntime = Boolean(options?.modelPath?.includes(TURBOSQUID_MODEL_ROOT));
+  const flatSkinColor = gender === "female" ? "#ede8e0" : "#e9e2d8";
+  const mannequinTint = gender === "female" ? "#f4eee7" : "#efe8de";
+  const materialTextures = loadMaterialTextures(materialSet?.texturePaths);
 
   root.traverse((obj) => {
     if (!(obj as Mesh).isMesh) return;
 
     const mesh = obj as Mesh;
+    if (isTurboSquidRuntime && shouldHideTurboSquidMesh(mesh.name)) {
+      mesh.visible = false;
+      return;
+    }
+
+    const turboSquidRegion = isTurboSquidRuntime ? resolveTurboSquidRegion(mesh.name) : null;
+    const isHeadRegion = turboSquidRegion === "head";
+    const isUnderwearRegion = turboSquidRegion === "underwear";
+    const regionalTextures = turboSquidRegion
+      ? loadMaterialTextures(TURBOSQUID_REGION_TEXTURES[gender][turboSquidRegion])
+      : null;
     const mats = Array.isArray(mesh.material) ? mesh.material : [mesh.material];
     const updated = mats.map((mat) => {
       const source = mat as MeshStandardMaterial;
       const clonedMat = source.clone();
-      clonedMat.map = source.map ?? null;
-      clonedMat.color = source.map ? new Color("#ffffff") : new Color(flatSkinColor);
-      clonedMat.roughness = source.map ? 0.72 : 0.56;
-      clonedMat.metalness = 0;
-      clonedMat.envMapIntensity = source.map ? 0.25 : 0.35;
+
+      clonedMat.map = regionalTextures?.map ?? materialTextures.map ?? source.map ?? null;
+      clonedMat.normalMap = regionalTextures?.normalMap ?? materialTextures.normalMap ?? source.normalMap ?? null;
+      clonedMat.roughnessMap =
+        regionalTextures?.roughnessMap ?? materialTextures.roughnessMap ?? source.roughnessMap ?? null;
+      clonedMat.metalnessMap =
+        regionalTextures?.metalnessMap ?? materialTextures.metalnessMap ?? source.metalnessMap ?? null;
+      clonedMat.aoMap = regionalTextures?.aoMap ?? materialTextures.aoMap ?? source.aoMap ?? null;
+      clonedMat.alphaMap = regionalTextures?.alphaMap ?? materialTextures.alphaMap ?? source.alphaMap ?? null;
+      clonedMat.emissiveMap =
+        regionalTextures?.emissiveMap ?? materialTextures.emissiveMap ?? source.emissiveMap ?? null;
+
+      const hasTextureMap = Boolean(clonedMat.map);
+      const defaultRoughness = hasTextureMap
+        ? isUnderwearRegion
+          ? renderProfile === "mobile-fallback"
+            ? 0.74
+            : 0.66
+          : isHeadRegion
+          ? renderProfile === "mobile-fallback"
+            ? 0.84
+            : 0.79
+          : renderProfile === "mobile-fallback"
+          ? 0.8
+          : 0.72
+        : 0.58;
+      const tunedRoughness =
+        typeof materialSet?.roughness === "number" ? materialSet.roughness : defaultRoughness;
+      const tunedMetalness =
+        typeof materialSet?.metalness === "number" ? materialSet.metalness : hasTextureMap ? 0.015 : 0;
+      const tunedEnv =
+        typeof materialSet?.envMapIntensity === "number"
+          ? materialSet.envMapIntensity
+          : hasTextureMap
+          ? isHeadRegion
+            ? 0.22
+            : 0.28
+          : 0.24;
+
+      clonedMat.color = new Color(materialSet?.baseColor ?? (hasTextureMap ? mannequinTint : flatSkinColor));
+      clonedMat.roughness = clamp(tunedRoughness, 0.02, 1);
+      clonedMat.metalness = clamp(tunedMetalness, 0, 1);
+      clonedMat.envMapIntensity = clamp(tunedEnv, 0, 1.5);
+
+      if (clonedMat.normalMap && clonedMat.normalScale) {
+        const normalScale = materialSet?.normalScale
+          ? materialSet.normalScale
+          : isHeadRegion
+          ? renderProfile === "mobile-fallback"
+            ? 0.18
+            : 0.24
+          : renderProfile === "mobile-fallback"
+          ? 0.48
+          : 0.58;
+        clonedMat.normalScale.set(normalScale, normalScale);
+      }
+
+      if (typeof materialSet?.transparent === "boolean") {
+        clonedMat.transparent = materialSet.transparent;
+      }
+      if (typeof materialSet?.alphaTest === "number") {
+        clonedMat.alphaTest = materialSet.alphaTest;
+      }
+
+      if (clonedMat.aoMap) {
+        ensureUv2(mesh);
+        clonedMat.aoMapIntensity = isHeadRegion ? 0.62 : 0.9;
+      }
+
+      clonedMat.flatShading = false;
+      clonedMat.depthWrite = true;
       clonedMat.needsUpdate = true;
       return clonedMat;
     });
 
     mesh.material = Array.isArray(mesh.material) ? updated : updated[0];
+    mesh.castShadow = true;
+    mesh.receiveShadow = true;
   });
 }
 
-function useAssetAvailable(path: string) {
+function useAssetAvailable(path: string | null | undefined) {
   const [available, setAvailable] = useState<boolean | null>(null);
 
   useEffect(() => {
+    if (!path) {
+      setAvailable(false);
+      return;
+    }
+
     let cancelled = false;
 
     const check = async () => {
@@ -630,20 +997,211 @@ function useAssetAvailable(path: string) {
   return available;
 }
 
+function useAssetPairAvailable(paths: Record<Gender, string | null>) {
+  const [available, setAvailable] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    const malePath = paths.male;
+    const femalePath = paths.female;
+
+    if (!malePath || !femalePath) {
+      setAvailable(false);
+      return;
+    }
+
+    let cancelled = false;
+    const check = async () => {
+      try {
+        const [maleResponse, femaleResponse] = await Promise.all([
+          fetch(malePath, { method: "HEAD" }),
+          fetch(femalePath, { method: "HEAD" }),
+        ]);
+        if (!cancelled) setAvailable(maleResponse.ok && femaleResponse.ok);
+      } catch {
+        if (!cancelled) setAvailable(false);
+      }
+    };
+
+    check();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [paths.female, paths.male]);
+
+  return available;
+}
+
+function useRealismManifest() {
+  const [manifest, setManifest] = useState<RealismAssetManifest | null>(null);
+  const [loaded, setLoaded] = useState(false);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    const load = async () => {
+      try {
+        const response = await fetch(REALISM_MANIFEST_PATH, { cache: "no-store" });
+        if (!response.ok) throw new Error("manifest unavailable");
+        const parsed = (await response.json()) as RealismAssetManifest;
+        if (!cancelled) setManifest(parsed);
+      } catch {
+        if (!cancelled) setManifest(null);
+      } finally {
+        if (!cancelled) setLoaded(true);
+      }
+    };
+
+    load();
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  return { manifest, loaded };
+}
+
+function useRenderQualityProfile() {
+  const [profile, setProfile] = useState<RenderQualityProfile>("desktop-high");
+
+  useEffect(() => {
+    const pickProfile = () => {
+      if (typeof window === "undefined") return "desktop-high" as RenderQualityProfile;
+
+      const nav = navigator as Navigator & { deviceMemory?: number };
+      const width = window.innerWidth;
+      const touchCapable = navigator.maxTouchPoints > 0;
+      const memory = nav.deviceMemory ?? 8;
+      const cores = navigator.hardwareConcurrency ?? 8;
+
+      if (width < 1024 || touchCapable || memory <= 6 || cores <= 6) {
+        return "mobile-fallback" as RenderQualityProfile;
+      }
+      return "desktop-high" as RenderQualityProfile;
+    };
+
+    const update = () => setProfile(pickProfile());
+    update();
+    window.addEventListener("resize", update);
+    return () => window.removeEventListener("resize", update);
+  }, []);
+
+  return profile;
+}
+
+function pickRealismModelPath(config: RealismAssetGenderConfig, qualityProfile: RenderQualityProfile) {
+  if (qualityProfile === "mobile-fallback") {
+    return config.mobileModelPath ?? config.fallbackModelPath ?? config.primaryModelPath;
+  }
+  return config.desktopModelPath ?? config.primaryModelPath;
+}
+
+function applyTurboSquidRigShaping(props: {
+  bones: Map<string, Bone>;
+  baseline: Record<string, { sx: number; sy: number; sz: number; px: number; py: number; pz: number }>;
+  modelRoot: Group;
+  gender: Gender;
+  bmi: number;
+  bodyFatPct: number;
+  heightCm: number;
+  measurementAdjustments: MeasurementAdjustments;
+}) {
+  const { bones, baseline, modelRoot, gender, bmi, bodyFatPct, heightCm, measurementAdjustments } = props;
+  const channels = buildMorphChannels({
+    gender,
+    bmi,
+    bodyFatPct,
+    heightCm,
+    measurementAdjustments,
+  });
+
+  const heightNorm = clamp((heightCm - HEIGHT_CM_MIN) / (HEIGHT_CM_MAX - HEIGHT_CM_MIN), 0, 1);
+  const shoulderBias = gender === "female" ? 0.9 : 1.04;
+  const hipBias = gender === "female" ? 1.1 : 0.94;
+
+  const scaleBone = (name: string, sx: number, sy: number, sz = sx) => {
+    const bone = bones.get(name);
+    const base = baseline[name];
+    if (!bone || !base) return;
+    bone.scale.set(base.sx * sx, base.sy * sy, base.sz * sz);
+  };
+
+  const torsoWidth =
+    0.98 +
+    0.28 * channels.local_torso_fat +
+    0.12 * channels.local_waist_fat +
+    0.08 * channels.local_torso_muscle +
+    measurementAdjustments.waistDelta * 0.38;
+  const torsoDepth =
+    0.98 +
+    0.36 * channels.local_torso_fat +
+    0.1 * channels.local_chest_fat +
+    measurementAdjustments.waistDelta * 0.45;
+
+  scaleBone("spine_01", torsoWidth * 0.98, 1 + 0.04 * heightNorm, torsoDepth * 0.94);
+  scaleBone("spine_02", torsoWidth, 1 + 0.05 * heightNorm, torsoDepth);
+  scaleBone(
+    "spine_03",
+    torsoWidth * (0.98 + channels.local_shoulder_muscle * 0.12) * shoulderBias,
+    1 + 0.04 * heightNorm,
+    torsoDepth * (0.96 + channels.local_chest_muscle * 0.12)
+  );
+
+  scaleBone("clavicle_l", 0.98 + channels.local_shoulder_muscle * 0.18, 1, 1);
+  scaleBone("clavicle_r", 0.98 + channels.local_shoulder_muscle * 0.18, 1, 1);
+
+  const upperArmBulk =
+    0.98 +
+    channels.local_arms_muscle * 0.2 +
+    channels.local_arms_fat * 0.16 +
+    measurementAdjustments.chestDelta * 0.12;
+  const forearmBulk = 0.98 + channels.local_forearms_muscle * 0.16 + channels.local_forearms_fat * 0.14;
+
+  scaleBone("upperarm_l", upperArmBulk, 1 + channels.local_arms_muscle * 0.06, upperArmBulk);
+  scaleBone("upperarm_r", upperArmBulk, 1 + channels.local_arms_muscle * 0.06, upperArmBulk);
+  scaleBone("lowerarm_l", forearmBulk, 1 + channels.local_forearms_muscle * 0.05, forearmBulk);
+  scaleBone("lowerarm_r", forearmBulk, 1 + channels.local_forearms_muscle * 0.05, forearmBulk);
+
+  const pelvisBulk = 0.98 + channels.local_glute_fat * 0.22 + channels.local_thigh_shape * 0.15;
+  scaleBone("pelvis", pelvisBulk * hipBias, 1 + channels.local_glute_fat * 0.04, 1 + channels.local_glute_fat * 0.18);
+
+  const thighBulk =
+    0.98 +
+    channels.local_legs_fat * 0.22 +
+    channels.local_legs_muscle * 0.15 +
+    channels.local_thigh_shape * 0.14 +
+    measurementAdjustments.hipsDelta * 0.2;
+  const calfBulk = 0.98 + channels.local_calves_fat * 0.18 + channels.local_calves_muscle * 0.15 + channels.local_calf_shape * 0.1;
+
+  scaleBone("thigh_l", thighBulk * hipBias, 1 + 0.05 * heightNorm, 0.98 + channels.local_legs_fat * 0.24);
+  scaleBone("thigh_r", thighBulk * hipBias, 1 + 0.05 * heightNorm, 0.98 + channels.local_legs_fat * 0.24);
+  scaleBone("calf_l", calfBulk, 1 + 0.05 * heightNorm, 0.98 + channels.local_calves_fat * 0.16);
+  scaleBone("calf_r", calfBulk, 1 + 0.05 * heightNorm, 0.98 + channels.local_calves_fat * 0.16);
+
+  const sceneScaleY = 0.92 + heightNorm * 0.24;
+  const sceneScaleX = 0.97 + channels.macro_weight * 0.08;
+  const sceneScaleZ = 0.98 + channels.local_torso_fat * 0.18;
+  modelRoot.scale.set(sceneScaleX, sceneScaleY, sceneScaleZ);
+}
+
 function LegacyHumanModel(props: {
   gender: Gender;
   bmi: number;
   bodyFatPct: number;
   heightCm: number;
+  materialSet?: MaterialSet;
+  renderProfile: RenderQualityProfile;
+  modelPath: string;
 }) {
-  const { gender, bmi, bodyFatPct, heightCm } = props;
+  const { gender, bmi, bodyFatPct, heightCm, materialSet, renderProfile, modelPath } = props;
   const gltf = useGLTF(LEGACY_MODEL_PATH);
 
   const modelRoot = useMemo(() => {
     const cloned = clone(gltf.scene) as Group;
-    applyMaterialOverride(cloned, gender);
+    applyMaterialOverride(cloned, gender, { materialSet, renderProfile, modelPath });
     return cloned;
-  }, [gender, gltf.scene]);
+  }, [gender, gltf.scene, materialSet, renderProfile, modelPath]);
 
   const skinnedMesh = useMemo<SkinnedMesh | null>(() => {
     let found: SkinnedMesh | null = null;
@@ -766,6 +1324,8 @@ function MorphTargetModel(props: {
   bodyFatPct: number;
   heightCm: number;
   measurementAdjustments: MeasurementAdjustments;
+  materialSet?: MaterialSet;
+  renderProfile: RenderQualityProfile;
 }) {
   const {
     modelPath,
@@ -775,14 +1335,16 @@ function MorphTargetModel(props: {
     bodyFatPct,
     heightCm,
     measurementAdjustments,
+    materialSet,
+    renderProfile,
   } = props;
   const gltf = useGLTF(modelPath);
 
   const modelRoot = useMemo(() => {
     const cloned = clone(gltf.scene) as Group;
-    applyMaterialOverride(cloned, gender);
+    applyMaterialOverride(cloned, gender, { materialSet, renderProfile, modelPath });
     return cloned;
-  }, [gender, gltf.scene]);
+  }, [gender, gltf.scene, materialSet, renderProfile, modelPath]);
 
   const morphMeshes = useMemo(() => {
     const meshes: Array<Mesh> = [];
@@ -795,6 +1357,37 @@ function MorphTargetModel(props: {
     });
     return meshes;
   }, [modelRoot]);
+
+  const skinnedMesh = useMemo<SkinnedMesh | null>(() => {
+    let found: SkinnedMesh | null = null;
+    modelRoot.traverse((obj) => {
+      if (!found && (obj as { isSkinnedMesh?: boolean }).isSkinnedMesh) {
+        found = obj as SkinnedMesh;
+      }
+    });
+    return found;
+  }, [modelRoot]);
+
+  const bones = useMemo(() => {
+    const map = new Map<string, Bone>();
+    skinnedMesh?.skeleton?.bones.forEach((bone) => map.set(bone.name, bone));
+    return map;
+  }, [skinnedMesh]);
+
+  const baseline = useMemo(() => {
+    const values: Record<string, { sx: number; sy: number; sz: number; px: number; py: number; pz: number }> = {};
+    bones.forEach((bone, name) => {
+      values[name] = {
+        sx: bone.scale.x,
+        sy: bone.scale.y,
+        sz: bone.scale.z,
+        px: bone.position.x,
+        py: bone.position.y,
+        pz: bone.position.z,
+      };
+    });
+    return values;
+  }, [bones]);
 
   const channels = useMemo(
     () =>
@@ -809,6 +1402,14 @@ function MorphTargetModel(props: {
   );
 
   useEffect(() => {
+    bones.forEach((bone, name) => {
+      const base = baseline[name];
+      if (!base) return;
+      bone.scale.set(base.sx, base.sy, base.sz);
+      bone.position.set(base.px, base.py, base.pz);
+    });
+
+    let matchedChannelCount = 0;
     morphMeshes.forEach((mesh) => {
       if (!mesh.morphTargetDictionary || !mesh.morphTargetInfluences) return;
 
@@ -820,9 +1421,36 @@ function MorphTargetModel(props: {
         const index = resolveMorphIndex(mesh.morphTargetDictionary!, channel, morphAdapter);
         if (index === null) return;
         mesh.morphTargetInfluences![index] = channels[channel];
+        matchedChannelCount += 1;
       });
     });
-  }, [channels, morphAdapter, morphMeshes]);
+
+    const shouldUseRigFallback = morphAdapter.id === "realism" || matchedChannelCount === 0;
+    if (shouldUseRigFallback && bones.size > 0) {
+      applyTurboSquidRigShaping({
+        bones,
+        baseline,
+        modelRoot,
+        gender,
+        bmi,
+        bodyFatPct,
+        heightCm,
+        measurementAdjustments,
+      });
+    }
+  }, [
+    baseline,
+    bmi,
+    bodyFatPct,
+    bones,
+    channels,
+    gender,
+    heightCm,
+    measurementAdjustments,
+    modelRoot,
+    morphAdapter,
+    morphMeshes,
+  ]);
 
   return <primitive object={modelRoot} position={[0, 0, 0]} rotation={[0, 0, 0]} />;
 }
@@ -849,6 +1477,8 @@ function BodyRender(props: {
   morphAdapter: MorphAdapter;
   modelPath: string | null;
   measurementAdjustments: MeasurementAdjustments;
+  materialSet?: MaterialSet;
+  renderProfile: RenderQualityProfile;
   onCanvasReady: (element: HTMLCanvasElement | null) => void;
 }) {
   const {
@@ -861,6 +1491,8 @@ function BodyRender(props: {
     morphAdapter,
     modelPath,
     measurementAdjustments,
+    materialSet,
+    renderProfile,
     onCanvasReady,
   } = props;
 
@@ -876,37 +1508,84 @@ function BodyRender(props: {
 
   return (
     <div
-      className="relative h-full w-full overflow-hidden rounded-[26px] border border-gray-200 bg-[#4a4d51]"
+      className="relative h-full w-full overflow-hidden rounded-[26px] border border-gray-300 bg-[#5f6469]"
       style={{
         background:
-          "radial-gradient(120% 58% at 50% 44%, rgba(235,240,246,0.17) 0%, rgba(235,240,246,0.04) 36%, rgba(0,0,0,0) 68%), linear-gradient(180deg, #2a2c2f 0%, #2f3135 48%, #4f5257 72%, #5b5e63 100%)",
+          "radial-gradient(120% 72% at 50% 30%, #7b8189 0%, #6b7178 38%, #5d626a 62%, #52575f 100%)",
       }}
     >
       <div className="pointer-events-none absolute inset-0 z-[1]">
-        <div className="absolute inset-x-[-40%] bottom-[-56%] h-[136%] opacity-32 [mask-image:linear-gradient(to_top,black_72%,transparent)] [transform:perspective(1200px)_rotateX(73deg)]">
-          <div className="absolute inset-0 [background-image:linear-gradient(rgba(255,255,255,0.12)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.12)_1px,transparent_1px)] [background-size:76px_76px]" />
+        <div className="absolute inset-x-[-40%] bottom-[-58%] h-[138%] opacity-28 [mask-image:linear-gradient(to_top,black_78%,transparent)] [transform:perspective(1400px)_rotateX(72deg)]">
+          <div className="absolute inset-0 [background-image:linear-gradient(rgba(255,255,255,0.14)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.14)_1px,transparent_1px)] [background-size:72px_72px]" />
         </div>
-        <div className="absolute inset-x-0 bottom-0 h-[45%] bg-gradient-to-t from-black/30 via-black/10 to-transparent" />
+        <div className="absolute inset-x-0 bottom-0 h-[52%] bg-gradient-to-t from-black/24 via-black/10 to-transparent" />
       </div>
 
       <Canvas
         className="relative z-[2]"
-        camera={{ position: [0, 0.08, 5.3], fov: 24 }}
-        dpr={[1, 1.75]}
+        shadows="soft"
+        camera={{
+          position: [0, 0.26, renderProfile === "desktop-high" ? 4.9 : 5.1],
+          fov: renderProfile === "desktop-high" ? 24 : 25,
+        }}
+        dpr={renderProfile === "desktop-high" ? [1, 2] : [1, 1.5]}
         gl={{ antialias: true, preserveDrawingBuffer: true, alpha: true }}
         onCreated={({ gl }) => {
+          gl.toneMapping = ACESFilmicToneMapping;
+          gl.toneMappingExposure = renderProfile === "desktop-high" ? 1.02 : 0.98;
+          gl.shadowMap.enabled = true;
+          gl.shadowMap.type = PCFSoftShadowMap;
           gl.setClearColor(0x000000, 0);
         }}
       >
-        <hemisphereLight intensity={0.52} groundColor="#e5e7eb" />
-        <directionalLight position={[3.5, 4.2, 2.4]} intensity={1.1} />
-        <directionalLight position={[-2.8, 1.4, -1.8]} intensity={0.48} />
-        <directionalLight position={[0.2, -2.1, 2.3]} intensity={0.22} />
+        <ambientLight intensity={renderProfile === "desktop-high" ? 0.22 : 0.24} />
+        <hemisphereLight
+          intensity={renderProfile === "desktop-high" ? 0.62 : 0.54}
+          color="#f8fafc"
+          groundColor="#6b7280"
+        />
+        <directionalLight
+          castShadow
+          position={[3.2, 5.1, 3.8]}
+          intensity={renderProfile === "desktop-high" ? 1.08 : 0.94}
+          shadow-mapSize-width={renderProfile === "desktop-high" ? 2048 : 1024}
+          shadow-mapSize-height={renderProfile === "desktop-high" ? 2048 : 1024}
+          shadow-camera-near={0.5}
+          shadow-camera-far={12}
+          shadow-camera-left={-3.2}
+          shadow-camera-right={3.2}
+          shadow-camera-top={3.2}
+          shadow-camera-bottom={-3.2}
+          shadow-bias={-0.00014}
+          shadow-normalBias={0.018}
+        />
+        <directionalLight
+          position={[-4.2, 2.5, -1.6]}
+          intensity={renderProfile === "desktop-high" ? 0.44 : 0.34}
+          color="#dbeafe"
+        />
+        <directionalLight
+          position={[0.2, 2.2, -4.8]}
+          intensity={renderProfile === "desktop-high" ? 0.38 : 0.28}
+          color="#fef3c7"
+        />
+        <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -1.58, 0]} receiveShadow>
+          <planeGeometry args={[20, 20]} />
+          <meshStandardMaterial color="#7a7f86" roughness={0.92} metalness={0.02} />
+        </mesh>
 
         <Suspense fallback={null}>
-          <group position={[-0.02, 0.02, 0]} rotation={[0, modelYaw + viewOffset, 0]}>
+          <group position={[-0.01, -0.02, 0]} rotation={[0, modelYaw + viewOffset, 0]}>
             {modelVariant === "legacy" || !modelPath ? (
-              <LegacyHumanModel gender={gender} bmi={bmi} bodyFatPct={bodyFatPct} heightCm={heightCm} />
+              <LegacyHumanModel
+                gender={gender}
+                bmi={bmi}
+                bodyFatPct={bodyFatPct}
+                heightCm={heightCm}
+                materialSet={materialSet}
+                renderProfile={renderProfile}
+                modelPath={LEGACY_MODEL_PATH}
+              />
             ) : (
               <MorphTargetModel
                 modelPath={modelPath}
@@ -916,6 +1595,8 @@ function BodyRender(props: {
                 bodyFatPct={bodyFatPct}
                 heightCm={heightCm}
                 measurementAdjustments={measurementAdjustments}
+                materialSet={materialSet}
+                renderProfile={renderProfile}
               />
             )}
           </group>
@@ -929,12 +1610,12 @@ function BodyRender(props: {
           enableZoom
           enableDamping
           dampingFactor={0.08}
-          rotateSpeed={0.8}
+          rotateSpeed={0.72}
           minDistance={3.6}
           maxDistance={7.5}
           minPolarAngle={Math.PI / 2 - 0.5}
           maxPolarAngle={Math.PI / 2 + 0.5}
-          target={[0, 1.02, 0]}
+          target={[0, 0.98, 0]}
         />
       </Canvas>
     </div>
@@ -1269,7 +1950,6 @@ function ControlPanel(props: {
   bmi: number;
   bmiClass: Category;
   measurements: MeasurementSet;
-  derivedMeasurements: MeasurementSet;
   activePresetName: string;
   canResetSaved: boolean;
   isDirty: boolean;
@@ -1280,7 +1960,6 @@ function ControlPanel(props: {
   onBodyFatChange: (value: number) => void;
   onBmiChange: (value: number) => void;
   onMeasurementChange: (key: keyof MeasurementSet, valueCm: number) => void;
-  onToggleAdvancedMeasurements: () => void;
   onResetDefault: () => void;
   onResetSaved: () => void;
   onSavePreset: () => void;
@@ -1290,7 +1969,6 @@ function ControlPanel(props: {
     bmi,
     bmiClass,
     measurements,
-    derivedMeasurements,
     activePresetName,
     canResetSaved,
     isDirty,
@@ -1301,7 +1979,6 @@ function ControlPanel(props: {
     onBodyFatChange,
     onBmiChange,
     onMeasurementChange,
-    onToggleAdvancedMeasurements,
     onResetDefault,
     onResetSaved,
     onSavePreset,
@@ -1322,9 +1999,6 @@ function ControlPanel(props: {
   const hipsBounds = boundsInDisplayUnits(SLIDER_BOUNDS_CM.hipsCm, profile.units);
   const inseamBounds = boundsInDisplayUnits(SLIDER_BOUNDS_CM.inseamCm, profile.units);
 
-  const measurementSubtitle = profile.advancedMeasurementsEnabled
-    ? "Manual measurements influence local morph detail"
-    : "Auto mode derives measurements from height, weight, and body fat";
   const bodyFatClass = bodyFatCategory(profile.gender, profile.bodyFatPct);
   const bodyFatGradient = useMemo(() => {
     if (profile.gender === "male") {
@@ -1428,7 +2102,6 @@ function ControlPanel(props: {
             step={chestBounds.step}
             value={toDisplayUnit(measurements.chestCm, profile.units)}
             onChange={(value) => onMeasurementChange("chestCm", fromDisplayUnit(value, profile.units))}
-            disabled={!profile.advancedMeasurementsEnabled}
           />
 
           <SliderField
@@ -1440,7 +2113,6 @@ function ControlPanel(props: {
             step={waistBounds.step}
             value={toDisplayUnit(measurements.waistCm, profile.units)}
             onChange={(value) => onMeasurementChange("waistCm", fromDisplayUnit(value, profile.units))}
-            disabled={!profile.advancedMeasurementsEnabled}
           />
 
           <SliderField
@@ -1452,7 +2124,6 @@ function ControlPanel(props: {
             step={hipsBounds.step}
             value={toDisplayUnit(measurements.hipsCm, profile.units)}
             onChange={(value) => onMeasurementChange("hipsCm", fromDisplayUnit(value, profile.units))}
-            disabled={!profile.advancedMeasurementsEnabled}
           />
 
           <SliderField
@@ -1464,58 +2135,34 @@ function ControlPanel(props: {
             step={inseamBounds.step}
             value={toDisplayUnit(measurements.inseamCm, profile.units)}
             onChange={(value) => onMeasurementChange("inseamCm", fromDisplayUnit(value, profile.units))}
-            disabled={!profile.advancedMeasurementsEnabled}
           />
 
-          <div className="rounded-xl border border-gray-200 bg-white p-3 text-xs text-black">
-            <button
-              type="button"
-              onClick={onToggleAdvancedMeasurements}
-              className="flex w-full items-center justify-between font-semibold text-black"
-            >
-              <span>Advanced measurements</span>
-              <span>{profile.advancedMeasurementsEnabled ? "On" : "Off"}</span>
-            </button>
-            <p className="mt-2 text-black/70">{measurementSubtitle}</p>
-            {!profile.advancedMeasurementsEnabled ? (
-              <p className="mt-2 text-black/60">
-                Auto reference: chest {formatLength(derivedMeasurements.chestCm, profile.units)}, waist {formatLength(derivedMeasurements.waistCm, profile.units)}, hips {formatLength(derivedMeasurements.hipsCm, profile.units)}, inseam {formatLength(derivedMeasurements.inseamCm, profile.units)}.
-              </p>
-            ) : null}
-          </div>
+          <div className="space-y-4">
+            <GradientStatSlider
+              label="Body Fat"
+              value={round(profile.bodyFatPct, 1)}
+              valueDisplay={`${round(profile.bodyFatPct, 1)}%`}
+              min={bounds.min}
+              max={bounds.max}
+              step={0.1}
+              statusLabel={bodyFatClass.label}
+              statusColor={bodyFatClass.color}
+              trackGradient={bodyFatGradient}
+              onChange={onBodyFatChange}
+            />
 
-          <div className="rounded-xl border border-gray-200 bg-white p-3">
-            <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-black/70">
-              Core composition (linked)
-            </p>
-
-            <div className="space-y-4">
-              <GradientStatSlider
-                label="Body Fat"
-                value={round(profile.bodyFatPct, 1)}
-                valueDisplay={`${round(profile.bodyFatPct, 1)}%`}
-                min={bounds.min}
-                max={bounds.max}
-                step={0.1}
-                statusLabel={bodyFatClass.label}
-                statusColor={bodyFatClass.color}
-                trackGradient={bodyFatGradient}
-                onChange={onBodyFatChange}
-              />
-
-              <GradientStatSlider
-                label="BMI"
-                value={round(bmi, 1)}
-                valueDisplay={round(bmi, 1).toString()}
-                min={BMI_MIN}
-                max={BMI_MAX}
-                step={0.1}
-                statusLabel={bmiClass.label}
-                statusColor={bmiClass.color}
-                trackGradient={bmiGradient}
-                onChange={onBmiChange}
-              />
-            </div>
+            <GradientStatSlider
+              label="BMI"
+              value={round(bmi, 1)}
+              valueDisplay={round(bmi, 1).toString()}
+              min={BMI_MIN}
+              max={BMI_MAX}
+              step={0.1}
+              statusLabel={bmiClass.label}
+              statusColor={bmiClass.color}
+              trackGradient={bmiGradient}
+              onChange={onBmiChange}
+            />
           </div>
         </div>
       </div>
@@ -1648,21 +2295,66 @@ export default function BodyVisualizerTool() {
   const [snapshotPayload, setSnapshotPayload] = useState<SnapshotPayload | null>(null);
 
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const renderProfile = useRenderQualityProfile();
+  const { manifest: realismManifest } = useRealismManifest();
 
   const maleCustomAvailable = useAssetAvailable(CUSTOM_MODEL_PATHS.male);
   const femaleCustomAvailable = useAssetAvailable(CUSTOM_MODEL_PATHS.female);
   const maleMpfbAvailable = useAssetAvailable(MPFB_MODEL_PATHS.male);
   const femaleMpfbAvailable = useAssetAvailable(MPFB_MODEL_PATHS.female);
 
-  const modelVariant: ModelVariant =
-    maleCustomAvailable === true && femaleCustomAvailable === true
-      ? "custom"
-      : maleMpfbAvailable === true && femaleMpfbAvailable === true
-      ? "mpfb"
-      : "legacy";
+  const realismPaths = useMemo<Record<Gender, string | null>>(() => {
+    if (!realismManifest) return { male: null, female: null };
+    return {
+      male: pickRealismModelPath(realismManifest.gender.male, renderProfile),
+      female: pickRealismModelPath(realismManifest.gender.female, renderProfile),
+    };
+  }, [realismManifest, renderProfile]);
+
+  const realismFallbackPaths = useMemo<Record<Gender, string | null>>(() => {
+    if (!realismManifest) return { male: null, female: null };
+    return {
+      male: realismManifest.gender.male.fallbackModelPath ?? null,
+      female: realismManifest.gender.female.fallbackModelPath ?? null,
+    };
+  }, [realismManifest]);
+
+  const realismPrimaryAvailable = useAssetPairAvailable(realismPaths);
+  const realismFallbackAvailable = useAssetPairAvailable(realismFallbackPaths);
+
+  const customAvailable = maleCustomAvailable === true && femaleCustomAvailable === true;
+  const mpfbAvailable = maleMpfbAvailable === true && femaleMpfbAvailable === true;
+
+  const modelVariant: ModelVariant = useMemo(() => {
+    if (realismPrimaryAvailable === true) return "realism";
+    if (customAvailable) return "custom";
+    if (mpfbAvailable) return "mpfb";
+    if (realismFallbackAvailable === true) return "realism";
+    return "legacy";
+  }, [customAvailable, mpfbAvailable, realismFallbackAvailable, realismPrimaryAvailable]);
 
   const morphAdapter = MODEL_ADAPTERS[modelVariant];
-  const modelPath = modelVariant === "legacy" ? LEGACY_MODEL_PATH : morphAdapter.paths?.[profile.gender] ?? null;
+  const realismConfig = realismManifest?.gender[profile.gender];
+  const realismPath = realismConfig ? pickRealismModelPath(realismConfig, renderProfile) : null;
+  const realismFallbackPath = realismConfig?.fallbackModelPath ?? null;
+  const realismAliasMap = realismConfig?.morphMap;
+
+  const effectiveMorphAdapter = useMemo<MorphAdapter>(() => {
+    if (modelVariant !== "realism" || !realismAliasMap) return morphAdapter;
+    return {
+      ...morphAdapter,
+      aliases: { ...MORPH_CHANNEL_ALIASES, ...realismAliasMap },
+    };
+  }, [modelVariant, morphAdapter, realismAliasMap]);
+
+  const modelPath =
+    modelVariant === "realism"
+      ? realismPath ?? realismFallbackPath ?? (mpfbAvailable ? MPFB_MODEL_PATHS[profile.gender] : null)
+      : modelVariant === "legacy"
+      ? LEGACY_MODEL_PATH
+      : morphAdapter.paths?.[profile.gender] ?? null;
+
+  const activeMaterialSet = modelVariant === "realism" ? realismConfig?.materialSet : undefined;
 
   const bmi = useMemo(() => bmiFrom(profile.weightKg, profile.heightCm), [profile.weightKg, profile.heightCm]);
   const bmiClass = useMemo(() => bmiCategory(bmi), [bmi]);
@@ -1679,8 +2371,6 @@ export default function BodyVisualizerTool() {
   );
 
   const measurements = useMemo<MeasurementSet>(() => {
-    if (!profile.advancedMeasurementsEnabled) return derivedMeasurements;
-
     return {
       chestCm: clamp(
         profile.manualMeasurements?.chestCm ?? derivedMeasurements.chestCm,
@@ -1703,7 +2393,7 @@ export default function BodyVisualizerTool() {
         SLIDER_BOUNDS_CM.inseamCm.max
       ),
     };
-  }, [profile.advancedMeasurementsEnabled, profile.manualMeasurements, derivedMeasurements]);
+  }, [profile.manualMeasurements, derivedMeasurements]);
 
   const measurementAdjustments = useMemo(
     () => buildMeasurementAdjustments(measurements, derivedMeasurements),
@@ -1719,15 +2409,15 @@ export default function BodyVisualizerTool() {
     setProfile({
       ...next,
       syncMode: "linked",
-      manualMeasurements: next.advancedMeasurementsEnabled
-        ? next.manualMeasurements ??
-          estimateMeasurements({
-            gender: next.gender,
-            heightCm: next.heightCm,
-            weightKg: next.weightKg,
-            bodyFatPct: next.bodyFatPct,
-          })
-        : undefined,
+      advancedMeasurementsEnabled: true,
+      manualMeasurements:
+        next.manualMeasurements ??
+        estimateMeasurements({
+          gender: next.gender,
+          heightCm: next.heightCm,
+          weightKg: next.weightKg,
+          bodyFatPct: next.bodyFatPct,
+        }),
     });
   }, []);
 
@@ -1742,16 +2432,14 @@ export default function BodyVisualizerTool() {
         syncMode: "linked",
         gender: nextGender,
         bodyFatPct: nextBodyFat,
-      };
-
-      if (nextProfile.advancedMeasurementsEnabled) {
-        nextProfile.manualMeasurements = estimateMeasurements({
+        advancedMeasurementsEnabled: true,
+        manualMeasurements: estimateMeasurements({
           gender: nextGender,
-          heightCm: nextProfile.heightCm,
-          weightKg: nextProfile.weightKg,
-          bodyFatPct: nextProfile.bodyFatPct,
-        });
-      }
+          heightCm: current.heightCm,
+          weightKg: current.weightKg,
+          bodyFatPct: nextBodyFat,
+        }),
+      };
 
       return nextProfile;
     });
@@ -1826,7 +2514,6 @@ export default function BodyVisualizerTool() {
 
   const handleMeasurementChange = (key: keyof MeasurementSet, valueCm: number) => {
     setProfile((current) => {
-      if (!current.advancedMeasurementsEnabled) return current;
       const bounds = SLIDER_BOUNDS_CM[key];
       const nextManual: MeasurementSet = {
         ...(current.manualMeasurements ?? derivedMeasurements),
@@ -1835,24 +2522,6 @@ export default function BodyVisualizerTool() {
       return {
         ...current,
         manualMeasurements: nextManual,
-      };
-    });
-  };
-
-  const toggleAdvancedMeasurements = () => {
-    setProfile((current) => {
-      if (!current.advancedMeasurementsEnabled) {
-        return {
-          ...current,
-          advancedMeasurementsEnabled: true,
-          manualMeasurements: derivedMeasurements,
-        };
-      }
-
-      return {
-        ...current,
-        advancedMeasurementsEnabled: false,
-        manualMeasurements: undefined,
       };
     });
   };
@@ -1953,10 +2622,27 @@ export default function BodyVisualizerTool() {
   };
 
   const modelBadgeText = useMemo(() => {
+    if (modelVariant === "realism") {
+      const lodLabel =
+        renderProfile === "desktop-high"
+          ? realismConfig?.lod?.desktopLabel ?? "Desktop high"
+          : realismConfig?.lod?.mobileLabel ?? "Mobile fallback";
+      return `Realistic premium render (${lodLabel})`;
+    }
+    if (modelVariant === "mpfb" && realismManifest && realismPrimaryAvailable === false) {
+      return "MPFB render (premium realism files pending import)";
+    }
     if (modelVariant === "custom") return MODEL_ADAPTERS.custom.label;
     if (modelVariant === "mpfb") return MODEL_ADAPTERS.mpfb.label;
     return "Legacy fallback render";
-  }, [modelVariant]);
+  }, [
+    modelVariant,
+    realismConfig?.lod?.desktopLabel,
+    realismConfig?.lod?.mobileLabel,
+    realismManifest,
+    realismPrimaryAvailable,
+    renderProfile,
+  ]);
 
   return (
     <section className="w-full">
@@ -2013,9 +2699,11 @@ export default function BodyVisualizerTool() {
                 heightCm={profile.heightCm}
                 viewPreset={viewPreset}
                 modelVariant={modelVariant}
-                morphAdapter={morphAdapter}
+                morphAdapter={effectiveMorphAdapter}
                 modelPath={modelPath}
                 measurementAdjustments={measurementAdjustments}
+                materialSet={activeMaterialSet}
+                renderProfile={renderProfile}
                 onCanvasReady={(el) => {
                   canvasRef.current = el;
                 }}
@@ -2073,7 +2761,6 @@ export default function BodyVisualizerTool() {
               bmi={bmi}
               bmiClass={bmiClass}
               measurements={measurements}
-              derivedMeasurements={derivedMeasurements}
               activePresetName={activePresetName}
               canResetSaved={Boolean(savedBaselineProfile)}
               isDirty={isDirty}
@@ -2084,7 +2771,6 @@ export default function BodyVisualizerTool() {
               onBodyFatChange={handleBodyFatChange}
               onBmiChange={handleBmiChange}
               onMeasurementChange={handleMeasurementChange}
-              onToggleAdvancedMeasurements={toggleAdvancedMeasurements}
               onResetDefault={resetToDefault}
               onResetSaved={resetToSaved}
               onSavePreset={saveCurrentAsPreset}
@@ -2113,7 +2799,6 @@ export default function BodyVisualizerTool() {
                 bmi={bmi}
                 bmiClass={bmiClass}
                 measurements={measurements}
-                derivedMeasurements={derivedMeasurements}
                 activePresetName={activePresetName}
                 canResetSaved={Boolean(savedBaselineProfile)}
                 isDirty={isDirty}
@@ -2124,7 +2809,6 @@ export default function BodyVisualizerTool() {
                 onBodyFatChange={handleBodyFatChange}
                 onBmiChange={handleBmiChange}
                 onMeasurementChange={handleMeasurementChange}
-                onToggleAdvancedMeasurements={toggleAdvancedMeasurements}
                 onResetDefault={resetToDefault}
                 onResetSaved={resetToSaved}
                 onSavePreset={saveCurrentAsPreset}
@@ -2148,3 +2832,5 @@ export default function BodyVisualizerTool() {
 useGLTF.preload(LEGACY_MODEL_PATH);
 useGLTF.preload(MPFB_MODEL_PATHS.male);
 useGLTF.preload(MPFB_MODEL_PATHS.female);
+useGLTF.preload("/models/body-visualizer/realism/premium/male/body_male_realism_v1.glb");
+useGLTF.preload("/models/body-visualizer/realism/premium/female/body_female_realism_v1.glb");
