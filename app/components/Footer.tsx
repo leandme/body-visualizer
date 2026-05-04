@@ -25,6 +25,19 @@ export default function Footer() {
 
         <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
           <span className="text-xs text-gray-400">© {new Date().getFullYear()} Body Visualizer — All Rights Reserved.</span>
+          <span className="text-xs text-gray-400 max-w-2xl leading-relaxed">
+            <a href="mailto:matt@leandme.com" className="hover:underline">
+              Contact
+            </a>{" "}
+            |{" "}
+            <a href="/terms" className="hover:underline">
+              Terms
+            </a>{" "}
+            |{" "}
+            <a href="/privacy" className="hover:underline">
+              Privacy
+            </a>
+          </span>
         </div>
       </div>
     </footer>
