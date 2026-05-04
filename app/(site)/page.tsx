@@ -146,10 +146,10 @@ export default function Home() {
         <BodyVisualizerTool />
       </section>
 
-      <section className="mx-auto mt-16 max-w-[1400px] overflow-hidden rounded-[30px] border border-gray-200 bg-white text-gray-900 shadow-sm">
+      <section className="mx-auto mt-16 max-w-[1400px] overflow-hidden rounded-[30px] bg-white text-gray-900 shadow-sm">
         <div className="px-6 pb-10 pt-12 text-center sm:px-8">
           <h1 className="text-4xl font-bold tracking-tight lg:text-5xl">Body Visualizer</h1>
-          <p className="mx-auto mt-5 max-w-4xl text-xl text-gray-600">
+          <p className="mx-auto mt-5 max-w-4xl text-lg text-gray-600">
             Transform your measurements into a lifelike 3D body model in seconds.
           </p>
         </div>
@@ -175,10 +175,10 @@ export default function Home() {
 
           <div className="space-y-7">
             <h2 className="text-3xl font-bold leading-tight lg:text-4xl">What is Body Visualizer</h2>
-            <p className="text-2xl leading-relaxed text-gray-600">
+            <p className="text-lg leading-relaxed text-gray-600">
               Body Visualizer creates realistic 3D body references from your measurements so you can compare shape changes in a clearer, more intuitive way.
             </p>
-            <p className="text-2xl leading-relaxed text-gray-600">
+            <p className="text-lg leading-relaxed text-gray-600">
               Enter BMI, height, weight, chest, waist, hips, and inseam to explore how different combinations influence overall proportions.
             </p>
 
@@ -188,8 +188,8 @@ export default function Home() {
                   <CheckCircle2 className="text-[#66cf7f]" size={22} />
                 </div>
                 <div>
-                  <p className="text-3xl font-semibold">Free and No Login</p>
-                  <p className="mt-2 text-xl leading-relaxed text-gray-600">
+                  <p className="text-lg font-semibold">Free and No Login</p>
+                  <p className="mt-2 text-lg leading-relaxed text-gray-600">
                     Use Body Visualizer instantly without creating an account.
                   </p>
                 </div>
@@ -200,8 +200,8 @@ export default function Home() {
                   <Activity className="text-[#66cf7f]" size={22} />
                 </div>
                 <div>
-                  <p className="text-3xl font-semibold">Real-Time Visualization</p>
-                  <p className="mt-2 text-xl leading-relaxed text-gray-600">
+                  <p className="text-lg font-semibold">Real-Time Visualization</p>
+                  <p className="mt-2 text-lg leading-relaxed text-gray-600">
                     Watch the avatar update instantly as you adjust sliders and measurements.
                   </p>
                 </div>
@@ -212,8 +212,8 @@ export default function Home() {
                   <Smartphone className="text-[#66cf7f]" size={22} />
                 </div>
                 <div>
-                  <p className="text-3xl font-semibold">Simple Interface</p>
-                  <p className="mt-2 text-xl leading-relaxed text-gray-600">
+                  <p className="text-lg font-semibold">Simple Interface</p>
+                  <p className="mt-2 text-lg leading-relaxed text-gray-600">
                     Easy controls on desktop and mobile make body-shape exploration straightforward.
                   </p>
                 </div>
@@ -223,14 +223,14 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="mx-auto mt-16 max-w-[1400px] overflow-hidden rounded-[30px] border border-gray-200 bg-white text-gray-900 shadow-sm">
+      <section className="mx-auto mt-16 max-w-[1400px] overflow-hidden rounded-[30px] bg-white text-gray-900 shadow-sm">
         <div className="grid gap-10 px-6 py-10 sm:px-8 lg:grid-cols-2 lg:items-start">
           <div>
             <span className="inline-flex rounded-full border border-gray-300 bg-gray-100 px-4 py-1.5 text-sm font-semibold text-gray-700">
               Benefits
             </span>
             <h2 className="mt-5 text-3xl font-bold leading-tight lg:text-4xl">Why Use Our Body Visualizer</h2>
-            <p className="mt-5 text-xl leading-relaxed text-gray-600">
+            <p className="mt-5 text-lg leading-relaxed text-gray-600">
               Discover how Body Visualizer transforms abstract body numbers into meaningful visual insights for better decision-making.
             </p>
 
@@ -275,9 +275,9 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="mx-auto mt-16 max-w-[1400px] overflow-hidden rounded-[30px] border border-gray-200 bg-white px-6 py-10 shadow-sm sm:px-8">
+      <section className="mx-auto mt-16 max-w-[1400px] overflow-hidden rounded-[30px] bg-white px-6 py-10 shadow-sm sm:px-8">
         <h2 className="mx-auto max-w-2xl text-center text-3xl font-bold leading-tight text-gray-900 lg:text-4xl">How to Use the Body Visualizer</h2>
-        <p className="mx-auto mt-5 max-w-3xl text-center text-xl leading-relaxed text-gray-600">
+        <p className="mx-auto mt-5 max-w-3xl text-center text-lg leading-relaxed text-gray-600">
           Creating your personalized 3D model takes less than a minute with these straightforward steps.
         </p>
 
@@ -298,7 +298,7 @@ export default function Home() {
                 {index + 1}
               </div>
               <h2 className="text-3xl font-semibold text-gray-900 lg:text-4xl">{step.title}</h2>
-              <p className="mt-3 text-xl leading-relaxed text-gray-600">{step.description}</p>
+              <p className="mt-3 text-lg leading-relaxed text-gray-600">{step.description}</p>
             </article>
           ))}
         </div>
@@ -316,12 +316,12 @@ export default function Home() {
       <section className="mt-16">
         <div
           id="cta"
-          className="mx-auto w-full max-w-4xl rounded-3xl border border-gray-200 bg-white px-6 py-14 text-center shadow-sm"
+          className="mx-auto w-full max-w-4xl rounded-3xl bg-white px-6 py-14 text-center shadow-sm"
         >
           <h2 className="text-3xl font-semibold text-gray-900 lg:text-4xl">
             Start Visualizing Your Body Shape Today
           </h2>
-          <p className="mx-auto mt-6 max-w-3xl text-xl leading-relaxed text-gray-700">
+          <p className="mx-auto mt-6 max-w-3xl text-lg leading-relaxed text-gray-700">
             Join thousands of satisfied Body Visualizer users and create your personalized 3D avatar now.
           </p>
           <div className="mt-10">
