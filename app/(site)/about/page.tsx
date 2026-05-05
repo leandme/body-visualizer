@@ -120,6 +120,8 @@ export default function AboutPage() {
             <a href="https://heightestimatorai.com" className="text-primary">Height Estimator</a><br />
             <a href="https://bodyshapeanalyzer.com" className="text-primary">Body Shape Visualizer</a><br />
             <a href="https://canthaltilttest.com" className="text-primary">Canthal Tilt Test</a><br />
+            <a href="https://bodyrecompositioncalculator.org" className="text-primary">Body Recomposition Calculator</a><br />
+            <a href="https://bulkingcaloriecalculator.com" className="text-primary">Bulking Calorie Calculator</a><br />
             <a href="https://bodyvisualizer.ai" className="text-primary">Body Visualizer</a>
           </p>
 
