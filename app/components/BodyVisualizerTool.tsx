@@ -1856,7 +1856,14 @@ function StatisticalMorphModel(props: {
 
   useEffect(() => {
     const mesh = meshRef.current;
-    if (!mesh?.morphTargetInfluences?.length) return;
+    if (!mesh) return;
+
+    // The mesh may be constructed before morphAttributes are attached to the geometry.
+    // Ensure the morph target dictionary/influence array are initialized for this geometry.
+    if (!mesh.morphTargetInfluences?.length) {
+      mesh.updateMorphTargets();
+    }
+    if (!mesh.morphTargetInfluences?.length) return;
 
     for (let i = 0; i < mesh.morphTargetInfluences.length; i += 1) {
       mesh.morphTargetInfluences[i] = 0;
