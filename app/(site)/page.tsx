@@ -12,7 +12,7 @@ import {
 import BodyVisualizerTool from "../components/BodyVisualizerTool";
 import FaqSection from "../components/FaqSection";
 
-const title = "Body Visualizer – BMI, Weight, Height & Shape";
+const title = "Body Visualizer – BMI, Weight, Height & Shape Simualtor";
 const description =
   "Interactive body visualizer with male/female morph models, advanced measurements, local presets, and snapshot export.";
 
