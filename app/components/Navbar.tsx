@@ -13,14 +13,7 @@ export default function Navbar() {
           {SITE_NAME}
         </a>
       </div>
-      <div className="navbar-end">
-        <a
-          href="https://skoy.ai"
-          className="btn btn-ghost text-base font-medium hover:bg-transparent focus:bg-transparent active:bg-transparent"
-        >
-          AI Calorie Counter
-        </a>
-      </div>
+      
     </div>
   );
 }
