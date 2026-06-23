@@ -25,11 +25,7 @@ export default function Hero() {
           <h1 className="text-4xl lg:text-5xl font-bold">See Your Future Body with AI</h1>
 
           <p className="py-6 text-lg mt-2">
-            Upload a photo, tweak body fat %, BMI, weight, and measurements, then visualize how your body could change. Fast and{" "}
-            <span className="inline-block rounded-md border border-primary px-2 py-0.5 text-base font-semibold text-primary">
-              realistic
-            </span>
-            .
+            Upload a photo, tweak body fat %, BMI, weight, and measurements, then visualize how your body could change.
           </p>
         </div>
 
