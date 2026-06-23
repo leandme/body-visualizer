@@ -1,15 +1,16 @@
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Sitemap - Body Visualizer",
-  description: "HTML sitemap for Body Visualizer.",
+  title: "Sitemap - BodyVisualizer",
+  description: "HTML sitemap for BodyVisualizer.",
 };
 
 const links = [
   { href: "/", label: "Home" },
   { href: "/upload", label: "Upload" },
   { href: "/about", label: "About" },
-  { href: "/#homepage-faq", label: "FAQs" },
+  { href: "/contact", label: "Contact" },
+  { href: "/#faqs", label: "FAQs" },
   { href: "/terms", label: "Terms" },
   { href: "/privacy", label: "Privacy" },
   { href: "/cookies", label: "Cookie" },

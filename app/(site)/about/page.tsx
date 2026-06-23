@@ -2,7 +2,7 @@ import { Metadata } from "next";
 
 const title = "About";
 const description =
-  "Learn what Body Visualizer is, how the interactive model works, key limitations, and how to use it responsibly.";
+  "Learn what BodyVisualizer is, how the AI body visualization workflow works, key limitations, and how to use it responsibly.";
 
 export const metadata: Metadata = {
   title,
@@ -17,31 +17,32 @@ export default function AboutPage() {
 
         <div className="prose prose-invert max-w-3xl text-center lg:text-left">
           <p className="text-lg">
-            Body Visualizer is an interactive 3D tool designed to help people explore how body fat percentage, BMI,
-            height, and weight can change overall body appearance. The goal is simple: make body-composition context
-            easier to understand and easier to use.
+            BodyVisualizer is an AI body visualization tool designed to help people explore how body fat percentage,
+            BMI, height, weight, and measurements can change overall body appearance. The goal is simple: make
+            body-composition context easier to understand and easier to use.
           </p>
 
           <h2>Why this tool exists</h2>
           <p className="text-lg">
             Numbers like BMI, weight, and body-fat percentage are useful, but they can feel abstract in isolation.
-            Body Visualizer exists to turn those metrics into a visual model so scenario planning and progress reviews
+            BodyVisualizer exists to turn those metrics into a visual model so scenario planning and progress reviews
             become more intuitive.
           </p>
 
           <h2>How it works (high level)</h2>
           <p className="text-lg">
-            The tool uses slider inputs and composition formulas to update a live body model. As you change body fat,
-            BMI, height, and weight, the render and derived metrics update in real time so you can compare scenarios.
+            The intended workflow starts with a clear full-body photo, then lets you adjust body fat percentage, BMI,
+            height, weight, and measurements. As you change those inputs, the preview and derived metrics update so you
+            can compare scenarios.
           </p>
           <p className="text-lg">
             You can switch between male and female profiles, imperial and metric units, plus linked or independent
-            slider modes depending on how you want to test changes.
+            controls depending on how you want to test changes.
           </p>
 
           <h2>Accuracy and limitations</h2>
           <p className="text-lg">
-            Body Visualizer is a directional planning tool, not a clinical measurement system. It is most useful for
+            BodyVisualizer is a directional planning tool, not a clinical measurement system. It is most useful for
             trend comparison, education, and what-if scenario testing.
           </p>
           <ul className="text-lg">
@@ -52,8 +53,8 @@ export default function AboutPage() {
 
           <h2>Privacy</h2>
           <p className="text-lg">
-            Privacy matters. Body Visualizer does not require photo uploads to run core scenarios. Review the Privacy
-            Policy for details on data handling.
+            Privacy matters. Uploaded photos are intended for processing and result generation only, and BodyVisualizer
+            aims to minimize retention wherever possible. Review the Privacy Policy for details on data handling.
           </p>
 
           <h2>Who should use this tool</h2>

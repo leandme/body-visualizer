@@ -1,8 +1,8 @@
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Cookie Policy - Body Visualizer",
-  description: "Cookie and similar technology usage for Body Visualizer.",
+  title: "Cookie Policy - BodyVisualizer",
+  description: "Cookie and similar technology usage for BodyVisualizer.",
 };
 
 export default function CookiesPage() {
@@ -10,7 +10,7 @@ export default function CookiesPage() {
     <div className="container mx-auto px-4 py-8 lg:px-8 lg:py-16 max-w-4xl">
       <h1 className="text-4xl font-bold mb-6">Cookie Policy</h1>
       <p className="text-lg mb-4">
-        This page describes how Body Visualizer may use cookies and similar technologies.
+        This page describes how BodyVisualizer may use cookies and similar technologies.
       </p>
 
       <section className="mb-6">

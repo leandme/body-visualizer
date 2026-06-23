@@ -1,132 +1,102 @@
+import { CheckCircle2 } from "lucide-react";
+
+const checkoutLinks = {
+  tenVisualizations: "https://buy.stripe.com/5kQ00j25J1X3clZ2ekfAc0h",
+  unlimitedAccess: "https://buy.stripe.com/4gMdR95hVdFL99N2ekfAc0i",
+};
+
+const plans = [
+  {
+    name: "10 Visualizations",
+    description: "Best for testing a few goal scenarios or comparing several body-shape variations.",
+    originalPrice: "$9",
+    price: "$5",
+    href: checkoutLinks.tenVisualizations,
+    cta: "Get 10 Visualizations",
+    features: [
+      "10 AI body visualizations",
+      "Upload an image and adjust target stats",
+      "Tweak body fat percentage, BMI, and weight",
+      "Save previews for progress planning",
+    ],
+  },
+  {
+    name: "Unlimited Access",
+    description: "Best for ongoing progress tracking, coaching, or experimenting with many what-if scenarios.",
+    originalPrice: "$24",
+    price: "$15",
+    href: checkoutLinks.unlimitedAccess,
+    cta: "Get Unlimited Access",
+    badge: "Best Value",
+    highlighted: true,
+    features: [
+      "Unlimited AI body visualizations",
+      "Create as many body-shape scenarios as you want",
+      "Compare changes across body fat, BMI, weight, and measurements",
+      "Use for long-term goal and progress planning",
+    ],
+  },
+];
+
 export default function Pricing() {
   return (
-    <div className="hero  flex items-center mb-20 justify-center">
-      <div className="flex flex-col items-center text-center">
-        <div className="flex flex-col items-center gap-8 p-6 lg:flex-row lg:justify-center lg:gap-24 mt-2">
-          {/* Card 1 */}
-          <div className="card bg-base-100 w-full max-w-lg shadow-xl">
+    <div className="flex w-full items-center justify-center">
+      <div className="grid w-full max-w-5xl grid-cols-1 gap-8 px-6 py-4 lg:grid-cols-2">
+        {plans.map((plan) => (
+          <article
+            key={plan.name}
+            className={[
+              "card w-full border bg-base-100 shadow-xl",
+              plan.highlighted ? "border-[#00AA6E]" : "border-gray-200",
+            ].join(" ")}
+          >
             <div className="card-body">
-              <h2 className="card-title justify-center text-3xl lg:text:4xl font-bold">
-                Snapshot
-              </h2>
-              <div className="flex justify-center items-center mr-12 mt-6">
-                <span className="text-lg text-gray-500 line-through mr-2">$6</span>
-                <span className="text-4xl font-extrabold">$3</span>
-                <span className="text-xs text-gray-500 ml-2">USD</span>
-              </div>
-              <ul className="mt-4 space-y-2">
-                <li className="flex items-center text-gray-500">
-                  <span className="text-green-500 mr-2">✔️</span>
-                  1 body fat estimate
-                </li>
-                <li className="flex items-center text-gray-500">
-                  <span className="text-green-500 mr-2">✔️</span>
-                  Highly accurate results
-                </li>
-                <li className="flex items-center text-gray-500">
-                  <span className="text-green-500 mr-2">✔️</span>
-                  7 day money-back guarantee
-                </li>
-              </ul>
-              <div className="card-actions mt-6">
-                <a
-                  href="https://buy.stripe.com/bIY6qkbfOdvCffi6oo"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="btn btn-primary text-lg text-white w-full"
-                >
-                  Get 1 Scan
-                </a>
-                <p className="text-sm text-center text-gray-500 mt-2">
-                  🔒 Pay once. No subscription.
+              <div className="flex flex-col items-center gap-3 text-center">
+                {plan.badge ? (
+                  <span className="badge border-0 bg-[#00AA6E] px-3 py-3 text-white">
+                    {plan.badge}
+                  </span>
+                ) : null}
+                <h2 className="card-title justify-center text-3xl font-bold">
+                  {plan.name}
+                </h2>
+                <p className="max-w-sm text-base leading-relaxed text-gray-600">
+                  {plan.description}
                 </p>
               </div>
-            </div>
-          </div>
 
-          {/* Card 2 */}
-          <div className="card bg-base-100 w-full max-w-lg shadow-xl">
-            <div className="card-body">
-              <h2 className="card-title justify-center text-3xl lg:text:4xl font-bold">
-                Progress
-              </h2>
-              <div className="flex justify-center items-center mr-12 mt-6">
-                <span className="text-lg text-gray-500 line-through mr-2">$18</span>
-                <span className="text-4xl font-extrabold">$9</span>
-                <span className="text-xs text-gray-500 ml-2">USD</span>
+              <div className="mt-6 flex items-end justify-center gap-2">
+                <span className="mb-1 text-lg text-gray-500 line-through">
+                  {plan.originalPrice}
+                </span>
+                <span className="text-5xl font-extrabold">{plan.price}</span>
+                <span className="mb-2 text-xs text-gray-500">USD</span>
               </div>
-              <ul className="mt-4 space-y-2">
-                <li className="flex items-center text-gray-500">
-                  <span className="text-green-500 mr-2">✔️</span>
-                  10 body fat estimates
-                </li>
-                <li className="flex items-center text-gray-500">
-                  <span className="text-green-500 mr-2">✔️</span>
-                  Highly accurate results
-                </li>
-                <li className="flex items-center text-gray-500">
-                  <span className="text-green-500 mr-2">✔️</span>
-                  7 day money-back guarantee
-                </li>
-              </ul>
-              <div className="card-actions mt-6">
-                <a
-                  href="https://buy.stripe.com/cN2bKEes0fDKffiaEF" // Replace with your actual Stripe link
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="btn btn-primary text-lg text-white w-full"
-                >
-                  Get 10 Scans
-                </a>
-                <p className="text-sm text-center text-gray-500 mt-2">
-                🔒 Pay once. No subscription.
-                </p>
-              </div>
-            </div>
-          </div>
 
-          {/* Card 3 */}
-          <div className="card bg-base-100 w-full max-w-lg shadow-xl">
-            <div className="card-body">
-              <h2 className="card-title justify-center text-3xl lg:text:4xl font-bold">
-                Athlete
-                <div className="badge text-white bg-[#00AA6E]">VALUE</div>
-              </h2>
-              <div className="flex justify-center items-center mr-12 mt-6">
-                <span className="text-lg text-gray-500 line-through mr-2">$50</span>
-                <span className="text-4xl font-extrabold">$25</span>
-                <span className="text-xs text-gray-500 ml-2">USD</span>
-              </div>
-              <ul className="mt-4 space-y-2">
-                <li className="flex items-center text-gray-500">
-                  <span className="text-green-500 mr-2">✔️</span>
-                  <span className="bg-[#D6EFE4] px-1 rounded">Unlimited</span>&nbsp;body fat estimates
-                </li>
-                <li className="flex items-center text-gray-500">
-                  <span className="text-green-500 mr-2">✔️</span>
-                  Highly accurate results
-                </li>
-                <li className="flex items-center text-gray-500">
-                  <span className="text-green-500 mr-2">✔️</span>
-                  7 day money-back guarantee
-                </li>
+              <ul className="mt-8 space-y-3">
+                {plan.features.map((feature) => (
+                  <li key={feature} className="flex items-start text-left text-gray-600">
+                    <CheckCircle2 className="mr-2 mt-0.5 h-5 w-5 shrink-0 text-[#00AA6E]" />
+                    <span>{feature}</span>
+                  </li>
+                ))}
               </ul>
-              <div className="card-actions mt-6">
+
+              <div className="card-actions mt-8">
                 <a
-                  href="https://buy.stripe.com/9AQ8ysdnWdvCaZ2aEG"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="btn btn-primary text-lg text-white w-full"
+                  href={plan.href}
+                  className="btn btn-primary w-full text-lg text-white"
+                  aria-disabled={plan.href === "#"}
                 >
-                  Get Unlimited Scans
+                  {plan.cta}
                 </a>
-                <p className="text-sm text-center text-gray-500 mt-2">
-                  🔒 Pay once. Use forever.
+                <p className="mt-2 w-full text-center text-sm text-gray-500">
+                  Pay once. No subscription.
                 </p>
               </div>
             </div>
-          </div>
-        </div>
+          </article>
+        ))}
       </div>
     </div>
   );

@@ -2347,7 +2347,7 @@ async function exportSnapshotCardPng(payload: SnapshotPayload, modelDataUrl: str
 
   ctx.fillStyle = "#d5e6ff";
   ctx.font = "600 30px Inter, system-ui, sans-serif";
-  ctx.fillText("Body Visualizer", panelX + 34, panelY + 52);
+  ctx.fillText("BodyVisualizer", panelX + 34, panelY + 52);
 
   ctx.fillStyle = "rgba(255,255,255,0.72)";
   ctx.font = "500 18px Inter, system-ui, sans-serif";

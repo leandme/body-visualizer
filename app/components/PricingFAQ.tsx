@@ -1,69 +1,70 @@
-export default function PricingFAQ() {
-    return (
-      <div id="faq" className="hero mt-10 mb-20 flex items-center justify-center bg-base-100">
-        <div className="hero-content w-full px-4">
-          <div className="max-w-5xl mx-auto">
-            {/* Heading */}
-            <h2 className="text-xl lg:text-4xl text-center font-bold">
-              Frequently Asked Questions
-            </h2>
-            <p className="py-6 text-lg mb-6 text-center">
-          Have another question? Reach out to our support team by sending us an <a href="mailto:matt@leandme.com" className="text-primary">email</a> and we’ll get back to you as soon as we can.
-          </p>
-  
-            {/* FAQ Items */}
-            <div className="space-y-4">
-    
-              <div className="collapse collapse-plus bg-base-500 rounded-lg">
-                <input type="radio" name="faq-accordion" />
-                <div className="collapse-title text-lg lg:text-xl">
-                  Should I buy one estimate or unlimited?
-                </div>
-                <div className="collapse-content">
-                  <p className="text-lg">
-                  For one-off or hard-to-predict body fat estimate needs, buying 1 or 10 estimates is a great option.
+const pricingFaqs = [
+  {
+    question: "Which BodyVisualizer plan should I choose?",
+    answer:
+      "Choose 10 Visualizations if you only want to test a few body-shape scenarios. Choose Unlimited Access if you want to experiment freely, compare many targets, or use BodyVisualizer regularly over time.",
+  },
+  {
+    question: "What counts as a visualization?",
+    answer:
+      "A visualization is one generated body-shape preview based on your uploaded image and adjusted stats, such as body fat percentage, BMI, weight, height, or measurements.",
+  },
+  {
+    question: "Does Unlimited Access include future visualizations?",
+    answer:
+      "Yes. Unlimited Access is intended for ongoing use, so you can keep generating and comparing body visualizations without worrying about a 10-use limit.",
+  },
+  {
+    question: "Can I change my body fat percentage, BMI, and weight after purchase?",
+    answer:
+      "Yes. The point of BodyVisualizer is to let you tweak those values and compare different scenarios, so you can keep adjusting the inputs for each visualization.",
+  },
+  {
+    question: "Is this a subscription?",
+    answer:
+      "No. These are one-time purchases. The 10 Visualization plan gives you 10 uses, and Unlimited Access gives you ongoing access without a recurring monthly bill.",
+  },
+  {
+    question: "Can I get a refund if I am not satisfied?",
+    answer:
+      "Yes. If something does not work as expected, contact support within 7 days of purchase and we will help make it right.",
+  },
+];
 
-                  For larger or ongoing estimate needs, you'll save on every estimate that you process with an unlimited lifetime deal. With monthly plans starting at just 40 images per month and rollover of any unused credits (up to 5×) you'll benefit from huge savings without making a huge commitment.
-                  </p>
-                </div>
+export default function PricingFAQ() {
+  return (
+    <section id="pricing-faq" className="mt-16 mb-20 w-full">
+      <div className="mx-auto max-w-5xl px-4">
+        <h2 className="text-center text-3xl font-bold lg:text-4xl">
+          Pricing FAQs
+        </h2>
+        <p className="mx-auto mt-4 max-w-2xl text-center text-lg leading-relaxed text-gray-700">
+          Questions about BodyVisualizer pricing, access, or refunds? Email{" "}
+          <a href="mailto:matt@leandme.com" className="text-primary">
+            support
+          </a>{" "}
+          and we will help.
+        </p>
+
+        <div className="mt-8 space-y-4">
+          {pricingFaqs.map((item) => (
+            <div
+              key={item.question}
+              className="collapse collapse-plus rounded-xl border border-gray-200 bg-base-100"
+            >
+              <input type="radio" name="pricing-faq-accordion" />
+              <div className="collapse-title text-lg font-medium lg:text-xl">
+                {item.question}
               </div>
-              <div className="collapse collapse-plus bg-base-500 rounded-lg">
-                <input type="radio" name="faq-accordion" />
-                <div className="collapse-title text-lg lg:text-xl">
-                What happens if I don't use all my esimates?
-                </div>
-                <div className="collapse-content">
-                  <p className="text-lg">
-                  Your leftover estimates will never expire. They can be used at any time in the future.
-                  </p>
-                </div>
-              </div>
-              <div className="collapse collapse-plus bg-base-500 rounded-lg">
-                <input type="radio" name="faq-accordion" />
-                <div className="collapse-title text-lg lg:text-xl">
-                  Can I get a refund if I'm not satisfied?
-                </div>
-                <div className="collapse-content">
-                  <p className="text-lg">
-                  We’re confident in the accuracy of our tool, but if you feel the results are off, you can get a 100% refund if you reach out to us within 7 days of your purchase.
-                  </p>
-                </div>
-              </div>
-              <div className="collapse collapse-plus bg-base-500 rounded-lg">
-                <input type="radio" name="faq-accordion" />
-                <div className="collapse-title text-lg lg:text-xl">
-                What payment methods do you support?
-                </div>
-                <div className="collapse-content">
-                  <p className="text-lg">
-                  We support all major Credit Cards, PayPal and Apple Pay.
-                  </p>
-                </div>
+              <div className="collapse-content">
+                <p className="text-lg leading-relaxed text-gray-700">
+                  {item.answer}
+                </p>
               </div>
             </div>
-          </div>
+          ))}
         </div>
       </div>
-    );
-  }
-  
+    </section>
+  );
+}

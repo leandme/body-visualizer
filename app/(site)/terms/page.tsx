@@ -1,8 +1,8 @@
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Terms & Conditions - Body Visualizer",
-  description: "Terms governing use of Body Visualizer and its interactive body-composition modeling features.",
+  title: "Terms & Conditions - BodyVisualizer",
+  description: "Terms governing use of BodyVisualizer and its interactive body-composition modeling features.",
 };
 
 export default function TermsPage() {
@@ -10,14 +10,15 @@ export default function TermsPage() {
     <div className="container mx-auto px-4 py-8 lg:px-8 lg:py-16 max-w-4xl">
       <h1 className="text-4xl font-bold mb-6">Terms &amp; Conditions</h1>
       <p className="mb-4 text-lg">
-        These Terms govern your use of Body Visualizer. By using this service, you agree to these terms.
+        These Terms govern your use of BodyVisualizer. By using this service, you agree to these terms.
       </p>
 
       <section className="mb-8">
         <h2 className="text-2xl font-semibold mb-4">1. Service Scope</h2>
         <p>
-          Body Visualizer provides interactive body-composition visualization based on user-provided inputs such as
-          height, weight, BMI, and body-fat percentage. Results are informational only and are not medical advice.
+          BodyVisualizer provides interactive body-composition visualization based on uploaded images and
+          user-provided inputs such as height, weight, BMI, and body-fat percentage. Results are informational only and
+          are not medical advice.
         </p>
       </section>
 
@@ -33,7 +34,7 @@ export default function TermsPage() {
       <section className="mb-8">
         <h2 className="text-2xl font-semibold mb-4">3. No Medical or Clinical Use</h2>
         <p>
-          Body Visualizer is not a medical or diagnostic tool. Do not rely on it as a substitute for professional
+          BodyVisualizer is not a medical or diagnostic tool. Do not rely on it as a substitute for professional
           evaluation or official measurement.
         </p>
       </section>

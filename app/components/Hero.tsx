@@ -1,22 +1,42 @@
-import ReviewBox from "./ReviewBox";
+"use client";
+
+import Image from "next/image";
+import TryExamples from "./TryExamples";
+import UploadDropzone from "./UploadDropZone";
 
 export default function Hero() {
   return (
-    <div className="hero min-h-screen lg:-mt-28 flex items-center justify-center">
-      <div className="hero-content text-center">
-        <div className="max-w-2xl">
-          <h1 className="text-4xl lg:text-5xl font-bold">
-            Estimate Height from a Photo
-          </h1>
-          <p className="py-6 text-lg mt-6">
-            Upload a full-body photo and get an apparent adult-height estimate with confidence and range context.
+    <div id="upload" className="hero min-h-screen lg:-mt-28 flex items-start lg:items-center justify-center pt-0 lg:pt-0">
+      <div className="hero-content w-full max-w-6xl px-6 lg:px-12 flex flex-col lg:flex-row items-center gap-6 lg:gap-16">
+        <div className="w-full lg:w-1/2 text-center lg:text-left">
+          <div className="flex justify-center mb-6 lg:mb-8">
+            <div className="relative w-full max-w-[360px] aspect-[3/2] mx-auto">
+              <Image
+                src="/hero/body-visualizer-header.webp"
+                alt="BodyVisualizer preview"
+                fill
+                priority
+                className="object-contain"
+                sizes="(max-width: 640px) 320px, 360px"
+              />
+            </div>
+          </div>
+
+          <h1 className="text-4xl lg:text-5xl font-bold">See Your Future Body with AI</h1>
+
+          <p className="py-6 text-lg mt-2">
+            Upload a photo, tweak body fat %, BMI, weight, and measurements, then visualize how your body could change. Fast, realistic, and{" "}
+            <span className="inline-block bg-primary text-white px-2 py-0.5 rounded-md text-base font-semibold">
+              free
+            </span>
           </p>
-          <a href="/">
-            <button className="btn btn-primary btn-lg text-white mt-6">
-              Estimate My Height <span className="text-lg">→</span>
-            </button>
-          </a>
-          <ReviewBox />
+        </div>
+
+        <div className="w-full lg:w-1/2 flex justify-center lg:justify-end">
+          <div className="w-full max-w-xl">
+            <UploadDropzone basePath="/" />
+            <TryExamples />
+          </div>
         </div>
       </div>
     </div>

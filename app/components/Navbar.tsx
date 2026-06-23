@@ -1,4 +1,4 @@
-const SITE_NAME = "Body Visualizer";
+const SITE_NAME = "BodyVisualizer";
 const LOGO_SRC = "/logo.png";
 
 export default function Navbar() {
@@ -9,7 +9,7 @@ export default function Navbar() {
           className="btn btn-ghost font-heading text-xl flex items-center gap-2 hover:bg-transparent focus:bg-transparent active:bg-transparent"
           href="/"
         >
-          <img src={LOGO_SRC} alt="Body Visualizer Logo" className="w-6 h-6" />
+          <img src={LOGO_SRC} alt="BodyVisualizer Logo" className="w-6 h-6" />
           {SITE_NAME}
         </a>
       </div>
