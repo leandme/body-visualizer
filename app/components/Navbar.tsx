@@ -13,7 +13,11 @@ export default function Navbar() {
           {SITE_NAME}
         </a>
       </div>
-      
+      <div className="navbar-end">
+        <a className="btn btn-ghost text-base" href="/pricing">
+          Pricing
+        </a>
+      </div>
     </div>
   );
 }
