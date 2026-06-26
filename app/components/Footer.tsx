@@ -16,13 +16,13 @@ export default function Footer() {
             <div className="flex items-center gap-2">
               <img
                 src="/logo.png"
-                alt="BodyVisualizer Logo"
+                alt="Body Visualizer Logo"
                 width={32}
                 height={32}
                 className="w-8 h-8 shrink-0 object-contain"
                 loading="eager"
               />
-              <span className="text-lg font-semibold">BodyVisualizer</span>
+              <span className="text-lg font-semibold">Body Visualizer</span>
             </div>
           </a>
           <p className="mt-3 text-base leading-relaxed text-gray-300">
@@ -76,7 +76,7 @@ export default function Footer() {
         <div className="my-8 h-px bg-white/10" />
 
         <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-          <span className="text-xs text-gray-400">© {new Date().getFullYear()} BodyVisualizer - All Rights Reserved.</span>
+          <span className="text-xs text-gray-400">© {new Date().getFullYear()} Body Visualizer - All Rights Reserved.</span>
           <span className="text-xs text-gray-400 max-w-2xl leading-relaxed">
             <a href="/terms" className="hover:underline">
               Terms

@@ -16,11 +16,11 @@ export default function FAQ() {
             <div className="collapse collapse-plus bg-base-500 rounded-lg">
               <input type="radio" name="faq-accordion" />
               <div className="collapse-title text-lg lg:text-xl">
-                What is BodyVisualizer?
+                What is Body Visualizer?
               </div>
               <div className="collapse-content">
                 <p className="text-lg">
-                BodyVisualizer is an interactive model that shows how body shape may change when you adjust body fat,
+                Body Visualizer is an interactive model that shows how body shape may change when you adjust body fat,
                 BMI, height, and weight.
                 </p>
               </div>
@@ -32,7 +32,7 @@ export default function FAQ() {
               </div>
               <div className="collapse-content">
                 <p className="text-lg">
-                  The intended BodyVisualizerAI workflow starts with a full-body photo, then lets you adjust body fat,
+                  The intended Body Visualizer AI workflow starts with a full-body photo, then lets you adjust body fat,
                   BMI, weight, and measurements.
                 </p>
               </div>

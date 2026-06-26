@@ -2,9 +2,9 @@ import { Metadata } from "next";
 import FaqSection from "@/app/components/FaqSection";
 
 export const metadata: Metadata = {
-  title: "Contact - BodyVisualizer",
+  title: "Contact - Body Visualizer",
   description:
-    "Contact BodyVisualizer support for questions about AI body visualization, photo uploads, privacy, accuracy, or feedback.",
+    "Contact Body Visualizer support for questions about AI body visualization, photo uploads, privacy, accuracy, or feedback.",
 };
 
 const CONTACT_FAQS = [
@@ -37,7 +37,7 @@ export default function ContactPage() {
         <h1 className="text-4xl lg:text-5xl font-bold">Contact</h1>
 
         <p className="mt-4 text-lg text-gray-700 max-w-2xl mx-auto">
-          Questions about BodyVisualizer, photo uploads, body-shape previews, accuracy, or privacy? Email us and we will get back to you as soon as we can.
+          Questions about Body Visualizer, photo uploads, body-shape previews, accuracy, or privacy? Email us and we will get back to you as soon as we can.
         </p>
 
         <div className="mt-8 flex justify-center">

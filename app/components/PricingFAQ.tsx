@@ -1,8 +1,8 @@
 const pricingFaqs = [
   {
-    question: "Which BodyVisualizer plan should I choose?",
+    question: "Which Body Visualizer plan should I choose?",
     answer:
-      "Choose 10 Visualizations if you only want to test a few body-shape scenarios. Choose Unlimited Access if you want to experiment freely, compare many targets, or use BodyVisualizer regularly over time.",
+      "Choose 10 Visualizations if you only want to test a few body-shape scenarios. Choose Unlimited Access if you want to experiment freely, compare many targets, or use Body Visualizer regularly over time.",
   },
   {
     question: "What counts as a visualization?",
@@ -17,7 +17,7 @@ const pricingFaqs = [
   {
     question: "Can I change my body fat percentage, BMI, and weight after purchase?",
     answer:
-      "Yes. The point of BodyVisualizer is to let you tweak those values and compare different scenarios, so you can keep adjusting the inputs for each visualization.",
+      "Yes. The point of Body Visualizer is to let you tweak those values and compare different scenarios, so you can keep adjusting the inputs for each visualization.",
   },
   {
     question: "Is this a subscription?",
@@ -39,7 +39,7 @@ export default function PricingFAQ() {
           Pricing FAQs
         </h2>
         <p className="mx-auto mt-4 max-w-2xl text-center text-lg leading-relaxed text-gray-700">
-          Questions about BodyVisualizer pricing, access, or refunds? Email{" "}
+          Questions about Body Visualizer pricing, access, or refunds? Email{" "}
           <a href="mailto:matt@leandme.com" className="text-primary">
             support
           </a>{" "}

@@ -12,7 +12,7 @@ export default function CTA() {
             Upload an image, tweak your stats, and compare realistic body scenarios.
             </p>
             <a href="https://buy.stripe.com/9AQ8ysdnWdvCaZ2aEG">
-              <button className="btn btn-primary btn-lg text-white">Open BodyVisualizer <span className="text-lg">→</span></button>
+              <button className="btn btn-primary btn-lg text-white">Open Body Visualizer <span className="text-lg">→</span></button>
             </a>
           </div>
         </div>

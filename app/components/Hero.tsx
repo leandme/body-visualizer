@@ -13,7 +13,7 @@ export default function Hero() {
             <div className="relative w-full max-w-[360px] aspect-[3/2] mx-auto">
               <Image
                 src="/hero/body-visualizer-header.webp"
-                alt="BodyVisualizer preview"
+                alt="Body Visualizer preview"
                 fill
                 priority
                 className="object-contain"

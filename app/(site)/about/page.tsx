@@ -2,7 +2,7 @@ import { Metadata } from "next";
 
 const title = "About";
 const description =
-  "Learn what BodyVisualizer is, how the AI body visualization workflow works, key limitations, and how to use it responsibly.";
+  "Learn what Body Visualizer is, how the AI body visualization workflow works, key limitations, and how to use it responsibly.";
 
 export const metadata: Metadata = {
   title,
@@ -17,7 +17,7 @@ export default function AboutPage() {
 
         <div className="prose prose-invert max-w-3xl text-center lg:text-left">
           <p className="text-lg">
-            BodyVisualizer is an AI body visualization tool designed to help people explore how body fat percentage,
+            Body Visualizer is an AI body visualization tool designed to help people explore how body fat percentage,
             BMI, height, weight, and measurements can change overall body appearance. The goal is simple: make
             body-composition context easier to understand and easier to use.
           </p>
@@ -25,7 +25,7 @@ export default function AboutPage() {
           <h2>Why this tool exists</h2>
           <p className="text-lg">
             Numbers like BMI, weight, and body-fat percentage are useful, but they can feel abstract in isolation.
-            BodyVisualizer exists to turn those metrics into a visual model so scenario planning and progress reviews
+            Body Visualizer exists to turn those metrics into a visual model so scenario planning and progress reviews
             become more intuitive.
           </p>
 
@@ -42,7 +42,7 @@ export default function AboutPage() {
 
           <h2>Accuracy and limitations</h2>
           <p className="text-lg">
-            BodyVisualizer is a directional planning tool, not a clinical measurement system. It is most useful for
+            Body Visualizer is a directional planning tool, not a clinical measurement system. It is most useful for
             trend comparison, education, and what-if scenario testing.
           </p>
           <ul className="text-lg">
@@ -53,7 +53,7 @@ export default function AboutPage() {
 
           <h2>Privacy</h2>
           <p className="text-lg">
-            Privacy matters. Uploaded photos are intended for processing and result generation only, and BodyVisualizer
+            Privacy matters. Uploaded photos are intended for processing and result generation only, and Body Visualizer
             aims to minimize retention wherever possible. Review the Privacy Policy for details on data handling.
           </p>
 

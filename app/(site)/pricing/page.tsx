@@ -3,7 +3,7 @@ import Pricing from "@/app/components/Pricing";
 import PricingFAQ from "@/app/components/PricingFAQ";
 
 const title = "Pricing";
-const description = "BodyVisualizer pricing for 10 AI visualizations or unlimited body visualization access.";
+const description = "Body Visualizer pricing for 10 AI visualizations or unlimited body visualization access.";
 
 export const metadata: Metadata = {
   title: title,
@@ -26,11 +26,11 @@ export default async function PricingPage({
     <div className="mx-auto flex min-h-screen max-w-6xl flex-col items-center px-4 py-12 lg:py-20">
       <div className="flex flex-col items-center gap-5 text-center">
         <h1 className="max-w-4xl text-4xl font-bold lg:text-5xl">
-          {hasUploadedImage ? "Choose a Plan to Generate Your Visualization" : "Simple BodyVisualizer Pricing"}
+          {hasUploadedImage ? "Choose a Plan to Generate Your Visualization" : "Simple Body Visualizer Pricing"}
         </h1>
         <p className="max-w-3xl text-lg leading-relaxed text-gray-700">
           {hasUploadedImage
-            ? "Select a plan to unlock BodyVisualizerAI and generate your body-shape preview."
+            ? "Select a plan to unlock Body Visualizer AI and generate your body-shape preview."
             : "Choose 10 visualizations for quick scenario testing, or unlock unlimited access for ongoing body-shape planning."}
         </p>
       </div>

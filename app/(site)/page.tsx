@@ -12,9 +12,9 @@ import {
 import FaqSection from "../components/FaqSection";
 import Hero from "../components/Hero";
 
-const title = "BodyVisualizer - AI Body Visualization Tool";
+const title = "Body Visualizer - AI Body Visualization Tool";
 const description =
-  "Upload a body photo, adjust body fat percentage, BMI, weight, and measurements, then visualize realistic body-shape scenarios with BodyVisualizerAI.";
+  "Upload a body photo, adjust body fat percentage, BMI, weight, and measurements, then visualize realistic body-shape scenarios with Body Visualizer AI.";
 
 export const metadata: Metadata = {
   title,
@@ -45,9 +45,9 @@ const HOW_BODY_VISUALIZER_AI_WORKS_STEPS: StepItem[] = [
     id: 1,
     title: "Upload a Body Photo",
     imageSrc: "/tools/height-estimator/height-example-1.jpg",
-    imageAlt: "Full-body photo upload example for BodyVisualizerAI",
+    imageAlt: "Full-body photo upload example for Body Visualizer AI",
     description:
-      "Start with a clear full-body image so BodyVisualizerAI can use your real proportions as the baseline for the preview.",
+      "Start with a clear full-body image so Body Visualizer AI can use your real proportions as the baseline for the preview.",
   },
   {
     id: 2,
@@ -90,14 +90,14 @@ const BENEFITS: BenefitItem[] = [
 
 const FAQS: FaqItem[] = [
   {
-    question: "How does BodyVisualizer work?",
+    question: "How does Body Visualizer work?",
     answer:
-      "BodyVisualizer combines a photo-based starting point with adjustable body-composition controls so you can preview changes to body fat percentage, BMI, weight, height, and proportions.",
+      "Body Visualizer combines a photo-based starting point with adjustable body-composition controls so you can preview changes to body fat percentage, BMI, weight, height, and proportions.",
   },
   {
-    question: "What is BodyVisualizerAI?",
+    question: "What is Body Visualizer AI?",
     answer:
-      "BodyVisualizerAI is the AI-assisted workflow behind the visualizer. It is designed to help turn an uploaded image and your inputs into a practical body-shape preview.",
+      "Body Visualizer AI is the AI-assisted workflow behind the visualizer. It is designed to help turn an uploaded image and your inputs into a practical body-shape preview.",
   },
   {
     question: "Do I need to upload a photo?",
@@ -112,10 +112,10 @@ const FAQS: FaqItem[] = [
   {
     question: "Can I compare different body scenarios?",
     answer:
-      "Yes. BodyVisualizer is built for what-if comparisons, local presets, reset states, and exported snapshots.",
+      "Yes. Body Visualizer is built for what-if comparisons, local presets, reset states, and exported snapshots.",
   },
   {
-    question: "Is BodyVisualizer a medical tool?",
+    question: "Is Body Visualizer a medical tool?",
     answer:
       "No. It is a visual planning and education tool, not a clinical measurement system or medical diagnosis.",
   },
@@ -132,10 +132,10 @@ const FAQS: FaqItem[] = [
   {
     question: "Is my photo private?",
     answer:
-      "Privacy matters. Uploaded images are intended for processing and result generation only, and BodyVisualizer aims to minimize retention wherever possible.",
+      "Privacy matters. Uploaded images are intended for processing and result generation only, and Body Visualizer aims to minimize retention wherever possible.",
   },
   {
-    question: "Who is BodyVisualizer for?",
+    question: "Who is Body Visualizer for?",
     answer:
       "It is useful for people planning fitness goals, comparing body-composition scenarios, coaching clients, or understanding how abstract stats may translate visually.",
   },
@@ -145,7 +145,7 @@ function HowBodyVisualizerAiWorks() {
   return (
     <section className="w-full max-w-5xl mx-auto px-4 pt-8 pb-12 lg:pt-12 lg:pb-16">
       <h2 className="text-3xl lg:text-4xl font-semibold text-center">
-        How BodyVisualizerAI Works
+        How Body Visualizer AI Works
       </h2>
 
       <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-5 lg:gap-6">
@@ -197,10 +197,10 @@ function BodyVisualizerExplainer() {
             A Better Way to Understand Body-Shape Changes
           </h2>
           <p className="mt-5 text-lg leading-relaxed text-gray-700">
-            BodyVisualizer is designed for one simple goal: helping you see how body-composition changes may look before you commit to a target.
+            Body Visualizer is designed for one simple goal: helping you see how body-composition changes may look before you commit to a target.
           </p>
           <p className="mt-4 text-lg leading-relaxed text-gray-700">
-            Instead of relying only on scale weight, BMI, or a formula, BodyVisualizer turns those inputs into a visual reference you can adjust, compare, and save.
+            Instead of relying only on scale weight, BMI, or a formula, Body Visualizer turns those inputs into a visual reference you can adjust, compare, and save.
           </p>
           <ul className="mt-5 list-disc space-y-2 pl-6 text-lg text-gray-700">
             <li>Explore fat loss, weight gain, or recomposition scenarios</li>
@@ -256,7 +256,7 @@ function BenefitsComparison() {
           <div className="card bg-[#DEFCED] shadow-xl border border-green-200">
             <div className="card-body">
               <h3 className="card-title text-center justify-center text-xl font-semibold">
-                BodyVisualizer
+                Body Visualizer
               </h3>
               <ul className="mt-4 space-y-4 text-gray-700">
                 <li className="flex items-start">
@@ -288,7 +288,7 @@ function BenefitList() {
   return (
     <section className="mx-auto mt-20 max-w-5xl px-4 lg:mt-28">
       <h2 className="text-3xl lg:text-4xl font-semibold text-center">
-        Why Use BodyVisualizer
+        Why Use Body Visualizer
       </h2>
       <div className="mt-8 grid grid-cols-1 gap-5 md:grid-cols-3">
         {BENEFITS.map((item) => {
@@ -320,7 +320,7 @@ export default function Home() {
 
       <FaqSection
         id="faqs"
-        heading="BodyVisualizer FAQ"
+        heading="Body Visualizer FAQ"
         description="Answers to common questions about AI body visualization, adjustable stats, accuracy, and privacy."
         items={FAQS}
         accordionName="bodyvisualizer-home-faq-accordion"
@@ -337,7 +337,7 @@ export default function Home() {
             Start Visualizing Your Body Shape
           </h2>
           <p className="mx-auto mt-6 max-w-3xl text-lg leading-relaxed text-gray-700">
-            Use BodyVisualizer to test realistic body-composition scenarios before setting your next goal.
+            Use Body Visualizer to test realistic body-composition scenarios before setting your next goal.
           </p>
           <div className="mt-10">
             <a href="#upload" className="btn btn-primary btn-lg inline-flex items-center gap-2 text-white">

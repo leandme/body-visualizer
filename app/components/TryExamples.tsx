@@ -64,7 +64,7 @@ export default function TryExamples({ examples = EXAMPLES }: { examples?: Exampl
         <a className="link" href="/terms">
           Terms of Service
         </a>
-        . To learn more about how BodyVisualizer handles your personal data, check our{" "}
+        . To learn more about how Body Visualizer handles your personal data, check our{" "}
         <a className="link" href="/privacy">
           Privacy Policy
         </a>
