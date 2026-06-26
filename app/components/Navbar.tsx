@@ -12,8 +12,20 @@ export default function Navbar() {
           <img src={LOGO_SRC} alt="BodyVisualizer Logo" className="w-6 h-6" />
           {SITE_NAME}
         </a>
+        <div className="hidden lg:flex ml-4 xl:ml-8">
+          <ul className="menu menu-horizontal px-1 gap-2 xl:gap-4 text-base whitespace-nowrap flex-nowrap">
+            <li>
+              <a
+                href="/pricing"
+                className="font-normal hover:bg-transparent focus:bg-transparent active:bg-transparent"
+              >
+                Pricing
+              </a>
+            </li>
+          </ul>
+        </div>
       </div>
-      <div className="navbar-end">
+      <div className="navbar-end lg:hidden">
         <a className="btn btn-ghost text-base" href="/pricing">
           Pricing
         </a>
