@@ -9,6 +9,7 @@ import {
   Sparkles,
   type LucideIcon,
 } from "lucide-react";
+import BodyVisualizerTool from "../components/BodyVisualizerTool";
 import FaqSection from "../components/FaqSection";
 import Hero from "../components/Hero";
 
@@ -312,6 +313,10 @@ export default function Home() {
   return (
     <div className="relative left-1/2 right-1/2 w-screen -translate-x-1/2 pb-20">
       <Hero />
+
+      <section id="visualizer-tool">
+        <BodyVisualizerTool />
+      </section>
 
       <HowBodyVisualizerAiWorks />
       <BodyVisualizerExplainer />
