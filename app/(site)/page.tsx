@@ -1,33 +1,24 @@
 import { Metadata } from "next";
-import Image from "next/image";
 import {
-  BarChart3,
-  Camera,
+  Activity,
+  ArrowRight,
   CheckCircle2,
-  ImageUp,
-  SlidersHorizontal,
+  RotateCcw,
+  Ruler,
+  Smartphone,
   Sparkles,
   type LucideIcon,
 } from "lucide-react";
 import BodyVisualizerTool from "../components/BodyVisualizerTool";
 import FaqSection from "../components/FaqSection";
-import Hero from "../components/Hero";
 
-const title = "Body Visualizer - AI Body Visualization Tool";
+const title = "Body Visualizer – BMI, Weight, Height & Shape";
 const description =
-  "Upload a body photo, adjust body fat percentage, BMI, weight, and measurements, then visualize realistic body-shape scenarios with Body Visualizer AI.";
+  "Interactive body visualizer with male/female morph models, advanced measurements, local presets, and snapshot export.";
 
 export const metadata: Metadata = {
   title,
   description,
-};
-
-type StepItem = {
-  id: number;
-  title: string;
-  imageSrc: string;
-  imageAlt: string;
-  description: string;
 };
 
 type BenefitItem = {
@@ -36,56 +27,52 @@ type BenefitItem = {
   icon: LucideIcon;
 };
 
+type StepItem = {
+  title: string;
+  description: string;
+};
+
 type FaqItem = {
   question: string;
   answer: string;
 };
 
-const HOW_BODY_VISUALIZER_AI_WORKS_STEPS: StepItem[] = [
+const BENEFITS: BenefitItem[] = [
   {
-    id: 1,
-    title: "Upload a Body Photo",
-    imageSrc: "/tools/height-estimator/height-example-1.jpg",
-    imageAlt: "Full-body photo upload example for Body Visualizer AI",
+    title: "Visualize Fitness Progress",
     description:
-      "Start with a clear full-body image so Body Visualizer AI can use your real proportions as the baseline for the preview.",
+      "See how body composition changes may influence appearance so you can set realistic goals and track outcomes more confidently.",
+    icon: Ruler,
   },
   {
-    id: 2,
-    title: "Tweak Your Stats",
-    imageSrc: "/tools/height-estimator/height-example-2.jpg",
-    imageAlt: "Body composition controls for BMI, weight, and body fat percentage",
+    title: "Better Body Understanding",
     description:
-      "Adjust body fat percentage, BMI, weight, height, and optional measurements to test realistic what-if scenarios.",
+      "Translate BMI, height, weight, and measurements into a lifelike 3D reference that is easier to interpret than isolated numbers.",
+    icon: Activity,
   },
   {
-    id: 3,
-    title: "Compare the Visualization",
-    imageSrc: "/tools/height-estimator/height-example-3.jpg",
-    imageAlt: "Body visualization result for comparing composition changes",
+    title: "Explore Body Changes",
     description:
-      "Review the updated body visualization, rotate the model, save presets, and compare baseline versus target looks.",
+      "Run fast what-if scenarios and compare saved configurations to plan adjustments over time.",
+    icon: RotateCcw,
   },
 ];
 
-const BENEFITS: BenefitItem[] = [
+const STEPS: StepItem[] = [
   {
-    title: "Photo-Based Starting Point",
+    title: "Input Measurements",
     description:
-      "Use an uploaded image as the context, then explore changes without losing sight of your actual proportions.",
-    icon: ImageUp,
+      "Enter height, weight, and body-fat context. Add chest, waist, hips, and inseam for more detailed shaping.",
   },
   {
-    title: "Body Fat, BMI, and Weight Controls",
+    title: "Generate 3D Model",
     description:
-      "Move the core sliders together or independently to see how each metric affects the modeled shape.",
-    icon: SlidersHorizontal,
+      "Body Visualizer maps your stats to a dynamic 3D avatar so you can instantly review proportion and composition changes.",
   },
   {
-    title: "Progress and Goal Planning",
+    title: "Explore and Adjust",
     description:
-      "Save setups, compare scenarios, and export snapshots for a more visual way to plan body-composition goals.",
-    icon: BarChart3,
+      "Rotate the model, save presets, and test multiple scenarios to compare progress and plan next steps.",
   },
 ];
 
@@ -93,261 +80,254 @@ const FAQS: FaqItem[] = [
   {
     question: "How does Body Visualizer work?",
     answer:
-      "Body Visualizer combines a photo-based starting point with adjustable body-composition controls so you can preview changes to body fat percentage, BMI, weight, height, and proportions.",
+      "Body Visualizer converts your inputs into a real-time 3D body-shape estimate using linked statistical relationships between BMI, body fat percentage, and measurements.",
   },
   {
-    question: "What is Body Visualizer AI?",
+    question: "Does Body Visualizer require photo uploads?",
     answer:
-      "Body Visualizer AI is the AI-assisted workflow behind the visualizer. It is designed to help turn an uploaded image and your inputs into a practical body-shape preview.",
+      "No. The morph visualizer works from sliders and measurement inputs, so you can adjust body fat, BMI, height, weight, and measurements without uploading an image.",
   },
   {
-    question: "Do I need to upload a photo?",
+    question: "What measurements should I enter?",
     answer:
-      "The intended workflow starts with a clear full-body photo, then lets you tweak body fat, BMI, weight, and measurements. The current visualizer controls also let you explore scenarios directly.",
+      "You can start with height and weight, then optionally add body fat %, chest, waist, hips, and inseam for a more detailed shape result.",
   },
   {
     question: "What stats can I adjust?",
     answer:
-      "You can adjust body fat percentage, BMI, weight, height, gender profile, units, and optional measurements such as chest, waist, hips, and inseam.",
+      "You can adjust height, weight, BMI/body-fat context, gender profile, units, and optional measurements such as chest, waist, hips, and inseam.",
   },
   {
-    question: "Can I compare different body scenarios?",
+    question: "Can I switch between imperial and metric units?",
     answer:
-      "Yes. Body Visualizer is built for what-if comparisons, local presets, reset states, and exported snapshots.",
+      "Yes. You can toggle units at any time, and values will update automatically.",
   },
   {
-    question: "Is Body Visualizer a medical tool?",
+    question: "What is linked mode in this version?",
     answer:
-      "No. It is a visual planning and education tool, not a clinical measurement system or medical diagnosis.",
+      "Linked mode is the default behavior: BMI, body fat %, weight, and related proportions stay synchronized for realistic adjustments.",
   },
   {
-    question: "How accurate are the visualizations?",
+    question: "Can I save and compare multiple body setups?",
     answer:
-      "The previews are directional estimates. They are best used for scenario planning and trend context because individual anatomy, posture, lighting, and fat distribution vary.",
+      "Yes. You can create local presets in your browser, switch between them, and reset to defaults at any time.",
   },
   {
-    question: "Can I use metric and imperial units?",
+    question: "Can I rotate the model and view different angles?",
     answer:
-      "Yes. The visualizer supports metric and imperial units so you can work in the format you already use.",
+      "Yes. You can rotate and zoom the model interactively and use front/left/right/back presets.",
   },
   {
-    question: "Is my photo private?",
+    question: "Can I export a snapshot of my current setup?",
     answer:
-      "Privacy matters. Uploaded images are intended for processing and result generation only, and Body Visualizer aims to minimize retention wherever possible.",
+      "Yes. Use the camera/share actions to preview and download a PNG snapshot card with your current stats.",
   },
   {
-    question: "Who is Body Visualizer for?",
+    question: "How accurate is Body Visualizer?",
     answer:
-      "It is useful for people planning fitness goals, comparing body-composition scenarios, coaching clients, or understanding how abstract stats may translate visually.",
+      "It is a visual estimator designed for trend exploration and planning, not a clinical or medical diagnostic tool.",
+  },
+  {
+    question: "Is my data private?",
+    answer:
+      "Your preset and control data are stored locally in your browser for this experience. You can clear them anytime.",
+  },
+  {
+    question: "Who is Body Visualizer best for?",
+    answer:
+      "It is useful for anyone comparing body-shape scenarios for fitness planning, progress tracking, or general visualization.",
   },
 ];
-
-function HowBodyVisualizerAiWorks() {
-  return (
-    <section className="w-full max-w-5xl mx-auto px-4 pt-8 pb-12 lg:pt-12 lg:pb-16">
-      <h2 className="text-3xl lg:text-4xl font-semibold text-center">
-        How Body Visualizer AI Works
-      </h2>
-
-      <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-5 lg:gap-6">
-        {HOW_BODY_VISUALIZER_AI_WORKS_STEPS.map((step) => (
-          <article key={step.id} className="rounded-2xl border bg-white p-6 shadow-sm">
-            <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-primary/15 text-primary text-xl font-bold">
-              {step.id}
-            </div>
-            <div className="relative w-full aspect-video overflow-hidden rounded-xl bg-base-100">
-              <Image
-                src={step.imageSrc}
-                alt={step.imageAlt}
-                fill
-                className="object-cover"
-                sizes="(max-width: 767px) 100vw, 33vw"
-              />
-            </div>
-            <h3 className="mt-4 text-xl font-semibold text-center text-gray-900">{step.title}</h3>
-            <p className="mt-3 text-lg leading-relaxed text-left text-gray-700">{step.description}</p>
-          </article>
-        ))}
-      </div>
-    </section>
-  );
-}
-
-function BodyVisualizerExplainer() {
-  return (
-    <section className="mx-auto mt-12 max-w-6xl px-6 lg:mt-20 lg:px-12">
-      <div className="grid grid-cols-1 gap-12 lg:grid-cols-2 lg:items-center">
-        <div className="relative min-h-[22rem] overflow-hidden rounded-2xl border bg-white shadow-sm">
-          <div className="absolute inset-0 bg-[linear-gradient(rgba(59,130,246,0.12)_1px,transparent_1px),linear-gradient(90deg,rgba(59,130,246,0.12)_1px,transparent_1px)] bg-[size:34px_34px]" />
-          <div className="absolute left-1/2 top-10 flex -translate-x-1/2 items-center gap-2 rounded-full border border-gray-200 bg-white px-4 py-2 text-sm font-semibold text-gray-800 shadow-sm">
-            <Sparkles size={15} />
-            Live Body Preview
-          </div>
-          <div className="absolute bottom-8 left-8 right-8 rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
-            <div className="grid grid-cols-2 gap-3 text-sm text-gray-700">
-              <span className="rounded-xl border border-gray-200 px-3 py-2">Body Fat %</span>
-              <span className="rounded-xl border border-gray-200 px-3 py-2">BMI</span>
-              <span className="rounded-xl border border-gray-200 px-3 py-2">Weight</span>
-              <span className="rounded-xl border border-gray-200 px-3 py-2">Measurements</span>
-            </div>
-          </div>
-        </div>
-
-        <div>
-          <h2 className="text-3xl lg:text-4xl font-semibold">
-            A Better Way to Understand Body-Shape Changes
-          </h2>
-          <p className="mt-5 text-lg leading-relaxed text-gray-700">
-            Body Visualizer is designed for one simple goal: helping you see how body-composition changes may look before you commit to a target.
-          </p>
-          <p className="mt-4 text-lg leading-relaxed text-gray-700">
-            Instead of relying only on scale weight, BMI, or a formula, Body Visualizer turns those inputs into a visual reference you can adjust, compare, and save.
-          </p>
-          <ul className="mt-5 list-disc space-y-2 pl-6 text-lg text-gray-700">
-            <li>Explore fat loss, weight gain, or recomposition scenarios</li>
-            <li>Compare before and target settings with more context</li>
-            <li>Understand why the same BMI can look different across bodies</li>
-            <li>Use snapshots and presets for visual progress planning</li>
-          </ul>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function BenefitsComparison() {
-  return (
-    <section className="mt-20 flex items-center justify-center lg:mt-28">
-      <div className="w-full max-w-6xl px-6 lg:px-12">
-        <h2 className="text-3xl lg:text-4xl font-bold text-center">
-          Visualize Body Changes <i>Easily</i>
-        </h2>
-
-        <p className="mt-4 text-lg text-center text-gray-600 max-w-3xl mx-auto">
-          Compare static body-composition numbers with an interactive visualizer built for practical what-if planning.
-        </p>
-
-        <div className="mt-12 grid grid-cols-1 gap-8 lg:grid-cols-2">
-          <div className="card bg-[#FFEAEC] shadow-xl">
-            <div className="card-body">
-              <h3 className="card-title text-center justify-center text-xl font-semibold">
-                Numbers Alone
-              </h3>
-              <ul className="mt-4 space-y-4 text-gray-700">
-                <li className="flex items-start">
-                  <span className="text-red-500 mr-2">x</span>
-                  BMI and weight can feel abstract without visual context
-                </li>
-                <li className="flex items-start">
-                  <span className="text-red-500 mr-2">x</span>
-                  Body fat percentage can be hard to imagine accurately
-                </li>
-                <li className="flex items-start">
-                  <span className="text-red-500 mr-2">x</span>
-                  Progress photos can be difficult to compare consistently
-                </li>
-                <li className="flex items-start">
-                  <span className="text-red-500 mr-2">x</span>
-                  Goal setting often becomes a guessing game
-                </li>
-              </ul>
-            </div>
-          </div>
-
-          <div className="card bg-[#DEFCED] shadow-xl border border-green-200">
-            <div className="card-body">
-              <h3 className="card-title text-center justify-center text-xl font-semibold">
-                Body Visualizer
-              </h3>
-              <ul className="mt-4 space-y-4 text-gray-700">
-                <li className="flex items-start">
-                  <CheckCircle2 className="mr-2 mt-0.5 h-5 w-5 shrink-0 text-green-600" />
-                  Upload an image and use it as a body-shape reference
-                </li>
-                <li className="flex items-start">
-                  <CheckCircle2 className="mr-2 mt-0.5 h-5 w-5 shrink-0 text-green-600" />
-                  Tweak body fat percentage, BMI, weight, and measurements
-                </li>
-                <li className="flex items-start">
-                  <CheckCircle2 className="mr-2 mt-0.5 h-5 w-5 shrink-0 text-green-600" />
-                  Save presets and compare realistic body scenarios
-                </li>
-                <li className="flex items-start">
-                  <CheckCircle2 className="mr-2 mt-0.5 h-5 w-5 shrink-0 text-green-600" />
-                  Export snapshots for easier progress planning
-                </li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function BenefitList() {
-  return (
-    <section className="mx-auto mt-20 max-w-5xl px-4 lg:mt-28">
-      <h2 className="text-3xl lg:text-4xl font-semibold text-center">
-        Why Use Body Visualizer
-      </h2>
-      <div className="mt-8 grid grid-cols-1 gap-5 md:grid-cols-3">
-        {BENEFITS.map((item) => {
-          const Icon = item.icon;
-          return (
-            <article key={item.title} className="rounded-2xl border bg-white p-6 shadow-sm">
-              <div className="mb-4 inline-flex h-11 w-11 items-center justify-center rounded-full bg-primary/15 text-primary">
-                <Icon size={22} />
-              </div>
-              <h3 className="text-xl font-semibold text-gray-900">{item.title}</h3>
-              <p className="mt-3 text-lg leading-relaxed text-gray-700">{item.description}</p>
-            </article>
-          );
-        })}
-      </div>
-    </section>
-  );
-}
 
 export default function Home() {
   return (
     <div className="relative left-1/2 right-1/2 w-screen -translate-x-1/2 pb-20">
-      <Hero />
-
       <section id="visualizer-tool">
         <BodyVisualizerTool />
       </section>
 
-      <HowBodyVisualizerAiWorks />
-      <BodyVisualizerExplainer />
-      <BenefitList />
-      <BenefitsComparison />
+      <section className="mx-auto mt-16 max-w-[1400px] overflow-hidden rounded-[30px] bg-white text-gray-900 shadow-sm">
+        <div className="px-6 pb-10 pt-12 text-center sm:px-8">
+          <h1 className="text-4xl font-bold tracking-tight lg:text-5xl">Body Visualizer</h1>
+          <p className="mx-auto mt-5 max-w-4xl text-lg text-gray-600">
+            Transform your measurements into a lifelike 3D body model in seconds.
+          </p>
+        </div>
+
+        <div className="grid gap-8 px-6 pb-12 sm:px-8 lg:grid-cols-2 lg:items-start">
+          <div className="rounded-2xl border border-gray-200 bg-white p-4">
+            <div className="relative aspect-[4/5] overflow-hidden rounded-xl border border-gray-200 bg-gray-50">
+              <div className="absolute inset-0 bg-[linear-gradient(rgba(107,114,128,0.08)_1px,transparent_1px),linear-gradient(90deg,rgba(107,114,128,0.08)_1px,transparent_1px)] bg-[size:34px_34px]" />
+              <div className="absolute left-1/2 top-12 flex -translate-x-1/2 items-center gap-2 rounded-full border border-gray-300 bg-white px-4 py-2 text-sm font-semibold text-gray-800">
+                <Sparkles size={15} />
+                Live 3D Reference
+              </div>
+              <div className="absolute bottom-6 left-6 right-6 rounded-xl border border-gray-200 bg-white p-4">
+                <div className="grid grid-cols-2 gap-3 text-xs text-gray-700">
+                  <span className="rounded-lg border border-gray-200 px-3 py-2">BMI + Body Fat</span>
+                  <span className="rounded-lg border border-gray-200 px-3 py-2">Height + Weight</span>
+                  <span className="rounded-lg border border-gray-200 px-3 py-2">Chest + Waist</span>
+                  <span className="rounded-lg border border-gray-200 px-3 py-2">Hips + Inseam</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="space-y-7">
+            <h2 className="text-3xl font-bold leading-tight lg:text-4xl">What is Body Visualizer</h2>
+            <p className="text-lg leading-relaxed text-gray-600">
+              Body Visualizer creates realistic 3D body references from your measurements so you can compare shape changes in a clearer, more intuitive way.
+            </p>
+            <p className="text-lg leading-relaxed text-gray-600">
+              Enter BMI, height, weight, chest, waist, hips, and inseam to explore how different combinations influence overall proportions.
+            </p>
+
+            <div className="space-y-6 pt-2">
+              <div className="flex items-start gap-4">
+                <div className="rounded-xl bg-gray-100 p-2.5">
+                  <CheckCircle2 className="text-[#66cf7f]" size={22} />
+                </div>
+                <div>
+                  <p className="text-lg font-semibold">No Photo Upload</p>
+                  <p className="mt-2 text-lg leading-relaxed text-gray-600">
+                    Explore body-shape changes from measurements and sliders without adding an image.
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-start gap-4">
+                <div className="rounded-xl bg-gray-100 p-2.5">
+                  <Activity className="text-[#66cf7f]" size={22} />
+                </div>
+                <div>
+                  <p className="text-lg font-semibold">Real-Time Visualization</p>
+                  <p className="mt-2 text-lg leading-relaxed text-gray-600">
+                    Watch the avatar update instantly as you adjust sliders and measurements.
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-start gap-4">
+                <div className="rounded-xl bg-gray-100 p-2.5">
+                  <Smartphone className="text-[#66cf7f]" size={22} />
+                </div>
+                <div>
+                  <p className="text-lg font-semibold">Simple Interface</p>
+                  <p className="mt-2 text-lg leading-relaxed text-gray-600">
+                    Easy controls on desktop and mobile make body-shape exploration straightforward.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="mx-auto mt-16 max-w-[1400px] overflow-hidden rounded-[30px] bg-white text-gray-900 shadow-sm">
+        <div className="grid gap-10 px-6 py-10 sm:px-8 lg:grid-cols-2 lg:items-start">
+          <div>
+            <span className="inline-flex rounded-full border border-gray-300 bg-gray-100 px-4 py-1.5 text-sm font-semibold text-gray-700">
+              Benefits
+            </span>
+            <h2 className="mt-5 text-3xl font-bold leading-tight lg:text-4xl">Why Use Our Body Visualizer</h2>
+            <p className="mt-5 text-lg leading-relaxed text-gray-600">
+              Discover how Body Visualizer transforms abstract body numbers into meaningful visual insights for better decision-making.
+            </p>
+
+            <div className="mt-8 space-y-4">
+              {BENEFITS.map((item, index) => {
+                const Icon = item.icon;
+                return (
+                  <details
+                    key={item.title}
+                    open={index === 0}
+                    className="group rounded-xl border border-gray-200 bg-white px-4 py-3"
+                  >
+                    <summary className="flex cursor-pointer list-none items-center justify-between gap-3">
+                      <span className="flex items-center gap-3">
+                        <span className="rounded-lg border border-gray-200 bg-gray-100 p-2">
+                          <Icon size={18} className="text-[#66cf7f]" />
+                        </span>
+                        <span className="text-xl font-semibold">{item.title}</span>
+                      </span>
+                      <span className="text-gray-500 transition group-open:rotate-180">⌄</span>
+                    </summary>
+                    <p className="mt-3 pl-12 text-lg leading-relaxed text-gray-600">{item.description}</p>
+                  </details>
+                );
+              })}
+            </div>
+          </div>
+
+          <div className="relative min-h-[420px] overflow-hidden rounded-2xl border border-gray-200 bg-white">
+            <div className="absolute inset-0 bg-[linear-gradient(rgba(107,114,128,0.12)_1px,transparent_1px),linear-gradient(90deg,rgba(107,114,128,0.12)_1px,transparent_1px)] bg-[size:36px_36px] opacity-30" />
+            <div className="absolute left-12 top-16 h-44 w-32 rounded-[40%] border-4 border-[#66cf7f]" />
+            <div className="absolute right-12 top-16 h-44 w-32 rounded-[40%] border-4 border-[#66cf7f]" />
+            <div className="absolute left-1/2 top-28 h-1 w-44 -translate-x-1/2 rounded-full bg-[#66cf7f]" />
+            <div className="absolute left-1/2 top-1/2 flex -translate-x-1/2 -translate-y-1/2 items-center gap-4 rounded-full border border-gray-300 bg-white px-4 py-2 text-sm font-semibold text-gray-800">
+              <Sparkles size={16} />
+              Shape Progress View
+            </div>
+            <div className="absolute bottom-10 left-8 right-8 rounded-xl border border-gray-200 bg-white p-4 text-sm text-gray-600">
+              Compare baseline and target configurations with a real-time visual reference.
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="mx-auto mt-16 max-w-[1400px] overflow-hidden rounded-[30px] bg-white px-6 py-10 shadow-sm sm:px-8">
+        <h2 className="mx-auto max-w-2xl text-center text-3xl font-bold leading-tight text-gray-900 lg:text-4xl">How to Use the Body Visualizer</h2>
+        <p className="mx-auto mt-5 max-w-3xl text-center text-lg leading-relaxed text-gray-600">
+          Creating your personalized 3D model takes less than a minute with these straightforward steps.
+        </p>
+
+        <div className="relative mt-10 grid gap-6 lg:grid-cols-3">
+          <div className="absolute left-7 right-7 top-7 hidden h-px bg-gray-200 lg:block" />
+          {STEPS.map((step, index) => (
+            <article
+              key={step.title}
+              className="relative rounded-2xl border border-gray-200 bg-white p-6"
+            >
+              <div
+                className={`mb-5 inline-flex h-12 w-12 items-center justify-center rounded-full border-2 text-xl font-bold ${
+                  index === 0
+                    ? "border-[#66cf7f] bg-[#66cf7f]/18 text-[#1f5f3a]"
+                    : "border-gray-300 bg-gray-100 text-gray-700"
+                }`}
+              >
+                {index + 1}
+              </div>
+              <h2 className="text-3xl font-semibold text-gray-900 lg:text-4xl">{step.title}</h2>
+              <p className="mt-3 text-lg leading-relaxed text-gray-600">{step.description}</p>
+            </article>
+          ))}
+        </div>
+      </section>
 
       <FaqSection
-        id="faqs"
-        heading="Body Visualizer FAQ"
-        description="Answers to common questions about AI body visualization, adjustable stats, accuracy, and privacy."
+        id="homepage-faq"
+        heading="Body Visualizer FAQs"
+        description="Everything you need to know about using the Body Visualizer service."
         items={FAQS}
-        accordionName="bodyvisualizer-home-faq-accordion"
-        className="mt-20 lg:mt-28"
+        accordionName="body-visualizer-home-faq-accordion"
+        className="mx-auto mt-16 max-w-[1400px]"
       />
 
-      <section className="mt-20 lg:mt-28">
+      <section className="mt-16">
         <div
           id="cta"
           className="mx-auto w-full max-w-4xl rounded-3xl bg-white px-6 py-14 text-center shadow-sm"
         >
-          <Camera className="mx-auto h-10 w-10 text-primary" />
-          <h2 className="mt-4 text-3xl font-semibold text-gray-900 lg:text-4xl">
-            Start Visualizing Your Body Shape
+          <h2 className="text-3xl font-semibold text-gray-900 lg:text-4xl">
+            Start Visualizing Your Body Shape Today
           </h2>
           <p className="mx-auto mt-6 max-w-3xl text-lg leading-relaxed text-gray-700">
-            Use Body Visualizer to test realistic body-composition scenarios before setting your next goal.
+            Join thousands of satisfied Body Visualizer users and create your personalized 3D avatar now.
           </p>
           <div className="mt-10">
-            <a href="#upload" className="btn btn-primary btn-lg inline-flex items-center gap-2 text-white">
-              Upload Photo
-              <Camera size={20} />
+            <a href="#visualizer-tool" className="btn btn-primary btn-lg inline-flex items-center gap-2 text-white">
+              Try Body Visualizer
+              <ArrowRight size={20} />
             </a>
           </div>
         </div>
