@@ -1,8 +1,14 @@
 import "../styles/globals.css";
 import Script from "next/script";
+import { Metadata } from "next";
 import AmplitudeInitializer from "../components/AmplitudeInitializer";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
+import { SITE_URL } from "../seo";
+
+export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
+};
 
 export default function RootLayout({
   children,

@@ -1,8 +1,12 @@
 import { Metadata } from "next";
+import { canonicalUrl } from "../../seo";
 
 export const metadata: Metadata = {
   title: "Security Policy - Body Visualizer",
   description: "Security practices and data-protection approach for Body Visualizer.",
+  alternates: {
+    canonical: canonicalUrl("/security"),
+  },
 };
 
 export default function SecurityPage() {

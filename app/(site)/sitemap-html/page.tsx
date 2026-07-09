@@ -1,15 +1,20 @@
 import { Metadata } from "next";
+import { canonicalUrl } from "../../seo";
 
 export const metadata: Metadata = {
   title: "Sitemap - Body Visualizer",
   description: "HTML sitemap for Body Visualizer.",
+  alternates: {
+    canonical: canonicalUrl("/sitemap-html"),
+  },
 };
 
 const links = [
   { href: "/", label: "Home" },
-  { href: "/upload", label: "Upload" },
+  { href: "/pricing", label: "Pricing" },
   { href: "/about", label: "About" },
   { href: "/contact", label: "Contact" },
+  { href: "/support", label: "Support" },
   { href: "/#faqs", label: "FAQs" },
   { href: "/terms", label: "Terms" },
   { href: "/privacy", label: "Privacy" },

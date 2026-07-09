@@ -1,8 +1,12 @@
 import { Metadata } from "next";
+import { canonicalUrl } from "../../seo";
 
 export const metadata: Metadata = {
   title: "Cookie Policy - Body Visualizer",
   description: "Cookie and similar technology usage for Body Visualizer.",
+  alternates: {
+    canonical: canonicalUrl("/cookies"),
+  },
 };
 
 export default function CookiesPage() {

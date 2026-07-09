@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+import { canonicalUrl } from "../../seo";
 
 const title = "FAQ";
 const description = "";
@@ -6,6 +7,9 @@ const description = "";
 export const metadata: Metadata = {
   title: title,
   description: description,
+  alternates: {
+    canonical: canonicalUrl("/support"),
+  },
 };
 
 export default function SupportPage() {

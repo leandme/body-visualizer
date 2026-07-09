@@ -1,8 +1,12 @@
 import { Metadata } from "next";
+import { canonicalUrl } from "../../seo";
 
 export const metadata: Metadata = {
   title: "Subprocessors - Body Visualizer",
   description: "Third-party service providers that may process data for Body Visualizer.",
+  alternates: {
+    canonical: canonicalUrl("/subprocessors"),
+  },
 };
 
 export default function SubprocessorsPage() {

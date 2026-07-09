@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+import { canonicalUrl } from "../../seo";
 
 const title = "About";
 const description =
@@ -7,6 +8,9 @@ const description =
 export const metadata: Metadata = {
   title,
   description,
+  alternates: {
+    canonical: canonicalUrl("/about"),
+  },
 };
 
 export default function AboutPage() {

@@ -1,8 +1,12 @@
 import { Metadata } from "next";
+import { canonicalUrl } from "../../seo";
 
 export const metadata: Metadata = {
   title: "Terms & Conditions - Body Visualizer",
   description: "Terms governing use of Body Visualizer and its interactive body-composition modeling features.",
+  alternates: {
+    canonical: canonicalUrl("/terms"),
+  },
 };
 
 export default function TermsPage() {

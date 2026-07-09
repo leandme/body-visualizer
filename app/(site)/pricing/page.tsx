@@ -1,6 +1,7 @@
 import { Metadata } from "next";
 import Pricing from "@/app/components/Pricing";
 import PricingFAQ from "@/app/components/PricingFAQ";
+import { canonicalUrl } from "../../seo";
 
 const title = "Pricing";
 const description = "Body Visualizer pricing for 10 AI visualizations or unlimited body visualization access.";
@@ -8,6 +9,9 @@ const description = "Body Visualizer pricing for 10 AI visualizations or unlimit
 export const metadata: Metadata = {
   title: title,
   description: description,
+  alternates: {
+    canonical: canonicalUrl("/pricing"),
+  },
 };
 
 type PricingPageParams = {

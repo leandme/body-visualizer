@@ -1,6 +1,6 @@
 const moreTools = [
   { href: "https://bodyfatestimator.ai", label: "Body Fat Estimator" },
-  { href: "https://bodyvisualizer.ai", label: "Body Visualizer" },
+  { href: "https://www.bodyvisualizer.ai", label: "Body Visualizer" },
   { href: "https://canthaltilttest.com", label: "Canthal Tilt Test" },
   { href: "https://ethnicityguesser.com", label: "Ethnicity Guesser" },
   { href: "https://heightestimatorai.com", label: "Height Estimator" },

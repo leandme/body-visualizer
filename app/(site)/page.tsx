@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import BodyVisualizerTool from "../components/BodyVisualizerTool";
 import FaqSection from "../components/FaqSection";
+import { canonicalUrl } from "../seo";
 
 const title = "Body Visualizer – BMI, Weight, Height & Shape Simulator";
 const description =
@@ -19,6 +20,9 @@ const description =
 export const metadata: Metadata = {
   title,
   description,
+  alternates: {
+    canonical: canonicalUrl(),
+  },
 };
 
 type BenefitItem = {

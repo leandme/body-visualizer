@@ -1,10 +1,14 @@
 import { Metadata } from "next";
 import FaqSection from "@/app/components/FaqSection";
+import { canonicalUrl } from "../../seo";
 
 export const metadata: Metadata = {
   title: "Contact - Body Visualizer",
   description:
     "Contact Body Visualizer support for questions about AI body visualization, photo uploads, privacy, accuracy, or feedback.",
+  alternates: {
+    canonical: canonicalUrl("/contact"),
+  },
 };
 
 const CONTACT_FAQS = [
