@@ -5,7 +5,6 @@ import {
   type VisualizerAccess,
   type VisualizerPlan,
 } from "./plans";
-import { SITE_URL } from "@/app/seo";
 
 type StripeCheckoutSession = {
   id: string;
@@ -27,33 +26,10 @@ function getStripeSecretKey() {
 }
 
 export function getSiteUrl(reqUrl?: string) {
-  const requestOrigin = reqUrl ? new URL(reqUrl).origin : null;
-
-  if (requestOrigin && isLocalOrigin(requestOrigin)) {
-    return requestOrigin;
-  }
-
-  const configuredUrl = normalizeSiteUrl(process.env.NEXT_PUBLIC_SITE_URL);
+  const configuredUrl = process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "");
   if (configuredUrl) return configuredUrl;
-  if (requestOrigin) return normalizeSiteUrl(requestOrigin) ?? requestOrigin;
-
-  return SITE_URL;
-}
-
-function normalizeSiteUrl(value?: string | null) {
-  if (!value) return null;
-
-  const parsed = new URL(value.replace(/\/$/, ""));
-  if (parsed.hostname === "bodyvisualizer.ai" || parsed.hostname === "www.bodyvisualizer.ai") {
-    return SITE_URL;
-  }
-
-  return parsed.origin;
-}
-
-function isLocalOrigin(origin: string) {
-  const hostname = new URL(origin).hostname;
-  return hostname === "localhost" || hostname === "127.0.0.1" || hostname === "::1";
+  if (!reqUrl) return "http://localhost:3000";
+  return new URL(reqUrl).origin;
 }
 
 export function getPlanPriceId(plan: VisualizerPlan) {
