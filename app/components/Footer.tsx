@@ -3,11 +3,7 @@ import BodyVisualizerAccessLink from "@/app/components/common/body-visualizer-ac
 
 const moreTools = [
   { href: "https://bodyfatestimator.ai", label: "Body Fat Estimator" },
-  { href: "https://www.bodyvisualizer.ai", label: "Body Visualizer" },
-  { href: "https://canthaltilttest.com", label: "Canthal Tilt Test" },
-  { href: "https://ethnicityguesser.com", label: "Ethnicity Guesser" },
-  { href: "https://heightestimatorai.com", label: "Height Estimator" },
-  { href: "https://jawlinecheck.com", label: "Jawline Check" },
+  { href: "https://homeheroes.se", label: "HomeHero" },
 ];
 
 export default function Footer() {
