@@ -329,7 +329,7 @@ export default function Home() {
             Join thousands of satisfied Body Visualizer users and create your personalized 3D avatar now.
           </p>
           <div className="mt-10">
-            <a href="#visualizer-tool" className="btn btn-primary btn-lg inline-flex items-center gap-2 text-white">
+            <a href="/pricing" className="btn btn-primary btn-lg inline-flex items-center gap-2 text-white">
               Try Body Visualizer
               <ArrowRight size={20} />
             </a>
