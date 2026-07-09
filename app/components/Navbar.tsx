@@ -1,3 +1,7 @@
+import TrackedPricingLink from "@/app/components/common/tracked-pricing-link";
+import BodyVisualizerAccessLink from "@/app/components/common/body-visualizer-access-link";
+import { Menu } from "lucide-react";
+
 const SITE_NAME = "Body Visualizer";
 const LOGO_SRC = "/logo.png";
 
@@ -15,20 +19,50 @@ export default function Navbar() {
         <div className="hidden lg:flex ml-4 xl:ml-8">
           <ul className="menu menu-horizontal px-1 gap-2 xl:gap-4 text-base whitespace-nowrap flex-nowrap">
             <li>
-              <a
-                href="/pricing"
+              <TrackedPricingLink
+                location="Header"
                 className="font-normal hover:bg-transparent focus:bg-transparent active:bg-transparent"
               >
                 Pricing
-              </a>
+              </TrackedPricingLink>
             </li>
           </ul>
         </div>
       </div>
+      <div className="navbar-end hidden lg:flex">
+        <BodyVisualizerAccessLink
+          location="Header"
+          className="btn btn-primary text-base font-bold text-white"
+        >
+          Body Visualizer
+        </BodyVisualizerAccessLink>
+      </div>
       <div className="navbar-end lg:hidden">
-        <a className="btn btn-ghost text-base" href="/pricing">
-          Pricing
-        </a>
+        <div className="dropdown dropdown-end">
+          <button
+            type="button"
+            tabIndex={0}
+            className="btn btn-ghost btn-square"
+            aria-label="Open menu"
+          >
+            <Menu className="h-6 w-6" aria-hidden="true" />
+          </button>
+          <ul
+            tabIndex={0}
+            className="menu dropdown-content z-[60] mt-3 w-56 rounded-box bg-base-100 p-2 shadow-xl"
+          >
+            <li>
+              <TrackedPricingLink location="Header">
+                Pricing
+              </TrackedPricingLink>
+            </li>
+            <li>
+              <BodyVisualizerAccessLink location="Header">
+                Body Visualizer
+              </BodyVisualizerAccessLink>
+            </li>
+          </ul>
+        </div>
       </div>
     </div>
   );

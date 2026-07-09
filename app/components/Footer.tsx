@@ -1,3 +1,6 @@
+import TrackedPricingLink from "@/app/components/common/tracked-pricing-link";
+import BodyVisualizerAccessLink from "@/app/components/common/body-visualizer-access-link";
+
 const moreTools = [
   { href: "https://bodyfatestimator.ai", label: "Body Fat Estimator" },
   { href: "https://www.bodyvisualizer.ai", label: "Body Visualizer" },
@@ -42,9 +45,14 @@ export default function Footer() {
                 </a>
               </li>
               <li>
-                <a className="hover:text-white" href="/pricing">
+                <TrackedPricingLink location="Footer" className="hover:text-white">
                   Pricing
-                </a>
+                </TrackedPricingLink>
+              </li>
+              <li>
+                <BodyVisualizerAccessLink location="Footer" className="hover:text-white">
+                  Body Visualizer
+                </BodyVisualizerAccessLink>
               </li>
               <li>
                 <a className="hover:text-white" href="/contact">

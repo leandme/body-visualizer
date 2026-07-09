@@ -35,11 +35,12 @@ import {
   MoveHorizontal,
   RotateCcw,
   Ruler,
-  Save,
   Share2,
+  Sparkles,
   Weight,
   X,
 } from "lucide-react";
+import TrackedPricingLink from "@/app/components/common/tracked-pricing-link";
 
 type Gender = "male" | "female";
 type Units = "imperial" | "metric";
@@ -2212,10 +2213,6 @@ function PanelButton(props: {
   );
 }
 
-function compareProfiles(a: BodyProfile, b: BodyProfile) {
-  return JSON.stringify(a) === JSON.stringify(b);
-}
-
 function formatLength(valueCm: number, units: Units) {
   if (units === "metric") return `${round(valueCm, 1)} cm`;
   return `${round(cmToIn(valueCm), 1)} in`;
@@ -2274,11 +2271,6 @@ function loadPresets(): PresetRecord[] {
   } catch {
     return [];
   }
-}
-
-function persistPresets(presets: PresetRecord[]) {
-  if (typeof window === "undefined") return;
-  window.localStorage.setItem(STORAGE_KEY, JSON.stringify(presets));
 }
 
 async function loadImage(src: string) {
@@ -2412,9 +2404,7 @@ function ControlPanel(props: {
   bmi: number;
   bmiClass: Category;
   measurements: MeasurementSet;
-  activePresetName: string;
   canResetSaved: boolean;
-  isDirty: boolean;
   onGenderChange: (gender: Gender) => void;
   onUnitsChange: (units: Units) => void;
   onHeightChange: (valueCm: number) => void;
@@ -2424,16 +2414,13 @@ function ControlPanel(props: {
   onMeasurementChange: (key: keyof MeasurementSet, valueCm: number) => void;
   onResetDefault: () => void;
   onResetSaved: () => void;
-  onSavePreset: () => void;
 }) {
   const {
     profile,
     bmi,
     bmiClass,
     measurements,
-    activePresetName,
     canResetSaved,
-    isDirty,
     onGenderChange,
     onUnitsChange,
     onHeightChange,
@@ -2443,7 +2430,6 @@ function ControlPanel(props: {
     onMeasurementChange,
     onResetDefault,
     onResetSaved,
-    onSavePreset,
   } = props;
 
   const bounds = bodyFatBounds(profile.gender);
@@ -2650,14 +2636,13 @@ function ControlPanel(props: {
           </button>
         </div>
 
-        <button
-          type="button"
-          onClick={onSavePreset}
+        <TrackedPricingLink
+          location="3D Visualizer Controls"
           className="flex w-full items-center justify-center gap-2 rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-white transition hover:brightness-95"
         >
-          <Save size={15} />
-          {isDirty ? `Save (${activePresetName})` : "Saved"}
-        </button>
+          <Sparkles size={15} />
+          Visualize on your own body
+        </TrackedPricingLink>
 
       </div>
     </div>
@@ -2996,45 +2981,9 @@ export default function BodyVisualizerTool() {
     });
   };
 
-  const currentProfile = profile;
-
   const activePresetName = activePresetId
     ? presets.find((preset) => preset.id === activePresetId)?.name ?? "Saved"
     : "New";
-
-  const isDirty = !compareProfiles(currentProfile, savedBaselineProfile);
-
-  const saveCurrentAsPreset = () => {
-    const now = new Date().toISOString();
-
-    if (activePresetId) {
-      const nextPresets = presets.map((preset) =>
-        preset.id === activePresetId ? { ...preset, profile: currentProfile, updatedAt: now } : preset
-      );
-      setPresets(nextPresets);
-      persistPresets(nextPresets);
-      setSavedBaselineProfile(currentProfile);
-      return;
-    }
-
-    const nameRaw = window.prompt("Name this preset", `Body ${presets.length + 1}`);
-    const name = nameRaw?.trim();
-    if (!name) return;
-
-    const created: PresetRecord = {
-      id: `preset_${Math.random().toString(36).slice(2, 10)}`,
-      name,
-      profile: currentProfile,
-      createdAt: now,
-      updatedAt: now,
-    };
-
-    const nextPresets = [created, ...presets];
-    setPresets(nextPresets);
-    persistPresets(nextPresets);
-    setActivePresetId(created.id);
-    setSavedBaselineProfile(currentProfile);
-  };
 
   const resetToDefault = () => {
     const next = createDefaultProfile(profile.gender);
@@ -3241,9 +3190,7 @@ export default function BodyVisualizerTool() {
               bmi={bmi}
               bmiClass={bmiClass}
               measurements={measurements}
-              activePresetName={activePresetName}
               canResetSaved={Boolean(savedBaselineProfile)}
-              isDirty={isDirty}
               onGenderChange={handleGenderChange}
               onUnitsChange={handleUnitsChange}
               onHeightChange={handleHeightChange}
@@ -3253,7 +3200,6 @@ export default function BodyVisualizerTool() {
               onMeasurementChange={handleMeasurementChange}
               onResetDefault={resetToDefault}
               onResetSaved={resetToSaved}
-              onSavePreset={saveCurrentAsPreset}
             />
           </aside>
         </div>
@@ -3279,9 +3225,7 @@ export default function BodyVisualizerTool() {
                 bmi={bmi}
                 bmiClass={bmiClass}
                 measurements={measurements}
-                activePresetName={activePresetName}
                 canResetSaved={Boolean(savedBaselineProfile)}
-                isDirty={isDirty}
                 onGenderChange={handleGenderChange}
                 onUnitsChange={handleUnitsChange}
                 onHeightChange={handleHeightChange}
@@ -3291,7 +3235,6 @@ export default function BodyVisualizerTool() {
                 onMeasurementChange={handleMeasurementChange}
                 onResetDefault={resetToDefault}
                 onResetSaved={resetToSaved}
-                onSavePreset={saveCurrentAsPreset}
               />
             </div>
           </div>

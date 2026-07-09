@@ -40,7 +40,7 @@ export default function PricingFAQ() {
         </h2>
         <p className="mx-auto mt-4 max-w-2xl text-center text-lg leading-relaxed text-gray-700">
           Questions about Body Visualizer pricing, access, or refunds? Email{" "}
-          <a href="mailto:matt@leandme.com" className="text-primary">
+          <a href="mailto:bodyfatestimator@gmail.com" className="text-primary">
             support
           </a>{" "}
           and we will help.

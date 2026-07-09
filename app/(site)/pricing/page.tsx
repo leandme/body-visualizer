@@ -1,6 +1,7 @@
 import { Metadata } from "next";
 import Pricing from "@/app/components/Pricing";
 import PricingFAQ from "@/app/components/PricingFAQ";
+import PricingHeroHeading from "@/app/components/PricingHeroHeading";
 import { canonicalUrl } from "../../seo";
 
 const title = "Pricing";
@@ -27,11 +28,9 @@ export default async function PricingPage({
   const hasUploadedImage = params?.uploaded === "1";
 
   return (
-    <div className="mx-auto flex min-h-screen max-w-6xl flex-col items-center px-4 py-12 lg:py-20">
+    <div className="mx-auto flex min-h-screen max-w-6xl flex-col items-center px-4 py-12 lg:pb-20 lg:pt-8">
       <div className="flex flex-col items-center gap-5 text-center">
-        <h1 className="max-w-4xl text-4xl font-bold lg:text-5xl">
-          {hasUploadedImage ? "Choose a Plan to Generate Your Visualization" : "Simple Body Visualizer Pricing"}
-        </h1>
+        <PricingHeroHeading />
         <p className="max-w-3xl text-lg leading-relaxed text-gray-700">
           {hasUploadedImage
             ? "Select a plan to unlock Body Visualizer AI and generate your body-shape preview."

@@ -1,6 +1,7 @@
 import "../styles/globals.css";
 import Script from "next/script";
 import { Metadata } from "next";
+import { Toaster } from "react-hot-toast";
 import AmplitudeInitializer from "../components/AmplitudeInitializer";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
@@ -36,6 +37,7 @@ export default function RootLayout({
           {children}
         </main>
         <Footer />
+        <Toaster />
       </body>
     </html>
   );
