@@ -26,7 +26,13 @@ export const initAmplitude = () => {
 
 // Track custom events across your app
 export const trackEvent = (eventName: string, properties: Record<string, any> = {}) => {
-  amplitude.track(eventName, properties);
+  if (!AMPLITUDE_API_KEY) return;
+
+  try {
+    amplitude.track(eventName, properties);
+  } catch (error) {
+    console.warn("Amplitude track failed:", error);
+  }
 };
 
 // Function to identify the user in Amplitude and set properties

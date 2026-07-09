@@ -47,7 +47,7 @@ export default function Footer() {
               </li>
               <li>
                 <BodyVisualizerAccessLink location="Footer" className="hover:text-white">
-                  Body Visualizer
+                  Visualizer
                 </BodyVisualizerAccessLink>
               </li>
               <li>
