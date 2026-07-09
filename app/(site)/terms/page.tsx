@@ -63,8 +63,8 @@ export default function TermsPage() {
         <h2 className="text-2xl font-semibold mb-4">6. Contact</h2>
         <p>
           Questions about these Terms can be sent to{" "}
-          <a href="mailto:matt@leandme.com" className="text-primary hover:underline">
-            matt@leandme.com
+          <a href="mailto:bodyfatestimator@gmail.com" className="text-primary hover:underline">
+            bodyfatestimator@gmail.com
           </a>
           .
         </p>

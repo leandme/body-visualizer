@@ -6,7 +6,6 @@ import {
   RotateCcw,
   Ruler,
   Smartphone,
-  Sparkles,
   type LucideIcon,
 } from "lucide-react";
 import BodyVisualizerTool from "../components/BodyVisualizerTool";
@@ -34,12 +33,40 @@ type BenefitItem = {
 type StepItem = {
   title: string;
   description: string;
+  visual: "measurements" | "model" | "compare";
+};
+
+type FeatureItem = {
+  title: string;
+  description: string;
+  icon: LucideIcon;
 };
 
 type FaqItem = {
   question: string;
   answer: string;
 };
+
+const FEATURES: FeatureItem[] = [
+  {
+    title: "No Photo Upload",
+    description:
+      "Explore body-shape changes from measurements and sliders without adding an image.",
+    icon: CheckCircle2,
+  },
+  {
+    title: "Real-Time Visualization",
+    description:
+      "Watch the 3D avatar update instantly as you adjust BMI, body fat, height, weight, and measurements.",
+    icon: Activity,
+  },
+  {
+    title: "Mobile-Friendly Controls",
+    description:
+      "Use the same simple controls on desktop or mobile for fast scenario planning.",
+    icon: Smartphone,
+  },
+];
 
 const BENEFITS: BenefitItem[] = [
   {
@@ -67,16 +94,19 @@ const STEPS: StepItem[] = [
     title: "Input Measurements",
     description:
       "Enter height, weight, and body-fat context. Add chest, waist, hips, and inseam for more detailed shaping.",
+    visual: "measurements",
   },
   {
     title: "Generate 3D Model",
     description:
       "Body Visualizer maps your stats to a dynamic 3D avatar so you can instantly review proportion and composition changes.",
+    visual: "model",
   },
   {
     title: "Explore and Adjust",
     description:
       "Rotate the model, save presets, and test multiple scenarios to compare progress and plan next steps.",
+    visual: "compare",
   },
 ];
 
@@ -143,6 +173,56 @@ const FAQS: FaqItem[] = [
   },
 ];
 
+function StepPreview({ visual }: { visual: StepItem["visual"] }) {
+  if (visual === "model") {
+    return (
+      <div className="flex h-full items-center justify-center bg-[#f6f7f9]">
+        <img
+          src="/hero/body-visualizer-header.webp"
+          alt=""
+          className="h-full w-full object-contain p-3"
+          loading="lazy"
+        />
+      </div>
+    );
+  }
+
+  if (visual === "compare") {
+    return (
+      <div className="grid h-full grid-cols-2 gap-3 bg-[#f6f7f9] p-3">
+        <div className="flex flex-col items-center justify-end rounded-lg border border-gray-200 bg-white p-3">
+          <div className="h-16 w-9 rounded-t-full rounded-b-[18px] bg-gray-300" />
+          <div className="mt-2 h-2 w-12 rounded-full bg-gray-200" />
+        </div>
+        <div className="flex flex-col items-center justify-end rounded-lg border border-primary/20 bg-primary/10 p-3">
+          <div className="h-16 w-12 rounded-t-full rounded-b-[22px] bg-primary/35" />
+          <div className="mt-2 h-2 w-12 rounded-full bg-primary/25" />
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="flex h-full flex-col justify-center gap-3 bg-[#f6f7f9] p-4">
+      {[
+        ["Height", "72%"],
+        ["Weight", "58%"],
+        ["Body fat", "42%"],
+      ].map(([label, width]) => (
+        <div key={label} className="rounded-lg border border-gray-200 bg-white p-3">
+          <div className="mb-2 flex items-center justify-between text-xs font-semibold text-gray-600">
+            <span>{label}</span>
+            <span className="h-2 w-8 rounded-full bg-primary/15" />
+          </div>
+          <div className="h-2 rounded-full bg-gray-200">
+            <div className="h-full rounded-full bg-primary" style={{ width }} />
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
 export default function Home() {
   return (
     <div className="relative left-1/2 right-1/2 w-screen -translate-x-1/2 pb-20">
@@ -150,159 +230,108 @@ export default function Home() {
         <BodyVisualizerTool />
       </section>
 
-      <section className="mx-auto mt-16 max-w-[1400px] overflow-hidden rounded-[30px] bg-white text-gray-900 shadow-sm">
-        <div className="px-6 pb-10 pt-12 text-center sm:px-8">
-          <h1 className="text-4xl font-bold tracking-tight lg:text-5xl">Body Visualizer</h1>
-          <p className="mx-auto mt-5 max-w-4xl text-lg text-gray-600">
-            Transform your measurements into a lifelike 3D body model in seconds.
+      <section className="mx-auto mt-16 max-w-6xl px-6 lg:mt-24">
+        <div className="grid grid-cols-1 items-center gap-10 lg:grid-cols-2 lg:gap-12">
+          <div>
+            <span className="inline-flex rounded-full bg-primary/10 px-3 py-1 text-sm font-semibold text-primary">
+              Interactive body-shape simulator
+            </span>
+            <h1 className="mt-5 text-4xl font-bold tracking-tight text-gray-900 lg:text-5xl">
+              Body Visualizer
+            </h1>
+            <p className="mt-5 text-lg leading-relaxed text-gray-700">
+              Transform height, weight, BMI, body fat, and body measurements into a real-time
+              3D reference you can adjust, compare, and save.
+            </p>
+            <p className="mt-4 text-lg leading-relaxed text-gray-700">
+              Instead of guessing what a number might look like, use Body Visualizer to explore
+              proportion changes in a clear, repeatable way.
+            </p>
+          </div>
+
+          <div className="rounded-3xl border border-gray-200 bg-white p-3 shadow-sm sm:p-4">
+            <div className="relative aspect-[4/3] overflow-hidden rounded-2xl bg-gray-100">
+              <img
+                src="/hero/body-visualizer-header.webp"
+                alt="Body Visualizer 3D body model preview"
+                className="h-full w-full object-contain p-4"
+                loading="lazy"
+              />
+            </div>
+          </div>
+        </div>
+
+        <div className="mt-10 grid grid-cols-1 gap-5 md:grid-cols-3">
+          {FEATURES.map((feature) => {
+            const Icon = feature.icon;
+
+            return (
+              <article
+                key={feature.title}
+                className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm"
+              >
+                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 text-primary">
+                  <Icon size={22} />
+                </div>
+                <h3 className="mt-5 text-xl font-semibold text-gray-900">{feature.title}</h3>
+                <p className="mt-3 text-base leading-relaxed text-gray-700">{feature.description}</p>
+              </article>
+            );
+          })}
+        </div>
+      </section>
+
+      <section className="mx-auto mt-20 max-w-6xl px-6 lg:mt-32">
+        <div className="text-center">
+          <h2 className="text-3xl font-bold text-gray-900 lg:text-4xl">Why Use Our Body Visualizer</h2>
+          <p className="mx-auto mt-5 max-w-3xl text-lg leading-relaxed text-gray-700">
+            Turn abstract body numbers into practical visual context for progress tracking,
+            scenario planning, and better body-composition understanding.
           </p>
         </div>
 
-        <div className="grid gap-8 px-6 pb-12 sm:px-8 lg:grid-cols-2 lg:items-start">
-          <div className="rounded-2xl border border-gray-200 bg-white p-4">
-            <div className="relative aspect-[4/5] overflow-hidden rounded-xl border border-gray-200 bg-gray-50">
-              <div className="absolute inset-0 bg-[linear-gradient(rgba(107,114,128,0.08)_1px,transparent_1px),linear-gradient(90deg,rgba(107,114,128,0.08)_1px,transparent_1px)] bg-[size:34px_34px]" />
-              <div className="absolute left-1/2 top-12 flex -translate-x-1/2 items-center gap-2 rounded-full border border-gray-300 bg-white px-4 py-2 text-sm font-semibold text-gray-800">
-                <Sparkles size={15} />
-                Live 3D Reference
-              </div>
-              <div className="absolute bottom-6 left-6 right-6 rounded-xl border border-gray-200 bg-white p-4">
-                <div className="grid grid-cols-2 gap-3 text-xs text-gray-700">
-                  <span className="rounded-lg border border-gray-200 px-3 py-2">BMI + Body Fat</span>
-                  <span className="rounded-lg border border-gray-200 px-3 py-2">Height + Weight</span>
-                  <span className="rounded-lg border border-gray-200 px-3 py-2">Chest + Waist</span>
-                  <span className="rounded-lg border border-gray-200 px-3 py-2">Hips + Inseam</span>
-                </div>
-              </div>
-            </div>
-          </div>
+        <div className="mt-10 grid grid-cols-1 gap-5 md:grid-cols-3">
+          {BENEFITS.map((item) => {
+            const Icon = item.icon;
 
-          <div className="space-y-7">
-            <h2 className="text-3xl font-bold leading-tight lg:text-4xl">What is Body Visualizer</h2>
-            <p className="text-lg leading-relaxed text-gray-600">
-              Body Visualizer creates realistic 3D body references from your measurements so you can compare shape changes in a clearer, more intuitive way.
-            </p>
-            <p className="text-lg leading-relaxed text-gray-600">
-              Enter BMI, height, weight, chest, waist, hips, and inseam to explore how different combinations influence overall proportions.
-            </p>
-
-            <div className="space-y-6 pt-2">
-              <div className="flex items-start gap-4">
-                <div className="rounded-xl bg-gray-100 p-2.5">
-                  <CheckCircle2 className="text-[#66cf7f]" size={22} />
+            return (
+              <article
+                key={item.title}
+                className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm transition hover:-translate-y-[1px] hover:shadow-md"
+              >
+                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 text-primary">
+                  <Icon size={22} />
                 </div>
-                <div>
-                  <p className="text-lg font-semibold">No Photo Upload</p>
-                  <p className="mt-2 text-lg leading-relaxed text-gray-600">
-                    Explore body-shape changes from measurements and sliders without adding an image.
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex items-start gap-4">
-                <div className="rounded-xl bg-gray-100 p-2.5">
-                  <Activity className="text-[#66cf7f]" size={22} />
-                </div>
-                <div>
-                  <p className="text-lg font-semibold">Real-Time Visualization</p>
-                  <p className="mt-2 text-lg leading-relaxed text-gray-600">
-                    Watch the avatar update instantly as you adjust sliders and measurements.
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex items-start gap-4">
-                <div className="rounded-xl bg-gray-100 p-2.5">
-                  <Smartphone className="text-[#66cf7f]" size={22} />
-                </div>
-                <div>
-                  <p className="text-lg font-semibold">Simple Interface</p>
-                  <p className="mt-2 text-lg leading-relaxed text-gray-600">
-                    Easy controls on desktop and mobile make body-shape exploration straightforward.
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
+                <h3 className="mt-5 text-xl font-semibold text-gray-900">{item.title}</h3>
+                <p className="mt-3 text-base leading-relaxed text-gray-700">{item.description}</p>
+              </article>
+            );
+          })}
         </div>
       </section>
 
-      <section className="mx-auto mt-16 max-w-[1400px] overflow-hidden rounded-[30px] bg-white text-gray-900 shadow-sm">
-        <div className="grid gap-10 px-6 py-10 sm:px-8 lg:grid-cols-2 lg:items-start">
-          <div>
-            <span className="inline-flex rounded-full border border-gray-300 bg-gray-100 px-4 py-1.5 text-sm font-semibold text-gray-700">
-              Benefits
-            </span>
-            <h2 className="mt-5 text-3xl font-bold leading-tight lg:text-4xl">Why Use Our Body Visualizer</h2>
-            <p className="mt-5 text-lg leading-relaxed text-gray-600">
-              Discover how Body Visualizer transforms abstract body numbers into meaningful visual insights for better decision-making.
-            </p>
-
-            <div className="mt-8 space-y-4">
-              {BENEFITS.map((item, index) => {
-                const Icon = item.icon;
-                return (
-                  <details
-                    key={item.title}
-                    open={index === 0}
-                    className="group rounded-xl border border-gray-200 bg-white px-4 py-3"
-                  >
-                    <summary className="flex cursor-pointer list-none items-center justify-between gap-3">
-                      <span className="flex items-center gap-3">
-                        <span className="rounded-lg border border-gray-200 bg-gray-100 p-2">
-                          <Icon size={18} className="text-[#66cf7f]" />
-                        </span>
-                        <span className="text-xl font-semibold">{item.title}</span>
-                      </span>
-                      <span className="text-gray-500 transition group-open:rotate-180">⌄</span>
-                    </summary>
-                    <p className="mt-3 pl-12 text-lg leading-relaxed text-gray-600">{item.description}</p>
-                  </details>
-                );
-              })}
-            </div>
-          </div>
-
-          <div className="relative min-h-[420px] overflow-hidden rounded-2xl border border-gray-200 bg-white">
-            <div className="absolute inset-0 bg-[linear-gradient(rgba(107,114,128,0.12)_1px,transparent_1px),linear-gradient(90deg,rgba(107,114,128,0.12)_1px,transparent_1px)] bg-[size:36px_36px] opacity-30" />
-            <div className="absolute left-12 top-16 h-44 w-32 rounded-[40%] border-4 border-[#66cf7f]" />
-            <div className="absolute right-12 top-16 h-44 w-32 rounded-[40%] border-4 border-[#66cf7f]" />
-            <div className="absolute left-1/2 top-28 h-1 w-44 -translate-x-1/2 rounded-full bg-[#66cf7f]" />
-            <div className="absolute left-1/2 top-1/2 flex -translate-x-1/2 -translate-y-1/2 items-center gap-4 rounded-full border border-gray-300 bg-white px-4 py-2 text-sm font-semibold text-gray-800">
-              <Sparkles size={16} />
-              Shape Progress View
-            </div>
-            <div className="absolute bottom-10 left-8 right-8 rounded-xl border border-gray-200 bg-white p-4 text-sm text-gray-600">
-              Compare baseline and target configurations with a real-time visual reference.
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section className="mx-auto mt-16 max-w-[1400px] overflow-hidden rounded-[30px] bg-white px-6 py-10 shadow-sm sm:px-8">
-        <h2 className="mx-auto max-w-2xl text-center text-3xl font-bold leading-tight text-gray-900 lg:text-4xl">How to Use the Body Visualizer</h2>
-        <p className="mx-auto mt-5 max-w-3xl text-center text-lg leading-relaxed text-gray-600">
+      <section className="mx-auto mt-20 max-w-5xl px-4 pb-8 pt-4 lg:mt-32 lg:pb-12 lg:pt-8">
+        <h2 className="text-center text-3xl font-semibold text-gray-900 lg:text-4xl">
+          How to Use the Body Visualizer
+        </h2>
+        <p className="mx-auto mt-4 max-w-3xl text-center text-lg leading-relaxed text-gray-700">
           Creating your personalized 3D model takes less than a minute with these straightforward steps.
         </p>
 
-        <div className="relative mt-10 grid gap-6 lg:grid-cols-3">
-          <div className="absolute left-7 right-7 top-7 hidden h-px bg-gray-200 lg:block" />
+        <div className="mt-8 grid grid-cols-1 gap-5 md:grid-cols-3 lg:gap-6">
           {STEPS.map((step, index) => (
             <article
               key={step.title}
-              className="relative rounded-2xl border border-gray-200 bg-white p-6"
+              className="rounded-2xl border bg-white p-6 shadow-sm"
             >
-              <div
-                className={`mb-5 inline-flex h-12 w-12 items-center justify-center rounded-full border-2 text-xl font-bold ${
-                  index === 0
-                    ? "border-[#66cf7f] bg-[#66cf7f]/18 text-[#1f5f3a]"
-                    : "border-gray-300 bg-gray-100 text-gray-700"
-                }`}
-              >
+              <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-primary/15 text-xl font-bold text-primary">
                 {index + 1}
               </div>
-              <h2 className="text-3xl font-semibold text-gray-900 lg:text-4xl">{step.title}</h2>
-              <p className="mt-3 text-lg leading-relaxed text-gray-600">{step.description}</p>
+              <div className="relative aspect-video w-full overflow-hidden rounded-xl bg-base-100">
+                <StepPreview visual={step.visual} />
+              </div>
+              <h3 className="mt-4 text-center text-xl font-semibold text-gray-900">{step.title}</h3>
+              <p className="mt-3 text-left text-lg leading-relaxed text-gray-700">{step.description}</p>
             </article>
           ))}
         </div>
@@ -314,18 +343,18 @@ export default function Home() {
         description="Everything you need to know about using the Body Visualizer service."
         items={FAQS}
         accordionName="body-visualizer-home-faq-accordion"
-        className="mx-auto mt-16 max-w-[1400px]"
+        className="mx-auto mt-20 max-w-6xl lg:mt-32"
       />
 
-      <section className="mt-16">
+      <section className="mx-auto mt-20 max-w-6xl px-6 lg:mt-32">
         <div
           id="cta"
-          className="mx-auto w-full max-w-4xl rounded-3xl bg-white px-6 py-14 text-center shadow-sm"
+          className="rounded-3xl border border-gray-200 bg-white px-6 py-14 text-center shadow-sm"
         >
           <h2 className="text-3xl font-semibold text-gray-900 lg:text-4xl">
             Start Visualizing Your Body Shape Today
           </h2>
-          <p className="mx-auto mt-6 max-w-3xl text-lg leading-relaxed text-gray-700">
+          <p className="mx-auto mt-5 max-w-3xl text-lg leading-relaxed text-gray-700">
             Join thousands of satisfied Body Visualizer users and create your personalized 3D avatar now.
           </p>
           <div className="mt-10">

@@ -21,7 +21,7 @@ export default function SupportPage() {
               Support
             </h2>
             <p className="py-6 text-lg mb-6 text-center">
-          Have a question or need help? Reach out to our support team by sending us an <a href="mailto:matt@leandme.com" className="text-primary">email</a> and we’ll get back to you as soon as we can.
+          Have a question or need help? Reach out to our support team by sending us an <a href="mailto:bodyfatestimator@gmail.com" className="text-primary">email</a> and we’ll get back to you as soon as we can.
           </p>
     </div>
     </div>

@@ -46,7 +46,7 @@ export default function ContactPage() {
 
         <div className="mt-8 flex justify-center">
           <a
-            href="mailto:matt@leandme.com"
+            href="mailto:bodyfatestimator@gmail.com"
             className="btn btn-primary btn-lg text-white"
           >
             Email Support

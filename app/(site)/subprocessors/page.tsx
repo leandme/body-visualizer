@@ -31,8 +31,8 @@ export default function SubprocessorsPage() {
         <h2 className="text-2xl font-semibold mb-4">Questions</h2>
         <p>
           For current subprocessor details, contact{" "}
-          <a href="mailto:matt@leandme.com" className="text-primary hover:underline">
-            matt@leandme.com
+          <a href="mailto:bodyfatestimator@gmail.com" className="text-primary hover:underline">
+            bodyfatestimator@gmail.com
           </a>
           .
         </p>

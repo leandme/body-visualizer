@@ -57,8 +57,8 @@ export default function PrivacyPolicy() {
         <h2 className="text-2xl font-semibold mb-4">Contact</h2>
         <p>
           Privacy questions can be sent to{" "}
-          <a href="mailto:matt@leandme.com" className="text-primary hover:underline">
-            matt@leandme.com
+          <a href="mailto:bodyfatestimator@gmail.com" className="text-primary hover:underline">
+            bodyfatestimator@gmail.com
           </a>
           .
         </p>
