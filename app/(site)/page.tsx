@@ -47,6 +47,13 @@ type FaqItem = {
   answer: string;
 };
 
+type MeasurementGuideItem = {
+  title: string;
+  effect: string;
+  watch: string;
+  adjust: string;
+};
+
 const FEATURES: FeatureItem[] = [
   {
     title: "No Photo Upload",
@@ -107,6 +114,53 @@ const STEPS: StepItem[] = [
     description:
       "Rotate the model, save presets, and test multiple scenarios to compare progress and plan next steps.",
     visual: "compare",
+  },
+];
+
+const MEASUREMENT_GUIDE: MeasurementGuideItem[] = [
+  {
+    title: "Height",
+    effect:
+      "Sets the model's overall scale so every other value is judged against the person's size.",
+    watch:
+      "At the same weight, shorter bodies can read broader while taller bodies can look more elongated.",
+    adjust: "Start here before tuning weight, BMI, body fat, or tape measurements.",
+  },
+  {
+    title: "Weight",
+    effect:
+      "Changes the broad visual fullness of the body while staying tied to height and BMI.",
+    watch:
+      "Look at the torso, arms, legs, and side profile together instead of one area only.",
+    adjust: "Use it as the broad control, then refine the result with chest, waist, hips, and inseam.",
+  },
+  {
+    title: "Chest",
+    effect: "Shapes the upper torso and helps define the relationship between chest and waist.",
+    watch:
+      "Compare it with waist to read taper, straightness, or upper-body width from different views.",
+    adjust: "Tune this after height and weight when the upper body needs a more specific shape.",
+  },
+  {
+    title: "Waist",
+    effect: "Shapes the midsection and changes how the torso transitions toward the hips.",
+    watch:
+      "Small changes can affect the front view, abdomen side view, and chest-to-hip contrast.",
+    adjust: "Move this in smaller steps because it is one of the most visually sensitive controls.",
+  },
+  {
+    title: "Hips",
+    effect: "Changes lower-body width and the visible balance between waist, pelvis, and thighs.",
+    watch:
+      "It affects the lower silhouette and can make the waist appear narrower or straighter by contrast.",
+    adjust: "Set this after chest and waist are close so the full body proportion stays balanced.",
+  },
+  {
+    title: "Inseam",
+    effect: "Adjusts leg length relative to torso length within the same overall height.",
+    watch:
+      "At the same height, a longer inseam creates a shorter-looking torso and longer leg proportion.",
+    adjust: "Set this last, after the model's height and body width feel close to your target.",
   },
 ];
 
@@ -332,6 +386,44 @@ export default function Home() {
               </div>
               <h3 className="mt-4 text-center text-xl font-semibold text-gray-900">{step.title}</h3>
               <p className="mt-3 text-left text-lg leading-relaxed text-gray-700">{step.description}</p>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section className="mx-auto mt-20 max-w-6xl px-6 lg:mt-32">
+        <div className="text-center">
+          <h2 className="text-3xl font-bold text-gray-900 lg:text-4xl">
+            What Each Body Measurement Changes
+          </h2>
+          <p className="mx-auto mt-5 max-w-3xl text-lg leading-relaxed text-gray-700">
+            Height, weight, BMI, body fat, and tape measurements work together to shape the
+            3D preview. BMI is a reference value for height and weight, while chest, waist,
+            hips, and inseam help refine the visible body proportion.
+          </p>
+        </div>
+
+        <div className="mt-10 grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
+          {MEASUREMENT_GUIDE.map((item) => (
+            <article
+              key={item.title}
+              className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm"
+            >
+              <h3 className="text-xl font-semibold text-gray-900">{item.title}</h3>
+              <div className="mt-4 space-y-3 text-base leading-relaxed text-gray-700">
+                <p>
+                  <span className="font-semibold text-gray-900">Changes: </span>
+                  {item.effect}
+                </p>
+                <p>
+                  <span className="font-semibold text-gray-900">Watch: </span>
+                  {item.watch}
+                </p>
+                <p>
+                  <span className="font-semibold text-gray-900">Adjust: </span>
+                  {item.adjust}
+                </p>
+              </div>
             </article>
           ))}
         </div>
